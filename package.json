@@ -13,6 +13,7 @@
 	},
 	"scripts": {
 		"build": "tsup",
+		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit",
