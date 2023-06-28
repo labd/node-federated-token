@@ -19,6 +19,10 @@
 		"tsc": "tsc --noEmit",
 		"lint": "eslint *.ts"
 	},
+	"files": [
+		"dist",
+		"src"
+	],
 	"exports": {
 		".": {
 			"require": "./dist/index.js",
