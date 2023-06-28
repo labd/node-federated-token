@@ -2,9 +2,9 @@
 	"name": "@labdigital/federated-token",
 	"version": "0.0.1",
 	"description": "",
-	"main": "src/index.ts",
-	"types": "src/index.ts",
-	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
@@ -12,10 +12,18 @@
 		"access": "public"
 	},
 	"scripts": {
+		"build": "tsup",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit",
 		"lint": "eslint *.ts"
+	},
+	"exports": {
+		".": {
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs",
+			"types": "./dist/index.d.ts"
+		}
 	},
 	"dependencies": {
 		"@apollo/gateway": "2.4.7",
@@ -35,6 +43,7 @@
 		"@vitest/coverage-v8": "0.32.2",
 		"eslint": "^8.40.0",
 		"eslint-plugin-unused-imports": "^2.0.0",
+		"tsup": "^7.1.0",
 		"vitest": "0.32.2"
 	}
 }
