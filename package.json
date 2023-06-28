@@ -7,12 +7,15 @@
 	"type": "module",
 	"keywords": [],
 	"author": "",
-	"license": "UNLICENSED",
-	"private": true,
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
-		"tsc": "tsc --noEmit"
+		"tsc": "tsc --noEmit",
+		"lint": "eslint *.ts"
 	},
 	"dependencies": {
 		"@apollo/gateway": "2.4.7",
@@ -28,7 +31,10 @@
 		"@sentry/types": "7.55.0",
 		"@types/crypto-js": "4.1.1",
 		"@types/lodash-es": "4.17.7",
+		"@typescript-eslint/eslint-plugin": "^5.60.1",
 		"@vitest/coverage-v8": "0.32.2",
+		"eslint": "^8.40.0",
+		"eslint-plugin-unused-imports": "^2.0.0",
 		"vitest": "0.32.2"
 	}
 }
