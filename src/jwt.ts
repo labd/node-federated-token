@@ -135,6 +135,21 @@ export class PublicFederatedToken extends FederatedToken {
 		return signer.encryptJWT(payload, exp);
 	}
 
+	async loadRefreshJWT(signer: TokenSigner, value: string) {
+		const result = await signer.decryptJWT(value);
+		if (!result) {
+			throw new Error("Invalid JWT");
+		}
+
+		const payload = result.payload;
+		const knownKeys = ["state", "iat", "exp", "aud", "iss"];
+		for (const k in payload) {
+			if (!knownKeys.includes(k)) {
+				this.refreshTokens[k] = payload[k] as string;
+			}
+		}
+	}
+
 	encryptTokens(signer: TokenSigner) {
 		const value = JSON.stringify(this.tokens);
 		return signer.encryptString(value);

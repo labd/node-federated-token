@@ -45,6 +45,11 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				);
 			}
 		}
+
+		const rt = request.http?.headers.get("x-refresh-token")
+		if (rt) {
+			await contextValue.federatedToken?.loadRefreshJWT(this.signer, rt);
+		}
 	}
 
 	async willSendResponse(
