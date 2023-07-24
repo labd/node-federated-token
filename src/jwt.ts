@@ -13,15 +13,18 @@ type TokenSignerOptions = {
 	issuer: string;
 };
 
-const padUint8Array = (array: Uint8Array, desiredLength: number): Uint8Array => {
-  if (array.length >= desiredLength) {
-    return array;
-  }
+const padUint8Array = (
+	array: Uint8Array,
+	desiredLength: number
+): Uint8Array => {
+	if (array.length >= desiredLength) {
+		return array;
+	}
 
-  const paddedArray = new Uint8Array(desiredLength);
-  paddedArray.set(array, desiredLength - array.length);
-  return paddedArray;
-}
+	const paddedArray = new Uint8Array(desiredLength);
+	paddedArray.set(array, desiredLength - array.length);
+	return paddedArray;
+};
 
 export class TokenSigner {
 	private _encryptKey: Uint8Array;
@@ -41,7 +44,10 @@ export class TokenSigner {
 			throw new Error("Missing issuer");
 		}
 
-		this._encryptKey = padUint8Array(jose.base64url.decode(config.encryptKey), 32)
+		this._encryptKey = padUint8Array(
+			jose.base64url.decode(config.encryptKey),
+			32
+		);
 		if (this._encryptKey.length != 32) {
 			throw new Error("Invalid encryptKey length");
 		}
@@ -85,7 +91,7 @@ export class TokenSigner {
 			.setAudience(this.config.audience)
 			.setExpirationTime(exp)
 			.encrypt(this._encryptKey);
-		return data
+		return data;
 	}
 
 	async decryptJWT(jwt: string) {
