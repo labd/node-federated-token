@@ -11,7 +11,7 @@ describe("FederatedToken", () => {
     };
     federatedToken.setAccessToken("exampleName", token);
     assert.equal(federatedToken.tokens.exampleName, token);
-    assert.isTrue(federatedToken.isModified());
+    assert.isTrue(federatedToken.isAccessTokenModified());
   });
 
   test("setRefreshToken", () => {
@@ -20,14 +20,14 @@ describe("FederatedToken", () => {
     assert.equal(federatedToken.refreshTokens.exampleName, "exampleToken");
   });
 
-  test("isModified", () => {
+  test("isAccessTokenModified", () => {
 		const federatedToken = new FederatedToken();
-    assert.isFalse(federatedToken.isModified());
+    assert.isFalse(federatedToken.isAccessTokenModified());
     federatedToken.setAccessToken("exampleName", {
       token: "exampleToken",
       exp: 1234567890,
     });
-    assert.isTrue(federatedToken.isModified());
+    assert.isTrue(federatedToken.isAccessTokenModified());
   });
 
   test("loadAccessToken", () => {
@@ -66,7 +66,7 @@ describe("FederatedToken", () => {
     );
 
     assert.isFalse(
-      federatedToken.isModified(),
+      federatedToken.isAccessTokenModified(),
       "isModified should be false when trackModified is false and token is modified"
     );
   });
@@ -107,7 +107,7 @@ describe("FederatedToken", () => {
     );
 
     assert.isTrue(
-      federatedToken.isModified(),
+      federatedToken.isAccessTokenModified(),
       "isModified should be true when trackModified is true and token is modified"
     );
   });

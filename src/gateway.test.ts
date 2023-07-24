@@ -19,6 +19,7 @@ describe("GatewayAuthPlugin", () => {
 	const typeDefs = `#graphql
  			type Query {
     		testToken(create: Boolean): String!
+    		refreshToken: String!
   		}
 	`;
 	const resolvers = {
@@ -33,7 +34,18 @@ describe("GatewayAuthPlugin", () => {
 						token: "bar",
 						exp: Date.now() + 1000,
 					});
+					context.federatedToken?.setRefreshToken("foo", "bar");
 				}
+				return JSON.stringify(context.federatedToken);
+			},
+			refreshToken: (
+				_: any,
+				context: PublicFederatedTokenContext
+			) => {
+				context.federatedToken?.setAccessToken("foo", {
+					token: "bar",
+					exp: Date.now() + 1000,
+				});
 				return JSON.stringify(context.federatedToken);
 			},
 		},

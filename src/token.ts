@@ -15,26 +15,33 @@ export class FederatedToken {
 	refreshTokens: Record<string, string>;
 	values: Record<string, any>;
 
-	private _modified: boolean;
+	private _accessTokenModified: boolean;
+	private _refreshTokenModified: boolean;
 
 	constructor() {
 		this.tokens = {};
 		this.refreshTokens = {};
 		this.values = {};
-		this._modified = false;
+		this._accessTokenModified = false;
+		this._refreshTokenModified = false;
 	}
 
 	setAccessToken(name: string, token: AccessToken) {
 		this.tokens[name] = token;
-		this._modified = true;
+		this._accessTokenModified = true;
 	}
 
 	setRefreshToken(name: string, token: string) {
 		this.refreshTokens[name] = token;
+		this._refreshTokenModified = true;
 	}
 
-	isModified() {
-		return this._modified;
+	isAccessTokenModified() {
+		return this._accessTokenModified;
+	}
+
+	isRefreshTokenModified() {
+		return this._refreshTokenModified;
 	}
 
 	loadAccessToken(at: string, trackModified = false) {
@@ -49,7 +56,7 @@ export class FederatedToken {
 		// Merge tokens into this object
 		for (const k in token.tokens) {
 			if (trackModified && !isEqual(this.tokens[k], token.tokens[k])) {
-				this._modified = true;
+				this._accessTokenModified = true;
 			}
 
 			this.tokens[k] = token.tokens[k];
@@ -76,7 +83,7 @@ export class FederatedToken {
 	}
 
 
-	loadRefreshToken(value: string) {
+	loadRefreshToken(value: string, trackModified = false) {
 		const refreshTokens: Record<string, string> = JSON.parse(
 			Buffer.from(value, "base64").toString("ascii")
 		);
@@ -86,6 +93,10 @@ export class FederatedToken {
 		// Merge tokens in object
 		for (const k in refreshTokens) {
 			this.refreshTokens[k] = refreshTokens[k];
+
+			if (trackModified && !isEqual(this.refreshTokens[k], refreshTokens[k])) {
+				this._refreshTokenModified = true;
+			}
 		}
 	}
 

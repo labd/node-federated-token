@@ -46,7 +46,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			}
 		}
 
-		const rt = request.http?.headers.get("x-refresh-token")
+		const rt = request.http?.headers.get("x-refresh-token");
 		if (rt) {
 			await contextValue.federatedToken?.loadRefreshJWT(this.signer, rt);
 		}
@@ -58,17 +58,18 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const { contextValue, response } = requestContext;
 		const token = contextValue?.federatedToken;
 
-		if (!token?.isModified()) {
-			return;
-		}
-		const accessToken = await token.createAccessJWT(this.signer);
-		if (accessToken) {
-			response.http.headers.set("X-Access-Token", accessToken);
+		if (token?.isAccessTokenModified()) {
+			const accessToken = await token.createAccessJWT(this.signer);
+			if (accessToken) {
+				response.http.headers.set("X-Access-Token", accessToken);
+			}
 		}
 
-		const refreshToken = await token.createRefreshJWT(this.signer);
-		if (refreshToken) {
-			response.http.headers.set("X-Refresh-Token", refreshToken);
+		if (token?.isRefreshTokenModified()) {
+			const refreshToken = await token.createRefreshJWT(this.signer);
+			if (refreshToken) {
+				response.http.headers.set("X-Refresh-Token", refreshToken);
+			}
 		}
 	}
 }
