@@ -21,25 +21,43 @@ export class CookieTokenSource implements TokenSource {
 
   cookieNames = {
     accessToken: "authToken",
-    accessTokenFingerprint: "authTokenHash",
+    accessTokenHash: "authTokenHash",
     refreshToken: "authRefreshToken",
     refreshTokenExist: "authRefreshTokenExist",
   };
 
+  _getCookieName(name: string): string {
+    if (this.options.secure) return `__Host-${name}`;
+    return `${name}`;
+  }
+
+  _getCookie(request: Request, name: string) {
+    return request.cookies[this._getCookieName(name)];
+  }
+
+  _setCookie(
+    response: Response,
+    name: string,
+    value: string,
+    options: CookieOptions
+  ) {
+    response.cookie(this._getCookieName(name), value, options);
+  }
+
   getAccessToken(request: Request): string {
-    return request.cookies[this.cookieNames.accessToken];
+    return this._getCookie(request, this.cookieNames.accessToken);
   }
 
   getRefreshToken(request: Request): string {
-    return request.cookies[this.cookieNames.refreshToken];
+    return this._getCookie(request, this.cookieNames.refreshToken);
   }
 
   getFingerprint(request: Request): string {
-    return request.cookies[this.cookieNames.accessTokenFingerprint];
+    return this._getCookie(request, this.cookieNames.accessTokenHash);
   }
 
   setAccessToken(response: Response, token: string) {
-    response.cookie(this.cookieNames.accessToken, token, {
+    this._setCookie(response, this.cookieNames.accessToken, token, {
       httpOnly: false,
       secure: this.options.secure,
       sameSite: this.options.sameSite,
@@ -48,7 +66,7 @@ export class CookieTokenSource implements TokenSource {
 
   setRefreshToken(response: Response, token: string) {
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
-    response.cookie(this.cookieNames.refreshToken, token, {
+    this._setCookie(response, this.cookieNames.refreshToken, token, {
       httpOnly: true,
       path: this.options.refreshTokenPath,
       secure: this.options.secure,
@@ -56,7 +74,7 @@ export class CookieTokenSource implements TokenSource {
       expires: expiresAt,
     });
 
-    response.cookie(this.cookieNames.refreshTokenExist, "1", {
+    this._setCookie(response, this.cookieNames.refreshTokenExist, "1", {
       httpOnly: false,
       secure: this.options.secure,
       sameSite: this.options.sameSite,
@@ -65,8 +83,7 @@ export class CookieTokenSource implements TokenSource {
   }
 
   setFingerprint(response: Response, fingerprint: string) {
-    response.cookie(this.cookieNames.accessTokenFingerprint, fingerprint, {
-      path: "/graphql",
+    this._setCookie(response, this.cookieNames.accessTokenHash, fingerprint, {
       httpOnly: true,
       secure: this.options.secure,
       sameSite: this.options.sameSite,
