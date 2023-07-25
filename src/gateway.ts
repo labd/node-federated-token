@@ -1,75 +1,113 @@
 import {
-	ApolloServerPlugin,
-	GraphQLRequestContext,
-	GraphQLRequestListener,
+  ApolloServerPlugin,
+  GraphQLRequestContext,
+  GraphQLRequestListener,
 } from "@apollo/server";
 import {
-	PublicFederatedToken,
-	PublicFederatedTokenContext,
-	TokenSigner,
+  PublicFederatedToken,
+  PublicFederatedTokenContext,
+  TokenExpiredError,
+  TokenSigner,
 } from "./jwt";
 import { GraphQLError } from "graphql";
+import { TokenSource } from "./tokensource";
+
+type GatewayOptions = {
+  signer: TokenSigner;
+  source: TokenSource;
+};
 
 export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
-	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
+  implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {
-	constructor(private signer: TokenSigner) {}
+  private signer: TokenSigner;
+  private tokenSource: TokenSource;
 
-	public async requestDidStart(
-		requestContext: GraphQLRequestContext<TContext>
-	): Promise<void | GraphQLRequestListener<TContext>> {
-		return this;
-	}
+  constructor(options: GatewayOptions) {
+    this.signer = options.signer;
+    this.tokenSource = options.source;
+  }
 
-	public async didResolveOperation(
-		requestContext: GraphQLRequestContext<TContext>
-	): Promise<void> {
-		const { contextValue, request } = requestContext;
-		const authHeader = request.http?.headers.get("Authorization");
-		const at = authHeader?.replace("Bearer ", "");
+  public async requestDidStart(
+    requestContext: GraphQLRequestContext<TContext>
+  ): Promise<void | GraphQLRequestListener<TContext>> {
+    return this;
+  }
 
-		if (at) {
-			if (!contextValue.federatedToken) {
-				contextValue.federatedToken = new PublicFederatedToken();
-			}
-			try {
-				await contextValue.federatedToken.loadAccessJWT(this.signer, at);
-			} catch (e) {
-				throw new GraphQLError(
-					"You are not authorized to perform this action.",
-					{
-						extensions: {
-							code: "FORBIDDEN",
-						},
-					}
-				);
-			}
-		}
+  public async didResolveOperation(
+    requestContext: GraphQLRequestContext<TContext>
+  ): Promise<void> {
+    const { contextValue } = requestContext;
+    const request = contextValue.req;
 
-		const rt = request.http?.headers.get("x-refresh-token");
-		if (rt) {
-			await contextValue.federatedToken?.loadRefreshJWT(this.signer, rt);
-		}
-	}
+    const accessToken = this.tokenSource.getAccessToken(request);
+    const refreshToken = this.tokenSource.getRefreshToken(request);
+    const fingerprint = this.tokenSource.getFingerprint(request);
 
-	async willSendResponse(
-		requestContext: GraphQLRequestContext<TContext>
-	): Promise<void> {
-		const { contextValue, response } = requestContext;
-		const token = contextValue?.federatedToken;
+    if (!accessToken && !refreshToken) {
+      return;
+    }
 
-		if (token?.isAccessTokenModified()) {
-			const accessToken = await token.createAccessJWT(this.signer);
-			if (accessToken) {
-				response.http.headers.set("X-Access-Token", accessToken);
-			}
-		}
+    if (!contextValue.federatedToken) {
+      contextValue.federatedToken = new PublicFederatedToken();
+    }
 
-		if (token?.isRefreshTokenModified()) {
-			const refreshToken = await token.createRefreshJWT(this.signer);
-			if (refreshToken) {
-				response.http.headers.set("X-Refresh-Token", refreshToken);
-			}
-		}
-	}
+    const token = contextValue.federatedToken;
+
+		// Only load the access token if there is no refresh token. If a refresh
+		// token is present then we assume a refresh is happening
+    if (accessToken && !refreshToken) {
+      try {
+        await token.loadAccessJWT(this.signer, accessToken, fingerprint);
+      } catch (e: unknown) {
+        if (e instanceof TokenExpiredError) {
+          throw new GraphQLError("Your token has expired.", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: {
+                statusCode: 401,
+              },
+            },
+          });
+        } else {
+          throw new GraphQLError("Your token is invalid.", {
+            extensions: {
+              code: "INVALID_TOKEN",
+              http: {
+                statusCode: 400,
+              },
+            },
+          });
+        }
+      }
+    }
+
+    if (refreshToken) {
+      await token.loadRefreshJWT(this.signer, refreshToken);
+    }
+  }
+
+  async willSendResponse(
+    requestContext: GraphQLRequestContext<TContext>
+  ): Promise<void> {
+    const { contextValue } = requestContext;
+    const token = contextValue?.federatedToken;
+    const response = contextValue.res;
+
+    if (token?.isAccessTokenModified()) {
+      const { accessToken, fingerprint } = await token.createAccessJWT(
+        this.signer
+      );
+
+      if (accessToken && fingerprint) {
+        this.tokenSource.setAccessToken(response, accessToken);
+        this.tokenSource.setFingerprint(response, fingerprint);
+      }
+    }
+
+    if (token?.isRefreshTokenModified()) {
+      const refreshToken = await token.createRefreshJWT(this.signer);
+      this.tokenSource.setRefreshToken(response, refreshToken);
+    }
+  }
 }

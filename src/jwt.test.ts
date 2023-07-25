@@ -1,6 +1,7 @@
 import * as jose from "jose";
-import { assert, describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { PublicFederatedToken, TokenSigner } from "./jwt";
+import { generateFingerprint, hashFingerprint } from "./fingerprint";
 
 describe("PublicFederatedToken", async () => {
 	const signOptions = {
@@ -24,7 +25,7 @@ describe("PublicFederatedToken", async () => {
 		const decryptedData = signer.decryptString(encryptedData);
 
 		const expectedData = JSON.stringify(publicFederatedToken.tokens);
-		assert.deepStrictEqual(decryptedData, expectedData);
+		expect(decryptedData).toStrictEqual(expectedData);
 	});
 
 	test("decryptTokens", () => {
@@ -50,7 +51,7 @@ describe("PublicFederatedToken", async () => {
 			},
 		};
 
-		assert.deepStrictEqual(decryptedData, expectedData);
+		expect(decryptedData).toStrictEqual(expectedData);
 	});
 
 	test("createAccessJWT", async () => {
@@ -67,23 +68,31 @@ describe("PublicFederatedToken", async () => {
 			value2: "exampleValue2",
 		};
 
-		const jwt = await publicFederatedToken.createAccessJWT(signer);
+		const { accessToken, fingerprint } =
+			await publicFederatedToken.createAccessJWT(signer);
 
-		const result = await jose.jwtVerify(jwt, jose.base64url.decode(signOptions.signKey), {
-			algorithms: ["HS256"],
-			audience: signOptions.audience,
-			issuer: signOptions.issuer,
-		});
+		const result = await jose.jwtVerify(
+			accessToken,
+			jose.base64url.decode(signOptions.signKey),
+			{
+				algorithms: ["HS256"],
+				audience: signOptions.audience,
+				issuer: signOptions.issuer,
+			}
+		);
 		const payload = result.payload;
-		assert.deepStrictEqual(payload.exp, expireAt);
-		assert.deepStrictEqual(payload.value1, "exampleValue1");
-		assert.deepStrictEqual(payload.value2, "exampleValue2");
+
+		expect(fingerprint).lengthOf(32);
+		expect(payload._fingerprint).toBe(hashFingerprint(fingerprint));
+		expect(payload.exp).toBe(expireAt);
+		expect(payload.value1).toBe("exampleValue1");
+		expect(payload.value2).toBe("exampleValue2");
 
 		const decrypted = publicFederatedToken.decryptTokens(
 			signer,
 			payload.state as string
 		);
-		assert.deepStrictEqual(decrypted, publicFederatedToken.tokens);
+		expect(decrypted).toStrictEqual(publicFederatedToken.tokens);
 	});
 
 	test("loadAccessJWT", async () => {
@@ -101,18 +110,47 @@ describe("PublicFederatedToken", async () => {
 		await publicFederatedToken.loadAccessJWT(signer, exampleJWT);
 
 		const result = await signer.verifyJWT(exampleJWT);
-		assert.deepStrictEqual(
-			publicFederatedToken.tokens,
+		expect(publicFederatedToken.tokens).toStrictEqual(
 			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
 		);
-		assert.deepStrictEqual(
+		expect(
 			publicFederatedToken.values,
+			"Values should be loaded correctly"
+		).toStrictEqual({
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+		});
+	});
+
+	test("loadAccessJWT with Fingerprint", async () => {
+		const publicFederatedToken = new PublicFederatedToken();
+		const fingerprint = generateFingerprint();
+		const exampleJWT = await signer.signJWT(
 			{
+				exp: Date.now() + 1000,
+				state: publicFederatedToken.encryptTokens(signer),
 				value1: "exampleValue1",
 				value2: "exampleValue2",
+				_fingerprint: hashFingerprint(fingerprint),
 			},
-			"Values should be loaded correctly"
+			Date.now() + 1000
 		);
+
+		expect(fingerprint).lengthOf(32);
+		await publicFederatedToken.loadAccessJWT(signer, exampleJWT, fingerprint);
+
+		const result = await signer.verifyJWT(exampleJWT);
+		expect(publicFederatedToken.tokens).toStrictEqual(
+			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
+		);
+		expect(
+			publicFederatedToken.values,
+			"Values should be loaded correctly"
+		).toStrictEqual({
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+			_fingerprint: hashFingerprint(fingerprint),
+		});
 	});
 
 	test("createRefreshJWT", async () => {
@@ -120,8 +158,9 @@ describe("PublicFederatedToken", async () => {
 		const publicFederatedToken = new PublicFederatedToken();
 		publicFederatedToken.refreshTokens = {
 			value1: "exampleValue1",
-		}
+		};
 
 		const jwt = await publicFederatedToken.createRefreshJWT(signer);
+		expect(jwt).toBeDefined();
 	});
 });

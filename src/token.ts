@@ -92,11 +92,10 @@ export class FederatedToken {
 
 		// Merge tokens in object
 		for (const k in refreshTokens) {
-			this.refreshTokens[k] = refreshTokens[k];
-
 			if (trackModified && !isEqual(this.refreshTokens[k], refreshTokens[k])) {
 				this._refreshTokenModified = true;
 			}
+			this.refreshTokens[k] = refreshTokens[k];
 		}
 	}
 
