@@ -62,7 +62,7 @@ export class FederatedGraphQLDataSource extends RemoteGraphQLDataSource<PublicFe
 			if (!context.federatedToken) {
 				context.federatedToken = new PublicFederatedToken();
 			}
-			context.federatedToken.loadRefreshToken(refreshToken);
+			context.federatedToken.loadRefreshToken(refreshToken, true);
 		}
 		return response;
 	}

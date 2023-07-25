@@ -43,12 +43,15 @@
 	"devDependencies": {
 		"@changesets/cli": "^2.26.2",
 		"@sentry/types": "7.55.0",
+		"@types/cookie-parser": "^1.4.3",
 		"@types/crypto-js": "4.1.1",
+		"@types/express": "^4.17.17",
 		"@types/lodash-es": "4.17.7",
 		"@typescript-eslint/eslint-plugin": "^5.60.1",
 		"@vitest/coverage-v8": "0.32.2",
 		"eslint": "^8.40.0",
 		"eslint-plugin-unused-imports": "^2.0.0",
+		"node-mocks-http": "^1.12.2",
 		"tsup": "^7.1.0",
 		"typescript": "^5.1.5",
 		"vitest": "0.32.2"

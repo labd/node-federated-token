@@ -20,3 +20,17 @@ When a federated services creates a new token (when non exist) it can also
 return a refresh token in the `x-refresh-token` header. The gateway will then
 encrypt all refresh tokens and encrypt them before passing them to the client
 as `x-refresh-token` header.
+
+
+# Token sources
+
+
+## Cookie Token Source
+This token source is used for browser clients to safely store the token. It is
+implemented via 4 cookies:
+ - accessToken - The JWT token
+ - tokenFingerprint - A random string that is used to protect the AccessToken
+   cookie from CSRF attacks. It is stored as HTTP_ONLY cookie.
+ - refreshToken - The refresh token, if any. It is stored as HTTP_ONLY cookie.
+ - refreshTokenExists - A boolean value that indicates if a refresh token exists
+   for the user. It is used to determine if the user is new or not.
