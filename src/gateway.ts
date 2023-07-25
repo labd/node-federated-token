@@ -10,7 +10,7 @@ import {
   TokenSigner,
 } from "./jwt";
 import { GraphQLError } from "graphql";
-import { TokenSource } from "./tokensource";
+import { TokenSource } from "./tokensource/base";
 
 type GatewayOptions = {
   signer: TokenSigner;
@@ -54,8 +54,8 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 
     const token = contextValue.federatedToken;
 
-		// Only load the access token if there is no refresh token. If a refresh
-		// token is present then we assume a refresh is happening
+    // Only load the access token if there is no refresh token. If a refresh
+    // token is present then we assume a refresh is happening
     if (accessToken && !refreshToken) {
       try {
         await token.loadAccessJWT(this.signer, accessToken, fingerprint);
