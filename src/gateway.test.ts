@@ -89,7 +89,7 @@ describe("GatewayAuthPlugin", () => {
   });
 
   it("Use generated token", async () => {
-    let context = {
+    const context = {
       federatedToken: new PublicFederatedToken(),
       res: httpMocks.createResponse(),
       req: httpMocks.createRequest(),

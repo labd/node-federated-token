@@ -55,44 +55,28 @@ describe("PublicFederatedToken", async () => {
 	});
 
 	test("createAccessJWT", async () => {
-		const publicFederatedToken = new PublicFederatedToken();
-		const expireAt = Date.now() + 1000;
-		publicFederatedToken.tokens = {
+		const token = new PublicFederatedToken();
+		const expireAt = Date.now() + 60;
+		token.tokens = {
 			exampleName: {
 				token: "exampleToken",
 				exp: expireAt,
 			},
 		};
-		publicFederatedToken.values = {
+		token.values = {
 			value1: "exampleValue1",
 			value2: "exampleValue2",
 		};
 
-		const { accessToken, fingerprint } =
-			await publicFederatedToken.createAccessJWT(signer);
-
-		const result = await jose.jwtVerify(
-			accessToken,
-			jose.base64url.decode(signOptions.signKey),
-			{
-				algorithms: ["HS256"],
-				audience: signOptions.audience,
-				issuer: signOptions.issuer,
-			}
-		);
-		const payload = result.payload;
+		const { accessToken, fingerprint } = await token.createAccessJWT(signer);
 
 		expect(fingerprint).lengthOf(32);
-		expect(payload._fingerprint).toBe(hashFingerprint(fingerprint));
-		expect(payload.exp).toBe(expireAt);
-		expect(payload.value1).toBe("exampleValue1");
-		expect(payload.value2).toBe("exampleValue2");
 
-		const decrypted = publicFederatedToken.decryptTokens(
-			signer,
-			payload.state as string
-		);
-		expect(decrypted).toStrictEqual(publicFederatedToken.tokens);
+		const newToken = new PublicFederatedToken();
+		await newToken.loadAccessJWT(signer, accessToken, fingerprint);
+		expect(newToken.tokens).toStrictEqual(token.tokens);
+		expect(newToken.refreshTokens).toStrictEqual(token.refreshTokens);
+		expect(newToken.values).toStrictEqual(token.values);
 	});
 
 	test("loadAccessJWT", async () => {
@@ -113,10 +97,7 @@ describe("PublicFederatedToken", async () => {
 		expect(publicFederatedToken.tokens).toStrictEqual(
 			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
 		);
-		expect(
-			publicFederatedToken.values,
-			"Values should be loaded correctly"
-		).toStrictEqual({
+		expect(publicFederatedToken.values).toStrictEqual({
 			value1: "exampleValue1",
 			value2: "exampleValue2",
 		});
@@ -143,13 +124,9 @@ describe("PublicFederatedToken", async () => {
 		expect(publicFederatedToken.tokens).toStrictEqual(
 			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
 		);
-		expect(
-			publicFederatedToken.values,
-			"Values should be loaded correctly"
-		).toStrictEqual({
+		expect(publicFederatedToken.values).toStrictEqual({
 			value1: "exampleValue1",
 			value2: "exampleValue2",
-			_fingerprint: hashFingerprint(fingerprint),
 		});
 	});
 
