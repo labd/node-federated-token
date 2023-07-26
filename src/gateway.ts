@@ -7,10 +7,10 @@ import {
   PublicFederatedToken,
   PublicFederatedTokenContext,
   TokenExpiredError,
-  TokenSigner,
 } from "./jwt";
 import { GraphQLError } from "graphql";
 import { TokenSource } from "./tokensource/base";
+import { TokenSigner } from "./sign";
 
 type GatewayOptions = {
   signer: TokenSigner;
