@@ -1,7 +1,7 @@
-import * as jose from "jose";
 import { describe, expect, test } from "vitest";
-import { PublicFederatedToken, TokenSigner } from "./jwt";
 import { generateFingerprint, hashFingerprint } from "./fingerprint";
+import { PublicFederatedToken } from "./jwt";
+import { EncryptedString, TokenSigner } from "./sign";
 
 describe("PublicFederatedToken", async () => {
 	const signOptions = {
@@ -95,7 +95,7 @@ describe("PublicFederatedToken", async () => {
 
 		const result = await signer.verifyJWT(exampleJWT);
 		expect(publicFederatedToken.tokens).toStrictEqual(
-			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
+			publicFederatedToken.decryptTokens(signer, result.payload.state as EncryptedString)
 		);
 		expect(publicFederatedToken.values).toStrictEqual({
 			value1: "exampleValue1",
@@ -122,7 +122,7 @@ describe("PublicFederatedToken", async () => {
 
 		const result = await signer.verifyJWT(exampleJWT);
 		expect(publicFederatedToken.tokens).toStrictEqual(
-			publicFederatedToken.decryptTokens(signer, result.payload.state as string)
+			publicFederatedToken.decryptTokens(signer, result.payload.state as EncryptedString)
 		);
 		expect(publicFederatedToken.values).toStrictEqual({
 			value1: "exampleValue1",

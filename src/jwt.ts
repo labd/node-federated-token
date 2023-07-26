@@ -1,13 +1,11 @@
-import CryptoJS from "crypto-js";
-import * as jose from "jose";
-import { FederatedToken } from "./token";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import {
   generateFingerprint,
   hashFingerprint,
   validateFingerprint,
 } from "./fingerprint";
-import { CompactJWEHeaderParameters, FlattenedJWE, FlattenedJWSInput, JWTHeaderParameters } from "jose";
+import { EncryptedString, TokenSigner } from "./sign";
+import { FederatedToken } from "./token";
 
 export type PublicFederatedTokenContext = {
   federatedToken?: PublicFederatedToken;
@@ -15,148 +13,17 @@ export type PublicFederatedTokenContext = {
   req: Request;
 };
 
-type TokenSignerOptions = {
-  encryptKey: string;
-  signKey: string;
-  audience: string;
-  issuer: string;
-};
-
 type JWTPayload = {
   exp: number;
-  state: string;
+  state: EncryptedString,
   _fingerprint: string;
   [key: string]: any;
 };
 
-const padUint8Array = (
-  array: Uint8Array,
-  desiredLength: number
-): Uint8Array => {
-  if (array.length >= desiredLength) {
-    return array;
-  }
-
-  const paddedArray = new Uint8Array(desiredLength);
-  paddedArray.set(array, desiredLength - array.length);
-  return paddedArray;
-};
 
 export class TokenExpiredError extends Error {}
 
-export class ConfigurationError extends Error {}
-
 export class TokenInvalidError extends Error {}
-
-export class TokenSigner {
-  private _encryptKey: Uint8Array;
-  private _signKey: Uint8Array;
-
-  constructor(private config: TokenSignerOptions) {
-    if (!config.encryptKey) {
-      throw new ConfigurationError("Missing encryptKey");
-    }
-    if (!config.signKey) {
-      throw new ConfigurationError("Missing signKey");
-    }
-    if (!config.audience) {
-      throw new ConfigurationError("Missing audience");
-    }
-    if (!config.issuer) {
-      throw new ConfigurationError("Missing issuer");
-    }
-
-    this._encryptKey = padUint8Array(
-      jose.base64url.decode(config.encryptKey),
-      32
-    );
-    if (this._encryptKey.length != 32) {
-      throw new Error("Invalid encryptKey length");
-    }
-    this._signKey = jose.base64url.decode(config.signKey);
-  }
-
-  encryptString(value: string) {
-    const key = jose.base64url.encode(this._encryptKey);
-    const data = CryptoJS.AES.encrypt(value, key).toString();
-    return {
-      data: data,
-      kid: "1",
-    }
-  }
-
-  decryptString(value: { data: string, kid: string}) {
-    const keyValue = this.getEncryptKeyFunction({ kid: value.kid })
-    const key = jose.base64url.encode(keyValue)
-    return CryptoJS.AES.decrypt(value.data, key).toString(CryptoJS.enc.Utf8);
-  }
-
-  async signJWT(payload: any, exp: number) {
-    const { keyId, keyValue } = this.getSignKey();
-    return await new jose.SignJWT(payload)
-      .setExpirationTime(exp)
-      .setIssuedAt()
-      .setProtectedHeader({ alg: "HS256", kid: keyId })
-      .setAudience(this.config.audience)
-      .setIssuer(this.config.issuer)
-      .sign(keyValue);
-  }
-
-  async verifyJWT(value: string) {
-    return await jose.jwtVerify(value, this.getSignKeyFunction.bind(this), {
-      algorithms: ["HS256"],
-      audience: this.config.audience,
-      issuer: this.config.issuer,
-    });
-  }
-
-  // For refresh token
-  async encryptJWT(payload: any, exp: number) {
-    const { keyId, keyValue } = this.getEncryptKey();
-
-    const data = await new jose.EncryptJWT(payload)
-      .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256", kid: keyId })
-      .setIssuedAt()
-      .setIssuer(this.config.issuer)
-      .setAudience(this.config.audience)
-      .setExpirationTime(exp)
-      .encrypt(keyValue);
-    return data;
-  }
-
-  async decryptJWT(jwt: string) {
-    return await jose.jwtDecrypt(jwt, this.getEncryptKeyFunction.bind(this), {
-      audience: this.config.audience,
-      issuer: this.config.issuer,
-    });
-  }
-
-  private getSignKey() {
-    return {
-      keyId: "1",
-      keyValue: this._signKey,
-    };
-  }
-
-  private getSignKeyFunction(header: JWTHeaderParameters, input: FlattenedJWSInput) {
-    return this._signKey;
-  }
-
-  private getEncryptKey() {
-    return {
-      keyId: "1",
-      keyValue: this._encryptKey,
-    };
-  }
-
-  private getEncryptKeyFunction(header: CompactJWEHeaderParameters, input: FlattenedJWE) {
-    return this.getEncryptKeyById("1")
-  }
-
-  private getEncryptKeyById(keyId: string) {
-    return this._encryptKey;
-  }
-}
 
 export class PublicFederatedToken extends FederatedToken {
   async createAccessJWT(signer: TokenSigner) {
@@ -210,7 +77,7 @@ export class PublicFederatedToken extends FederatedToken {
       throw new TokenInvalidError("Invalid fingerprint");
     }
 
-    this.tokens = this.decryptTokens(signer, payload.state as string);
+    this.tokens = this.decryptTokens(signer, payload.state);
     const knownKeys = ["state", "iat", "exp", "aud", "iss", "_fingerprint"];
     for (const k in payload) {
       if (!knownKeys.includes(k)) {
@@ -242,12 +109,12 @@ export class PublicFederatedToken extends FederatedToken {
     }
   }
 
-  encryptTokens(signer: TokenSigner) {
+  encryptTokens(signer: TokenSigner): EncryptedString {
     const value = JSON.stringify(this.tokens);
     return signer.encryptString(value);
   }
 
-  decryptTokens(signer: TokenSigner, value: string) {
+  decryptTokens(signer: TokenSigner, value: EncryptedString) {
     const data = signer.decryptString(value);
     return JSON.parse(data);
   }

@@ -1,12 +1,12 @@
 import { ApolloServer, HeaderMap } from "@apollo/server";
+import httpMocks from "node-mocks-http";
+import { assert, describe, expect, it } from "vitest";
 import { GatewayAuthPlugin } from "./gateway";
 import {
   PublicFederatedToken,
   PublicFederatedTokenContext,
-  TokenSigner,
 } from "./jwt";
-import { assert, describe, expect, it } from "vitest";
-import httpMocks from "node-mocks-http";
+import { TokenSigner } from "./sign";
 import { HeaderTokenSource } from "./tokensource/headers";
 
 describe("GatewayAuthPlugin", () => {
