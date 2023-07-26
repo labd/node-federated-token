@@ -4,7 +4,7 @@ import {
   hashFingerprint,
   validateFingerprint,
 } from "./fingerprint";
-import { EncryptedString, TokenSigner } from "./sign";
+import { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
 
 export type PublicFederatedTokenContext = {
@@ -15,7 +15,7 @@ export type PublicFederatedTokenContext = {
 
 type JWTPayload = {
   exp: number;
-  state: EncryptedString,
+  jwe: string,
   _fingerprint: string;
   [key: string]: any;
 };
@@ -35,7 +35,7 @@ export class PublicFederatedToken extends FederatedToken {
     const fingerprint = generateFingerprint();
     const payload: JWTPayload = {
       exp: exp,
-      state: this.encryptTokens(signer),
+      jwe: await signer.encryptObject(this.tokens),
       ...this.values,
       _fingerprint: hashFingerprint(fingerprint),
     };
@@ -77,8 +77,8 @@ export class PublicFederatedToken extends FederatedToken {
       throw new TokenInvalidError("Invalid fingerprint");
     }
 
-    this.tokens = this.decryptTokens(signer, payload.state);
-    const knownKeys = ["state", "iat", "exp", "aud", "iss", "_fingerprint"];
+    this.tokens = await signer.decryptObject(payload.jwe);
+    const knownKeys = ["jwe", "iat", "exp", "aud", "iss", "_fingerprint"];
     for (const k in payload) {
       if (!knownKeys.includes(k)) {
         this.values[k] = payload[k];
@@ -101,21 +101,11 @@ export class PublicFederatedToken extends FederatedToken {
     }
 
     const payload = result.payload;
-    const knownKeys = ["state", "iat", "exp", "aud", "iss"];
+    const knownKeys = ["jwe", "iat", "exp", "aud", "iss"];
     for (const k in payload) {
       if (!knownKeys.includes(k)) {
         this.refreshTokens[k] = payload[k] as string;
       }
     }
-  }
-
-  encryptTokens(signer: TokenSigner): EncryptedString {
-    const value = JSON.stringify(this.tokens);
-    return signer.encryptString(value);
-  }
-
-  decryptTokens(signer: TokenSigner, value: EncryptedString) {
-    const data = signer.decryptString(value);
-    return JSON.parse(data);
   }
 }
