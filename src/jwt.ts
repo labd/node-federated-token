@@ -7,6 +7,7 @@ import {
   hashFingerprint,
   validateFingerprint,
 } from "./fingerprint";
+import { CompactJWEHeaderParameters, FlattenedJWE, FlattenedJWSInput, JWTHeaderParameters } from "jose";
 
 export type PublicFederatedTokenContext = {
   federatedToken?: PublicFederatedToken;
@@ -77,26 +78,32 @@ export class TokenSigner {
 
   encryptString(value: string) {
     const key = jose.base64url.encode(this._encryptKey);
-    return CryptoJS.AES.encrypt(value, key).toString();
+    const data = CryptoJS.AES.encrypt(value, key).toString();
+    return {
+      data: data,
+      kid: "1",
+    }
   }
 
-  decryptString(value: string) {
-    const key = jose.base64url.encode(this._encryptKey);
-    return CryptoJS.AES.decrypt(value, key).toString(CryptoJS.enc.Utf8);
+  decryptString(value: { data: string, kid: string}) {
+    const keyValue = this.getEncryptKeyFunction({ kid: value.kid })
+    const key = jose.base64url.encode(keyValue)
+    return CryptoJS.AES.decrypt(value.data, key).toString(CryptoJS.enc.Utf8);
   }
 
   async signJWT(payload: any, exp: number) {
+    const { keyId, keyValue } = this.getSignKey();
     return await new jose.SignJWT(payload)
       .setExpirationTime(exp)
       .setIssuedAt()
-      .setProtectedHeader({ alg: "HS256" })
+      .setProtectedHeader({ alg: "HS256", kid: keyId })
       .setAudience(this.config.audience)
       .setIssuer(this.config.issuer)
-      .sign(this._signKey);
+      .sign(keyValue);
   }
 
   async verifyJWT(value: string) {
-    return await jose.jwtVerify(value, this._signKey, {
+    return await jose.jwtVerify(value, this.getSignKeyFunction.bind(this), {
       algorithms: ["HS256"],
       audience: this.config.audience,
       issuer: this.config.issuer,
@@ -105,21 +112,49 @@ export class TokenSigner {
 
   // For refresh token
   async encryptJWT(payload: any, exp: number) {
+    const { keyId, keyValue } = this.getEncryptKey();
+
     const data = await new jose.EncryptJWT(payload)
-      .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256" })
+      .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256", kid: keyId })
       .setIssuedAt()
       .setIssuer(this.config.issuer)
       .setAudience(this.config.audience)
       .setExpirationTime(exp)
-      .encrypt(this._encryptKey);
+      .encrypt(keyValue);
     return data;
   }
 
   async decryptJWT(jwt: string) {
-    return await jose.jwtDecrypt(jwt, this._encryptKey, {
+    return await jose.jwtDecrypt(jwt, this.getEncryptKeyFunction.bind(this), {
       audience: this.config.audience,
       issuer: this.config.issuer,
     });
+  }
+
+  private getSignKey() {
+    return {
+      keyId: "1",
+      keyValue: this._signKey,
+    };
+  }
+
+  private getSignKeyFunction(header: JWTHeaderParameters, input: FlattenedJWSInput) {
+    return this._signKey;
+  }
+
+  private getEncryptKey() {
+    return {
+      keyId: "1",
+      keyValue: this._encryptKey,
+    };
+  }
+
+  private getEncryptKeyFunction(header: CompactJWEHeaderParameters, input: FlattenedJWE) {
+    return this.getEncryptKeyById("1")
+  }
+
+  private getEncryptKeyById(keyId: string) {
+    return this._encryptKey;
   }
 }
 
@@ -156,7 +191,7 @@ export class PublicFederatedToken extends FederatedToken {
       throw new Error("Invalid JWT");
     }
 
-    const payload = result.payload as JWTPayload
+    const payload = result.payload as JWTPayload;
     if (!payload) {
       throw new TokenInvalidError("Invalid JWT");
     }
@@ -168,12 +203,15 @@ export class PublicFederatedToken extends FederatedToken {
       throw new TokenExpiredError("JWT expired");
     }
 
-    if (fingerprint && !validateFingerprint(fingerprint, payload._fingerprint)) {
-      throw new TokenInvalidError("Invalid fingerprint")
+    if (
+      fingerprint &&
+      !validateFingerprint(fingerprint, payload._fingerprint)
+    ) {
+      throw new TokenInvalidError("Invalid fingerprint");
     }
 
     this.tokens = this.decryptTokens(signer, payload.state as string);
-    const knownKeys = ["state", "iat", "exp", "aud", "iss"];
+    const knownKeys = ["state", "iat", "exp", "aud", "iss", "_fingerprint"];
     for (const k in payload) {
       if (!knownKeys.includes(k)) {
         this.values[k] = payload[k];
