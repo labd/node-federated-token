@@ -19,14 +19,15 @@ describe("Strings", async () => {
 		vi.useRealTimers()
 	})
 
-	test("encryptString", () => {
-		const encryptedData = signer.encryptString("exampleString");
-		expect(encryptedData.kid).toBe("1");
-		expect(encryptedData.data).toBeDefined();
-
-		const decryptedData = signer.decryptString(encryptedData);
-		expect(decryptedData).toBe("exampleString");
+	test("encryptObject", async () => {
+		const value = {
+			"foo": ["bar", "baz", "qux"],
+		}
+		const encryptedData = await signer.encryptObject(value)
+		const decryptedData = await signer.decryptObject(encryptedData);
+		expect(decryptedData).toStrictEqual(value)
 	});
+
 
 	test("JWT Sign and verify", async () => {
 		const payload = {

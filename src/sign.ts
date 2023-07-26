@@ -1,4 +1,3 @@
-import CryptoJS from "crypto-js";
 import * as jose from "jose";
 import {
 	CompactJWEHeaderParameters,
@@ -13,12 +12,6 @@ type TokenSignerOptions = {
 	audience: string;
 	issuer: string;
 };
-
-export type EncryptedString = {
-	kid: string;
-	data: string;
-};
-
 
 const padUint8Array = (
 	array: Uint8Array,
@@ -63,19 +56,27 @@ export class TokenSigner {
 		this._signKey = jose.base64url.decode(config.signKey);
 	}
 
-	encryptString(value: string): EncryptedString {
-		const key = jose.base64url.encode(this._encryptKey);
-		const data = CryptoJS.AES.encrypt(value, key).toString();
-		return {
-			data: data,
-			kid: "1",
-		};
+	async encryptObject(value: Record<string, any>): Promise<string> {
+		const buf = new TextEncoder().encode(JSON.stringify(value))
+		const data = await new jose.CompactEncrypt(buf)
+			.setProtectedHeader({ alg: "dir", enc: "A256GCM", kid: "1" })
+			.encrypt(this._encryptKey);
+		return data;
 	}
 
-	decryptString(value: EncryptedString) {
-		const keyValue = this.getEncryptKeyById(value.kid);
-		const key = jose.base64url.encode(keyValue);
-		return CryptoJS.AES.decrypt(value.data, key).toString(CryptoJS.enc.Utf8);
+	async decryptObject(value: string) {
+		if (typeof value !== "string") {
+			throw new Error("Invalid value type");
+		}
+		const result = await jose.compactDecrypt(
+			value,
+			this.getEncryptKeyFunction.bind(this),
+			{
+				keyManagementAlgorithms: ["dir"],
+				contentEncryptionAlgorithms: ["A256GCM"],
+			}
+		)
+		return JSON.parse(result.plaintext.toString())
 	}
 
 	async signJWT(payload: any, exp: number) {
@@ -97,7 +98,7 @@ export class TokenSigner {
 		});
 	}
 
-	// For refresh token
+	// For refresh token, encrypt the token (JWE)
 	async encryptJWT(payload: any, exp: number) {
 		const { keyId, keyValue } = this.getEncryptKey();
 
@@ -143,7 +144,8 @@ export class TokenSigner {
 		header: CompactJWEHeaderParameters,
 		input: FlattenedJWE
 	) {
-		return this.getEncryptKeyById("1");
+		const kid = input.header?.kid ?? "1";
+		return this.getEncryptKeyById(kid);
 	}
 
 	private getEncryptKeyById(keyId: string) {
