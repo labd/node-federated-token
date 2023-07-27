@@ -1,9 +1,9 @@
 import {
-	GraphQLDataSourceProcessOptions,
 	RemoteGraphQLDataSource,
+	type GraphQLDataSourceProcessOptions,
 } from "@apollo/gateway";
 import { HeaderMap } from "@apollo/server";
-import { GatewayGraphQLResponse } from "@apollo/server-gateway-interface";
+import { type GatewayGraphQLResponse } from "@apollo/server-gateway-interface";
 import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
 
 // FederatedGraphQLDataSource is a RemoteGraphQLDataSource that adds the

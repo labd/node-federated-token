@@ -1,7 +1,7 @@
 import {
-  ApolloServerPlugin,
-  GraphQLRequestContext,
-  GraphQLRequestListener,
+  type ApolloServerPlugin,
+  type GraphQLRequestContext,
+  type GraphQLRequestListener,
 } from "@apollo/server";
 import {
   PublicFederatedToken,
