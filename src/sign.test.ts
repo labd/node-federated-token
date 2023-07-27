@@ -1,40 +1,54 @@
+import * as crypto from "crypto";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { TokenSigner } from "./sign";
+import { KeyManager, TokenSigner } from "./sign";
 
 describe("Strings", async () => {
 	const signOptions = {
-		encryptKey: "jabja buqb uibafjb jdbuieqb ajfbajfsa",
-		signKey: "alsdlasdasd",
+		encryptKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(
+					Buffer.from("12345678".repeat(4))
+				),
+			},
+		]),
+		signKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(
+					Buffer.from("87654321".repeat(4))
+				),
+			},
+		]),
 		audience: "exampleAudience",
 		issuer: "exampleIssuer",
 	};
 	const signer = new TokenSigner(signOptions);
 
 	beforeEach(() => {
-		vi.useFakeTimers()
-		vi.setSystemTime(Date.now())
-	})
+		vi.useFakeTimers();
+		vi.setSystemTime(Date.now());
+	});
 
 	afterEach(() => {
-		vi.useRealTimers()
-	})
+		vi.useRealTimers();
+	});
 
 	test("encryptObject", async () => {
 		const value = {
-			"foo": ["bar", "baz", "qux"],
-		}
-		const encryptedData = await signer.encryptObject(value)
+			foo: ["bar", "baz", "qux"],
+		};
+		const encryptedData = await signer.encryptObject(value);
 		const decryptedData = await signer.decryptObject(encryptedData);
-		expect(decryptedData).toStrictEqual(value)
+		expect(decryptedData).toStrictEqual(value);
 	});
-
 
 	test("JWT Sign and verify", async () => {
 		const payload = {
 			foo: "bar",
 		};
 
-		const exp = Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 90)
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const token = await signer.signJWT(payload, exp);
 		expect(token).toBeDefined();
 
@@ -54,7 +68,7 @@ describe("Strings", async () => {
 			foo: "bar",
 		};
 
-		const exp = Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 90)
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const token = await signer.encryptJWT(payload, exp);
 		expect(token).toBeDefined();
 
@@ -67,5 +81,5 @@ describe("Strings", async () => {
 			iat: Math.floor(Date.now() / 1000),
 			iss: "exampleIssuer",
 		});
-	})
+	});
 });

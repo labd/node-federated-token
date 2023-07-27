@@ -1,4 +1,5 @@
 import { ApolloServer, HeaderMap } from "@apollo/server";
+import * as crypto from "crypto";
 import httpMocks from "node-mocks-http";
 import { assert, describe, expect, it } from "vitest";
 import { GatewayAuthPlugin } from "./gateway";
@@ -6,16 +7,31 @@ import {
   PublicFederatedToken,
   PublicFederatedTokenContext,
 } from "./jwt";
-import { TokenSigner } from "./sign";
+import { KeyManager, TokenSigner } from "./sign";
 import { HeaderTokenSource } from "./tokensource/headers";
 
 describe("GatewayAuthPlugin", () => {
-  const signer = new TokenSigner({
+  const signOptions = {
+    encryptKeys: new KeyManager([
+      {
+        id: "1",
+        key: crypto.createSecretKey(
+          Buffer.from("12345678".repeat(4))
+        ),
+      },
+    ]),
+    signKeys: new KeyManager([
+      {
+        id: "1",
+        key: crypto.createSecretKey(
+          Buffer.from("87654321".repeat(4))
+        ),
+      },
+    ]),
     audience: "exampleAudience",
     issuer: "exampleIssuer",
-    encryptKey: "foo",
-    signKey: "bar",
-  });
+  };
+  const signer = new TokenSigner(signOptions);
 
   const plugin = new GatewayAuthPlugin({
     signer: signer,
