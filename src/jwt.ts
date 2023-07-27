@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import {
 	generateFingerprint,
 	hashFingerprint,
@@ -6,12 +6,13 @@ import {
 } from "./fingerprint";
 import { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
+import { type BaseContext } from "@apollo/server";
 
 export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;
 	res: Response;
 	req: Request;
-};
+} & BaseContext
 
 type JWTPayload = {
 	exp: number;

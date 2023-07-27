@@ -1,4 +1,5 @@
 import {
+	BaseContext,
 	type ApolloServerPlugin,
 	type GraphQLRequestContext,
 	type GraphQLRequestListener,
