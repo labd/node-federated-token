@@ -1,12 +1,27 @@
 import { describe, expect, test } from "vitest";
 import { generateFingerprint, hashFingerprint } from "./fingerprint";
 import { PublicFederatedToken } from "./jwt";
-import { TokenSigner } from "./sign";
+import { KeyManager, TokenSigner } from "./sign";
+import * as crypto from "crypto";
 
 describe("PublicFederatedToken", async () => {
 	const signOptions = {
-		encryptKey: "jabja buqb uibafjb jdbuieqb ajfbajfsa",
-		signKey: "alsdlasdasd",
+		encryptKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(
+					Buffer.from("12345678".repeat(4))
+				),
+			},
+		]),
+		signKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(
+					Buffer.from("87654321".repeat(4))
+				),
+			},
+		]),
 		audience: "exampleAudience",
 		issuer: "exampleIssuer",
 	};
