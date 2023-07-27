@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.3.2
+
+### Patch Changes
+
+- 9dca6a8: Export PublicFederatedTokenContext type
+
 ## 0.3.1
 
 ### Patch Changes
