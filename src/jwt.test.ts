@@ -9,17 +9,13 @@ describe("PublicFederatedToken", async () => {
 		encryptKeys: new KeyManager([
 			{
 				id: "1",
-				key: crypto.createSecretKey(
-					Buffer.from("12345678".repeat(4))
-				),
+				key: crypto.createSecretKey(Buffer.from("12345678".repeat(4))),
 			},
 		]),
 		signKeys: new KeyManager([
 			{
 				id: "1",
-				key: crypto.createSecretKey(
-					Buffer.from("87654321".repeat(4))
-				),
+				key: crypto.createSecretKey(Buffer.from("87654321".repeat(4))),
 			},
 		]),
 		audience: "exampleAudience",

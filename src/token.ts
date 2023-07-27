@@ -82,7 +82,6 @@ export class FederatedToken {
 		return Buffer.from(JSON.stringify(data)).toString("base64");
 	}
 
-
 	loadRefreshToken(value: string, trackModified = false) {
 		const refreshTokens: Record<string, string> = JSON.parse(
 			Buffer.from(value, "base64").toString("ascii")

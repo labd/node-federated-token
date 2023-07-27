@@ -17,6 +17,7 @@
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit",
+		"format": "prettier --write src/",
 		"lint": "eslint *.ts"
 	},
 	"files": [

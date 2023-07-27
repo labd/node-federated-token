@@ -5,7 +5,6 @@ import {
 } from "@apollo/server";
 import { FederatedToken, FederatedTokenContext } from "./token";
 
-
 export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {

@@ -105,7 +105,7 @@ type Key = {
 };
 
 export interface KeyManagerInterface {
-	getActiveKey(): Promise<Key>
+	getActiveKey(): Promise<Key>;
 	getKeyFunction(
 		header: jose.JWTHeaderParameters | jose.CompactJWEHeaderParameters,
 		input: jose.FlattenedJWSInput | jose.FlattenedJWE
