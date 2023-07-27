@@ -1,5 +1,12 @@
 # @labdigital/federated-token
 
+## 0.3.0
+
+### Minor Changes
+
+- 66b663e: Refactor the key handling by introducing a KeyManager object to handle one or
+  multiple keys.
+
 ## 0.2.0
 
 ### Minor Changes
