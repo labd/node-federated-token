@@ -7,6 +7,7 @@ export default defineConfig({
 			provider: "v8",
 			all: true,
 			include: ["src/**/*.ts"],
+			reportsDirectory: './test-reports/'
 		},
 		globalSetup: [path.join(__dirname, "vitest.setup.ts")],
 		passWithNoTests: true,
