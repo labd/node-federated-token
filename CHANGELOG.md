@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.3.3
+
+### Patch Changes
+
+- c9c16b9: Move dependencies to peer depdenencies
+
 ## 0.3.2
 
 ### Patch Changes
