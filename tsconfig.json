@@ -2,32 +2,26 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": true,
     "composite": false,
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "inlineSources": false,
     "isolatedModules": true,
-    "lib": ["ESNext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "outDir": ".build",
-    "preserveConstEnums": true,
+    "module": "ES2022",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "paths": {
+      "~src/*": ["./src/*"]
+    },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true,
     "strictPropertyInitialization": false,
-    "target": "es2022"
+    "target": "ES2022"
   },
-  "exclude": ["node_modules/*", "**/node_modules/*"],
-  "include": ["./src", "*.ts", "*.js", "*.cjs"]
+  "exclude": [
+    "node_modules/*",
+    "**/node_modules/*"
+  ]
 }

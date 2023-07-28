@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TokenSource } from "./base";
+import { TokenSource } from "./base.js";
 
 export class CompositeTokenSource implements TokenSource {
 	private sources: TokenSource[];

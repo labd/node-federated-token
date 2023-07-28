@@ -1,6 +1,6 @@
-import { HeaderTokenSource } from "./headers";
 import httpMocks from "node-mocks-http";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { HeaderTokenSource } from "./headers.js";
 
 // Mock tokens
 const mockRefreshToken = "mockRefreshToken";

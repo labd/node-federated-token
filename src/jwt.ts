@@ -1,12 +1,12 @@
+import { type BaseContext } from "@apollo/server";
 import { type Request, type Response } from "express";
 import {
 	generateFingerprint,
 	hashFingerprint,
 	validateFingerprint,
-} from "./fingerprint";
-import { TokenSigner } from "./sign";
-import { FederatedToken } from "./token";
-import { type BaseContext } from "@apollo/server";
+} from "./fingerprint.js";
+import { TokenSigner } from "./sign.js";
+import { FederatedToken } from "./token.js";
 
 export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;

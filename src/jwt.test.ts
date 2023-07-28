@@ -1,8 +1,8 @@
-import { describe, expect, test } from "vitest";
-import { generateFingerprint, hashFingerprint } from "./fingerprint";
-import { PublicFederatedToken } from "./jwt";
-import { KeyManager, TokenSigner } from "./sign";
 import * as crypto from "crypto";
+import { describe, expect, test } from "vitest";
+import { generateFingerprint, hashFingerprint } from "./fingerprint.js";
+import { PublicFederatedToken } from "./jwt.js";
+import { KeyManager, TokenSigner } from "./sign.js";
 
 describe("PublicFederatedToken", async () => {
 	const signOptions = {

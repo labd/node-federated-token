@@ -1,6 +1,6 @@
 import httpMocks from "node-mocks-http";
 import { describe, it, expect } from "vitest";
-import { CookieTokenSource } from "./cookies";
+import { CookieTokenSource } from "./cookies.js";
 
 describe("CookieTokenSource", () => {
 	it("should get the access token from cookies", () => {

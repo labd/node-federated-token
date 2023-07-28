@@ -1,17 +1,16 @@
 import {
-	BaseContext,
 	type ApolloServerPlugin,
 	type GraphQLRequestContext,
 	type GraphQLRequestListener,
 } from "@apollo/server";
+import { GraphQLError } from "graphql";
 import {
 	PublicFederatedToken,
 	PublicFederatedTokenContext,
 	TokenExpiredError,
-} from "./jwt";
-import { GraphQLError } from "graphql";
-import { TokenSource } from "./tokensource/base";
-import { TokenSigner } from "./sign";
+} from "./jwt.js";
+import { TokenSigner } from "./sign.js";
+import { TokenSource } from "./tokensource/base.js";
 
 type GatewayOptions = {
 	signer: TokenSigner;
