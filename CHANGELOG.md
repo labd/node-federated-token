@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.4.0
+
+### Minor Changes
+
+- 910eced: Move to full ESM
+
 ## 0.3.3
 
 ### Patch Changes
