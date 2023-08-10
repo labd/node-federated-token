@@ -10,6 +10,6 @@ const setup = async function () {
 	process.env.CTP_SCOPES = "foo";
 	process.env.CTP_API_URL = "https://localhost";
 	process.env.CTP_AUTH_URL = "https://localhost";
-}
+};
 
-export default setup
+export default setup;

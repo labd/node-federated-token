@@ -12,7 +12,7 @@ export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;
 	res: Response;
 	req: Request;
-} & BaseContext
+} & BaseContext;
 
 type JWTPayload = {
 	exp: number;

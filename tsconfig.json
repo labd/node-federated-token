@@ -1,27 +1,23 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "allowJs": true,
-    "composite": false,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "isolatedModules": true,
-    "module": "ES2022",
-    "moduleResolution": "nodenext",
-    "outDir": "dist",
-    "paths": {
-      "~src/*": ["./src/*"]
-    },
-    "preserveWatchOutput": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "target": "ES2022"
-  },
-  "exclude": [
-    "node_modules/*",
-    "**/node_modules/*"
-  ]
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"allowJs": true,
+		"composite": false,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"baseUrl": "./src/",
+		"isolatedModules": true,
+		"module": "ES2022",
+		"moduleResolution": "nodenext",
+		"noEmit": true,
+		"outDir": "dist",
+		"preserveWatchOutput": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"target": "ES2022"
+	},
+	"exclude": ["node_modules/*", "**/node_modules/*", "dist/*"]
 }
