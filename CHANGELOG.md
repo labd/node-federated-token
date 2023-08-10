@@ -1,5 +1,15 @@
 # @labdigital/federated-token
 
+## 0.5.0
+
+### Minor Changes
+
+- eee2cd1: Use a generic for the FederatedGraphQLDataSource context
+
+### Patch Changes
+
+- eee2cd1: Fix peerDependencies range
+
 ## 0.4.0
 
 ### Minor Changes
