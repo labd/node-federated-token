@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.5.1
+
+### Patch Changes
+
+- 752d421: remove unused IIFE and CJS dist files
+
 ## 0.5.0
 
 ### Minor Changes
