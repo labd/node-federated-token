@@ -49,8 +49,8 @@
 		"vitest": "0.32.2"
 	},
 	"peerDependencies": {
-		"@apollo/gateway": "2.4.7",
-		"@apollo/server": "4.8.1",
-		"graphql": "16.6.0"
+		"@apollo/gateway": ">= 2.4",
+		"@apollo/server": ">= 4.5",
+		"graphql": ">= 16.6.0"
 	}
 }
