@@ -10,14 +10,9 @@ import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt.js";
 // x-access-token and x-refresh-token headers to the request and reads the
 // x-access-token and x-refresh-token headers from the response.
 // It works in conjunction with the GatewayAuthPlugin.
-export class FederatedGraphQLDataSource extends RemoteGraphQLDataSource<PublicFederatedTokenContext> {
-	private name: string;
-
-	constructor({ name, url }: { name: string; url: string }) {
-		super({ url });
-		this.name = name;
-	}
-
+export class FederatedGraphQLDataSource<
+	TContext extends PublicFederatedTokenContext
+> extends RemoteGraphQLDataSource<TContext> {
 	willSendRequest(
 		options: GraphQLDataSourceProcessOptions
 	): void | Promise<void> {
