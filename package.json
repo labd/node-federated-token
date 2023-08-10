@@ -1,13 +1,16 @@
 {
 	"name": "@labdigital/federated-token",
 	"version": "0.4.0",
-	"description": "",
+	"description": "Federate JWT tokens between Apollo servers",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
 	"type": "module",
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"graphql",
+		"authentication"
+	],
+	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
