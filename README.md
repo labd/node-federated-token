@@ -1,4 +1,8 @@
 # Federated Token
+
+[![npm](https://img.shields.io/npm/v/@labdigital/federated-token.svg)](https://www.npmjs.com/package/@labdigital/federated-token)
+
+
 This package provides support for using JWT tokens for clients and passing
 that information to all federated services. The JWT token includes a JWE token
 for sensitive information like the client specific access tokens of third party
