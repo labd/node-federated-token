@@ -27,7 +27,8 @@ export class CookieTokenSource implements TokenSource {
 	};
 
 	_getCookieName(name: string): string {
-		if (this.options.secure) return `__Host-${name}`;
+		if (this.options.secure && this.options.sameSite === "strict")
+			return `__Host-${name}`;
 		return `${name}`;
 	}
 
