@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.5.2
+
+### Patch Changes
+
+- a7b27c2: Only add host prefix for strict same site
+
 ## 0.5.1
 
 ### Patch Changes
