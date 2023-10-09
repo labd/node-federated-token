@@ -20,13 +20,13 @@ export class HeaderTokenSource implements TokenSource {
 		return "";
 	}
 
-	setAccessToken(response: Response, token: string) {
+	setAccessToken(request: Request, response: Response, token: string) {
 		response.set(this.headerNames.accessToken, token);
 	}
 
-	setRefreshToken(response: Response, token: string) {
+	setRefreshToken(request: Request, response: Response, token: string) {
 		response.set(this.headerNames.refreshToken, token);
 	}
 
-	setFingerprint(response: Response, fingerprint: string) {}
+	setFingerprint(request: Request, response: Response, fingerprint: string) {}
 }

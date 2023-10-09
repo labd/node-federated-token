@@ -92,7 +92,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	): Promise<void> {
 		const { contextValue } = requestContext;
 		const token = contextValue?.federatedToken;
-		const response = contextValue.res;
+		const { req: request, res: response } = contextValue;
 
 		if (token?.isAccessTokenModified()) {
 			const { accessToken, fingerprint } = await token.createAccessJWT(
@@ -100,14 +100,14 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			);
 
 			if (accessToken && fingerprint) {
-				this.tokenSource.setAccessToken(response, accessToken);
-				this.tokenSource.setFingerprint(response, fingerprint);
+				this.tokenSource.setAccessToken(request, response, accessToken);
+				this.tokenSource.setFingerprint(request, response, fingerprint);
 			}
 		}
 
 		if (token?.isRefreshTokenModified()) {
 			const refreshToken = await token.createRefreshJWT(this.signer);
-			this.tokenSource.setRefreshToken(response, refreshToken);
+			this.tokenSource.setRefreshToken(request, response, refreshToken);
 		}
 	}
 }

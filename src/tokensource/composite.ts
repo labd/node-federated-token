@@ -38,21 +38,21 @@ export class CompositeTokenSource implements TokenSource {
 		return "";
 	}
 
-	setAccessToken(response: Response, token: string) {
+	setAccessToken(request: Request, response: Response, token: string) {
 		for (const source of this.sources) {
-			source.setAccessToken(response, token);
+			source.setAccessToken(request, response, token);
 		}
 	}
 
-	setRefreshToken(response: Response, token: string) {
+	setRefreshToken(request: Request, response: Response, token: string) {
 		for (const source of this.sources) {
-			source.setRefreshToken(response, token);
+			source.setRefreshToken(request, response, token);
 		}
 	}
 
-	setFingerprint(response: Response, fingerprint: string) {
+	setFingerprint(request: Request, response: Response, fingerprint: string) {
 		for (const source of this.sources) {
-			source.setFingerprint(response, fingerprint);
+			source.setFingerprint(request, response, fingerprint);
 		}
 	}
 }
