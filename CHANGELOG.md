@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.6.0
+
+### Minor Changes
+
+- 6248b79: Implement cookie domain options
+
 ## 0.5.2
 
 ### Patch Changes
