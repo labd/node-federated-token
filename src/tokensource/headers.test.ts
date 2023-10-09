@@ -35,23 +35,26 @@ describe("HeaderTokenSource", () => {
 	});
 
 	it("should set the access token in the response headers", () => {
+		const request = httpMocks.createRequest();
 		const response = httpMocks.createResponse();
 		const headerTokenSource = new HeaderTokenSource();
-		headerTokenSource.setAccessToken(response, "foobar");
+		headerTokenSource.setAccessToken(request, response, "foobar");
 		expect(response.get("x-access-token")).toBe("foobar");
 	});
 
 	it("should set the refresh token in the response headers", () => {
+		const request = httpMocks.createRequest();
 		const response = httpMocks.createResponse();
 		const headerTokenSource = new HeaderTokenSource();
-		headerTokenSource.setRefreshToken(response, "foobar");
+		headerTokenSource.setRefreshToken(request, response, "foobar");
 		expect(response.get("x-refresh-token")).toBe("foobar");
 	});
 
 	it("should not set the fingerprint in the response headers", () => {
+		const request = httpMocks.createRequest();
 		const response = httpMocks.createResponse();
 		const headerTokenSource = new HeaderTokenSource();
-		headerTokenSource.setFingerprint(response, "mockFingerprint");
+		headerTokenSource.setFingerprint(request, response, "mockFingerprint");
 
 		expect(response.getHeaders()).toStrictEqual({});
 	});

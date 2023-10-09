@@ -4,7 +4,11 @@ export interface TokenSource {
 	getAccessToken(request: Request): string;
 	getRefreshToken(request: Request): string;
 	getFingerprint(request: Request): string;
-	setAccessToken(response: Response, token: string): void;
-	setRefreshToken(response: Response, token: string): void;
-	setFingerprint(response: Response, fingerprint: string): void;
+	setAccessToken(request: Request, response: Response, token: string): void;
+	setRefreshToken(request: Request, response: Response, token: string): void;
+	setFingerprint(
+		request: Request,
+		response: Response,
+		fingerprint: string
+	): void;
 }

@@ -5,6 +5,8 @@ type CookieSourceOptions = {
 	secure: boolean;
 	sameSite: CookieOptions["sameSite"];
 	refreshTokenPath: string;
+	publicDomainFn?: (request: Request) => string | undefined;
+	privateDomainFn?: (request: Request) => string | undefined;
 };
 
 /*
@@ -57,15 +59,16 @@ export class CookieTokenSource implements TokenSource {
 		return this._getCookie(request, this.cookieNames.accessTokenHash);
 	}
 
-	setAccessToken(response: Response, token: string) {
+	setAccessToken(request: Request, response: Response, token: string) {
 		this._setCookie(response, this.cookieNames.accessToken, token, {
 			httpOnly: false,
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
+			domain: this.options?.publicDomainFn?.(request),
 		});
 	}
 
-	setRefreshToken(response: Response, token: string) {
+	setRefreshToken(request: Request, response: Response, token: string) {
 		const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
 		this._setCookie(response, this.cookieNames.refreshToken, token, {
 			httpOnly: true,
@@ -73,6 +76,7 @@ export class CookieTokenSource implements TokenSource {
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			expires: expiresAt,
+			domain: this.options?.privateDomainFn?.(request),
 		});
 
 		this._setCookie(response, this.cookieNames.refreshTokenExist, "1", {
@@ -80,14 +84,16 @@ export class CookieTokenSource implements TokenSource {
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			expires: expiresAt,
+			domain: this.options?.publicDomainFn?.(request),
 		});
 	}
 
-	setFingerprint(response: Response, fingerprint: string) {
+	setFingerprint(request: Request, response: Response, fingerprint: string) {
 		this._setCookie(response, this.cookieNames.accessTokenHash, fingerprint, {
 			httpOnly: true,
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
+			domain: this.options?.privateDomainFn?.(request),
 		});
 	}
 }
