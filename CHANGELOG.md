@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.6.1
+
+### Patch Changes
+
+- ad77b2a: Delete the access token cookie when the token is invalid
+
 ## 0.6.0
 
 ### Minor Changes
