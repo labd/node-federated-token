@@ -12,6 +12,7 @@ describe("CompositeTokenSource", () => {
 		getAccessToken: vi.fn().mockReturnValue(""),
 		getRefreshToken: vi.fn().mockReturnValue(""),
 		getFingerprint: vi.fn().mockReturnValue(""),
+		deleteAccessToken: vi.fn(),
 		setAccessToken: vi.fn(),
 		setRefreshToken: vi.fn(),
 		setFingerprint: vi.fn(),
