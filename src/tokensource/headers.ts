@@ -7,6 +7,8 @@ export class HeaderTokenSource implements TokenSource {
 		refreshToken: "x-refresh-token",
 	};
 
+	deleteAccessToken(response: Response<any, Record<string, any>>): void {}
+
 	getAccessToken(request: Request): string {
 		const authHeader = request.headers[this.headerNames.accessToken] as string;
 		return authHeader?.replace("Bearer ", "");

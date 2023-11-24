@@ -47,6 +47,15 @@ export class CookieTokenSource implements TokenSource {
 		response.cookie(this._getCookieName(name), value, options);
 	}
 
+	_deleteCookie(response: Response, name: string) {
+		response.clearCookie(this._getCookieName(name));
+	}
+
+	deleteAccessToken(response: Response<any, Record<string, any>>): void {
+		this._deleteCookie(response, this.cookieNames.accessToken)
+		this._deleteCookie(response, this.cookieNames.accessTokenHash)
+	}
+
 	getAccessToken(request: Request): string {
 		return this._getCookie(request, this.cookieNames.accessToken);
 	}

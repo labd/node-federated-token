@@ -60,6 +60,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			try {
 				await token.loadAccessJWT(this.signer, accessToken, fingerprint);
 			} catch (e: unknown) {
+				this.tokenSource.deleteAccessToken(contextValue.res);
 				if (e instanceof TokenExpiredError) {
 					throw new GraphQLError("Your token has expired.", {
 						extensions: {

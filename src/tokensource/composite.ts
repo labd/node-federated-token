@@ -8,6 +8,12 @@ export class CompositeTokenSource implements TokenSource {
 		this.sources = sources;
 	}
 
+	deleteAccessToken(response: Response): void {
+		for (const source of this.sources) {
+			source.deleteAccessToken(response);
+		}
+	}
+
 	getAccessToken(request: Request): string {
 		for (const source of this.sources) {
 			const token = source.getAccessToken(request);
