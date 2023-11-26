@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.6.2
+
+### Patch Changes
+
+- cfde937: Fix issues when running with bun by converting KeyObject to uint8
+
 ## 0.6.1
 
 ### Patch Changes
