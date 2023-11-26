@@ -103,7 +103,7 @@ export class TokenSigner {
 
 type Key = {
 	id: string;
-	key: jose.KeyLike;
+	key: jose.KeyLike | Uint8Array;
 };
 
 export interface KeyManagerInterface {

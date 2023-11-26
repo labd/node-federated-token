@@ -8,7 +8,7 @@
 		"baseUrl": "./src/",
 		"isolatedModules": true,
 		"module": "ES2022",
-		"moduleResolution": "nodenext",
+		"moduleResolution": "bundler",
 		"noEmit": true,
 		"outDir": "dist",
 		"preserveWatchOutput": true,
