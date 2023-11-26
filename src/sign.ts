@@ -1,4 +1,5 @@
 import * as jose from "jose";
+import { KeyObject } from "node:crypto";
 
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
@@ -47,7 +48,8 @@ export class TokenSigner {
 				contentEncryptionAlgorithms: ["A256GCM"],
 			}
 		);
-		return JSON.parse(result.plaintext.toString());
+		const data = new TextDecoder().decode(result.plaintext.buffer)
+		return JSON.parse(data)
 	}
 
 	async signJWT(payload: any, exp: number) {
@@ -118,7 +120,7 @@ export class KeyManager implements KeyManagerInterface {
 		if (keys.length === 0) {
 			throw new ConfigurationError("Missing keys");
 		}
-		this.keys = keys;
+		this.keys = keys.map((k) => ({ id: k.id, key: this.convertKey(k.key) }));
 	}
 
 	// getActiveKey returns a key to sign the JWT. It always returns the first key
@@ -140,6 +142,15 @@ export class KeyManager implements KeyManagerInterface {
 		const key = this.keys.find((k) => k.id === kid)?.key;
 		if (!key) {
 			throw new ConfigurationError("Missing key");
+		}
+		return key;
+	}
+
+	convertKey(
+		key: KeyObject | jose.KeyLike | Uint8Array
+	): Uint8Array | jose.KeyLike {
+		if (key instanceof KeyObject) {
+			return new Uint8Array(key.export());
 		}
 		return key;
 	}

@@ -71,6 +71,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 						},
 					});
 				} else {
+					console.error(e)
 					throw new GraphQLError("Your token is invalid.", {
 						extensions: {
 							code: "INVALID_TOKEN",
