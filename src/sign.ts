@@ -48,8 +48,8 @@ export class TokenSigner {
 				contentEncryptionAlgorithms: ["A256GCM"],
 			}
 		);
-		const data = new TextDecoder().decode(result.plaintext.buffer)
-		return JSON.parse(data)
+		const data = new TextDecoder().decode(result.plaintext.buffer);
+		return JSON.parse(data);
 	}
 
 	async signJWT(payload: any, exp: number) {
