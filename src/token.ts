@@ -17,6 +17,7 @@ export class FederatedToken {
 
 	private _accessTokenModified: boolean;
 	private _refreshTokenModified: boolean;
+	private _valueModified: boolean;
 
 	constructor() {
 		this.tokens = {};
@@ -24,6 +25,7 @@ export class FederatedToken {
 		this.values = {};
 		this._accessTokenModified = false;
 		this._refreshTokenModified = false;
+		this._valueModified = false;
 	}
 
 	setAccessToken(name: string, token: AccessToken) {
@@ -36,12 +38,21 @@ export class FederatedToken {
 		this._refreshTokenModified = true;
 	}
 
+	setValue(name: string, value: any): void {
+		this.values[name] = value;
+		this._valueModified = true;
+	}
+
 	isAccessTokenModified() {
 		return this._accessTokenModified;
 	}
 
 	isRefreshTokenModified() {
 		return this._refreshTokenModified;
+	}
+
+	isValueModified() {
+		return this._valueModified;
 	}
 
 	loadAccessToken(at: string, trackModified = false) {

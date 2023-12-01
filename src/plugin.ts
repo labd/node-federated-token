@@ -39,7 +39,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 
 		const t = contextValue.federatedToken;
 
-		if (t.isAccessTokenModified()) {
+		if (t.isAccessTokenModified() || t.isValueModified()) {
 			const val = t.dumpAccessToken();
 			if (val) {
 				response.http.headers.set("X-Access-Token", val);

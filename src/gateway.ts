@@ -10,7 +10,7 @@ import {
 	TokenExpiredError,
 } from "./jwt.js";
 import { TokenSigner } from "./sign.js";
-import { TokenSource } from "./tokensource/base.js";
+import { TokenSource } from "./tokensource";
 
 type GatewayOptions = {
 	signer: TokenSigner;
@@ -37,7 +37,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	public async didResolveOperation(
 		requestContext: GraphQLRequestContext<TContext>
 	): Promise<void> {
-		const { contextValue } = requestContext;
+		const {contextValue} = requestContext;
 		const request = contextValue.req;
 
 		const accessToken = this.tokenSource.getAccessToken(request);
@@ -96,7 +96,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const token = contextValue?.federatedToken;
 		const { req: request, res: response } = contextValue;
 
-		if (token?.isAccessTokenModified()) {
+		if (token?.isAccessTokenModified() || token?.isValueModified()) {
 			const { accessToken, fingerprint } = await token.createAccessJWT(
 				this.signer
 			);
