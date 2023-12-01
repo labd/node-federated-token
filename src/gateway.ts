@@ -37,7 +37,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	public async didResolveOperation(
 		requestContext: GraphQLRequestContext<TContext>
 	): Promise<void> {
-		const {contextValue} = requestContext;
+		const { contextValue } = requestContext;
 		const request = contextValue.req;
 
 		const accessToken = this.tokenSource.getAccessToken(request);
@@ -71,7 +71,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 						},
 					});
 				} else {
-					console.error(e)
+					console.error(e);
 					throw new GraphQLError("Your token is invalid.", {
 						extensions: {
 							code: "INVALID_TOKEN",

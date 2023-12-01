@@ -1,11 +1,11 @@
-import {ApolloServer, HeaderMap} from "@apollo/server";
+import { ApolloServer, HeaderMap } from "@apollo/server";
 import * as crypto from "crypto";
 import httpMocks from "node-mocks-http";
-import {assert, describe, expect, it} from "vitest";
-import {GatewayAuthPlugin} from "./gateway.js";
-import {PublicFederatedToken, PublicFederatedTokenContext} from "./jwt.js";
-import {KeyManager, TokenSigner} from "./sign.js";
-import {HeaderTokenSource} from "./tokensource";
+import { assert, describe, expect, it } from "vitest";
+import { GatewayAuthPlugin } from "./gateway.js";
+import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt.js";
+import { KeyManager, TokenSigner } from "./sign.js";
+import { HeaderTokenSource } from "./tokensource";
 
 describe("GatewayAuthPlugin", () => {
 	const signOptions = {
@@ -41,7 +41,7 @@ describe("GatewayAuthPlugin", () => {
 		Query: {
 			testToken: (
 				_: any,
-				{create, value}: { create: boolean, value: string },
+				{ create, value }: { create: boolean; value: string },
 				context: PublicFederatedTokenContext
 			) => {
 				if (!context.federatedToken) {
@@ -56,9 +56,8 @@ describe("GatewayAuthPlugin", () => {
 				}
 
 				if (value) {
-					context.federatedToken.setValue("value", value)
+					context.federatedToken.setValue("value", value);
 				}
-
 
 				return JSON.stringify(context.federatedToken);
 			},
@@ -202,7 +201,7 @@ describe("GatewayAuthPlugin", () => {
 
 		await testServer.executeOperation(
 			{
-				query: "query testToken { testToken(value: \"foobar\") }",
+				query: 'query testToken { testToken(value: "foobar") }',
 				http: {
 					headers: new HeaderMap(),
 					method: "POST",
@@ -216,7 +215,7 @@ describe("GatewayAuthPlugin", () => {
 		);
 		const newAccessToken = newContext.res.get("x-access-token");
 
-		assert.isNotEmpty(newAccessToken)
-		assert.notEqual(newAccessToken, accessToken)
+		assert.isNotEmpty(newAccessToken);
+		assert.notEqual(newAccessToken, accessToken);
 	});
 });
