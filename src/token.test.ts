@@ -1,5 +1,5 @@
-import { assert, describe, test } from "vitest";
-import { AccessToken, FederatedToken } from "./token.js";
+import {assert, describe, test} from "vitest";
+import {AccessToken, FederatedToken} from "./token.js";
 
 describe("FederatedToken", () => {
 	test("setAccessToken", () => {
@@ -17,6 +17,23 @@ describe("FederatedToken", () => {
 		const federatedToken = new FederatedToken();
 		federatedToken.setRefreshToken("exampleName", "exampleToken");
 		assert.equal(federatedToken.refreshTokens.exampleName, "exampleToken");
+	});
+
+	test("setValue", () => {
+		const federatedToken = new FederatedToken();
+		federatedToken.setValue("exampleName", "exampleValue");
+		assert.equal(federatedToken.values["exampleName"], "exampleValue");
+
+		let val = {example: "value"}
+		federatedToken.setValue("exampleName2", val);
+		assert.equal(federatedToken.values["exampleName2"], val);
+	});
+
+	test("isValueModified", () => {
+		const federatedToken = new FederatedToken();
+		assert.isFalse(federatedToken.isValueModified());
+		federatedToken.setValue("exampleName", "exampleValue");
+		assert.isTrue(federatedToken.isValueModified());
 	});
 
 	test("isAccessTokenModified", () => {

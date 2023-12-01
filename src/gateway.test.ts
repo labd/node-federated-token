@@ -1,11 +1,11 @@
-import { ApolloServer, HeaderMap } from "@apollo/server";
+import {ApolloServer, HeaderMap} from "@apollo/server";
 import * as crypto from "crypto";
 import httpMocks from "node-mocks-http";
-import { assert, describe, expect, it } from "vitest";
-import { GatewayAuthPlugin } from "./gateway.js";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt.js";
-import { KeyManager, TokenSigner } from "./sign.js";
-import { HeaderTokenSource } from "./tokensource/headers.js";
+import {assert, describe, expect, it} from "vitest";
+import {GatewayAuthPlugin} from "./gateway.js";
+import {PublicFederatedToken, PublicFederatedTokenContext} from "./jwt.js";
+import {KeyManager, TokenSigner} from "./sign.js";
+import {HeaderTokenSource} from "./tokensource";
 
 describe("GatewayAuthPlugin", () => {
 	const signOptions = {
@@ -32,16 +32,16 @@ describe("GatewayAuthPlugin", () => {
 	});
 
 	const typeDefs = `#graphql
- 			type Query {
-				testToken(create: Boolean): String!
-				refreshToken: String!
-			}
+	type Query {
+		testToken(create: Boolean, value: String): String!
+		refreshToken: String!
+	}
 	`;
 	const resolvers = {
 		Query: {
 			testToken: (
 				_: any,
-				{ create }: { create: boolean },
+				{create, value}: { create: boolean, value: string },
 				context: PublicFederatedTokenContext
 			) => {
 				if (!context.federatedToken) {
@@ -54,6 +54,12 @@ describe("GatewayAuthPlugin", () => {
 					});
 					context.federatedToken.setRefreshToken("foo", "bar");
 				}
+
+				if (value) {
+					context.federatedToken.setValue("value", value)
+				}
+
+
 				return JSON.stringify(context.federatedToken);
 			},
 			refreshToken: (_: any, context: PublicFederatedTokenContext) => {
@@ -156,5 +162,61 @@ describe("GatewayAuthPlugin", () => {
 		expect(token.tokens.foo.token).toBe("bar");
 		expect(newContext.res.get("x-access-token")).toBeUndefined();
 		expect(newContext.res.get("x-refresh-token")).toBeUndefined();
+	});
+
+	it("updates token on value change", async () => {
+		const context = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest(),
+		};
+		await testServer.executeOperation(
+			{
+				query: "query testToken { testToken(create: true) }",
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: context,
+			}
+		);
+		expect(context.res.statusCode).toBe(200);
+		expect(context.res.get("x-access-token")).toBeDefined();
+		expect(context.res.get("x-refresh-token")).toBeDefined();
+		const accessToken = context.res.get("x-access-token");
+
+		// Set received token
+		const newContext = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest({
+				headers: {
+					"x-access-token": `Bearer ${accessToken}`,
+				},
+			}),
+		};
+
+		await testServer.executeOperation(
+			{
+				query: "query testToken { testToken(value: \"foobar\") }",
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: newContext,
+			}
+		);
+		const newAccessToken = newContext.res.get("x-access-token");
+
+		assert.isNotEmpty(newAccessToken)
+		assert.notEqual(newAccessToken, accessToken)
 	});
 });
