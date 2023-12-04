@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.7.0
+
+### Minor Changes
+
+- 645d0e3: Added support for setting values on token
+
 ## 0.6.2
 
 ### Patch Changes
