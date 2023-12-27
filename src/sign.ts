@@ -1,11 +1,14 @@
 import * as jose from "jose";
+import { PublicFederatedToken } from "jwt";
 import { KeyObject } from "node:crypto";
+
 
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
 	signKeys: KeyManagerInterface;
 	audience: string;
 	issuer: string;
+	getSubject?: (token: PublicFederatedToken) => Promise<string>;
 };
 
 export class ConfigurationError extends Error {}
@@ -52,10 +55,14 @@ export class TokenSigner {
 		return JSON.parse(data);
 	}
 
-	async signJWT(payload: any, exp: number) {
+	async getSubject(token: PublicFederatedToken): Promise<string | undefined> {
+		return this.config.getSubject ? this.config.getSubject(token) : undefined
+	}
+
+	async signJWT(payload: jose.JWTPayload) {
 		const { id, key } = await this._signKeys.getActiveKey();
-		return await new jose.SignJWT(payload)
-			.setExpirationTime(exp)
+
+		return new jose.SignJWT(payload)
 			.setIssuedAt()
 			.setProtectedHeader({ alg: "HS256", kid: id })
 			.setAudience(this.config.audience)

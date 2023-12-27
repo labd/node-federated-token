@@ -40,12 +40,13 @@ describe("Strings", async () => {
 	});
 
 	test("JWT Sign and verify", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const payload = {
 			foo: "bar",
+			exp: exp,
 		};
 
-		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
-		const token = await signer.signJWT(payload, exp);
+		const token = await signer.signJWT(payload);
 		expect(token).toBeDefined();
 
 		const result = await signer.verifyJWT(token);

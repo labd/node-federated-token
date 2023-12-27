@@ -13,6 +13,9 @@ export interface AccessToken {
 	// Expire at, unixtime
 	token: string;
 	exp: number;
+
+	// Subject, it is most often used for the user-id.
+	sub: string;
 }
 
 export class FederatedToken {

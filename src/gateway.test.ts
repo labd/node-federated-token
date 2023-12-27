@@ -51,6 +51,7 @@ describe("GatewayAuthPlugin", () => {
 					context.federatedToken.setAccessToken("foo", {
 						token: "bar",
 						exp: Date.now() + 1000,
+						sub: "my-user-id",
 					});
 					context.federatedToken.setRefreshToken("foo", "bar");
 				}
@@ -65,6 +66,7 @@ describe("GatewayAuthPlugin", () => {
 				context.federatedToken?.setAccessToken("foo", {
 					token: "bar",
 					exp: Date.now() + 1000,
+					sub: "my-user-id",
 				});
 				return JSON.stringify(context.federatedToken);
 			},

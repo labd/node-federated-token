@@ -7,6 +7,7 @@ describe("FederatedToken", () => {
 		const token: AccessToken = {
 			token: "exampleToken",
 			exp: 1234567890,
+			sub: "exampleSubject",
 		};
 		federatedToken.setAccessToken("exampleName", token);
 		assert.equal(federatedToken.tokens.exampleName, token);
@@ -42,6 +43,7 @@ describe("FederatedToken", () => {
 		federatedToken.setAccessToken("exampleName", {
 			token: "exampleToken",
 			exp: 1234567890,
+			sub: "exampleSubject",
 		});
 		assert.isTrue(federatedToken.isAccessTokenModified());
 	});
@@ -53,6 +55,7 @@ describe("FederatedToken", () => {
 					exampleName: {
 						token: "exampleToken",
 						exp: 1234567890,
+						sub: "exampleSubject",
 					},
 				},
 				values: {
@@ -70,6 +73,7 @@ describe("FederatedToken", () => {
 			{
 				token: "exampleToken",
 				exp: 1234567890,
+				sub: "exampleSubject",
 			},
 			"Token object should be loaded correctly"
 		);
@@ -96,6 +100,7 @@ describe("FederatedToken", () => {
 					exampleName: {
 						token: "exampleToken",
 						exp: 1234567890,
+						sub: "exampleSubject",
 					},
 				},
 				values: {
@@ -113,6 +118,7 @@ describe("FederatedToken", () => {
 			{
 				token: "exampleToken",
 				exp: 1234567890,
+				sub: "exampleSubject",
 			},
 			"Token object should be loaded correctly"
 		);
@@ -137,6 +143,7 @@ describe("FederatedToken", () => {
 		federatedToken.setAccessToken("exampleName", {
 			token: "exampleToken",
 			exp: 1234567890,
+			sub: "exampleSubject",
 		});
 		federatedToken.values = {
 			value1: "exampleValue1",
@@ -149,6 +156,7 @@ describe("FederatedToken", () => {
 					exampleName: {
 						token: "exampleToken",
 						exp: 1234567890,
+						sub: "exampleSubject",
 					},
 				},
 				values: {

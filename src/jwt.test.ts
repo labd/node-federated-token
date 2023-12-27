@@ -30,6 +30,38 @@ describe("PublicFederatedToken", async () => {
 			exampleName: {
 				token: "exampleToken",
 				exp: expireAt,
+				sub: "exampleSubject",
+			},
+		};
+		token.values = {
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+		};
+
+		const { accessToken, fingerprint } = await token.createAccessJWT(signer);
+
+		expect(fingerprint).lengthOf(32);
+
+		const newToken = new PublicFederatedToken();
+		await newToken.loadAccessJWT(signer, accessToken, fingerprint);
+		expect(newToken.tokens).toStrictEqual(token.tokens);
+		expect(newToken.refreshTokens).toStrictEqual(token.refreshTokens);
+		expect(newToken.values).toStrictEqual(token.values);
+	});
+
+	test("createAccessJWT with TokenSigner create hook", async () => {
+		const signer = new TokenSigner({
+			...signOptions,
+			getSubject: async (token) => token.tokens.exampleName?.sub,
+		});
+
+		const token = new PublicFederatedToken();
+		const expireAt = Date.now() + 60;
+		token.tokens = {
+			exampleName: {
+				token: "exampleToken",
+				exp: expireAt,
+				sub: "exampleSubject",
 			},
 		};
 		token.values = {
@@ -50,15 +82,12 @@ describe("PublicFederatedToken", async () => {
 
 	test("loadAccessJWT", async () => {
 		const token = new PublicFederatedToken();
-		const exampleJWT = await signer.signJWT(
-			{
-				exp: Date.now() + 1000,
-				jwe: await signer.encryptObject(token.tokens),
-				value1: "exampleValue1",
-				value2: "exampleValue2",
-			},
-			Date.now() + 1000
-		);
+		const exampleJWT = await signer.signJWT({
+			exp: Date.now() + 1000,
+			jwe: await signer.encryptObject(token.tokens),
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+		});
 
 		await token.loadAccessJWT(signer, exampleJWT);
 
@@ -75,16 +104,13 @@ describe("PublicFederatedToken", async () => {
 	test("loadAccessJWT with Fingerprint", async () => {
 		const token = new PublicFederatedToken();
 		const fingerprint = generateFingerprint();
-		const exampleJWT = await signer.signJWT(
-			{
-				exp: Date.now() + 1000,
-				jwe: await signer.encryptObject(token.tokens),
-				value1: "exampleValue1",
-				value2: "exampleValue2",
-				_fingerprint: hashFingerprint(fingerprint),
-			},
-			Date.now() + 1000
-		);
+		const exampleJWT = await signer.signJWT({
+			exp: Date.now() + 1000,
+			jwe: await signer.encryptObject(token.tokens),
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+			_fingerprint: hashFingerprint(fingerprint),
+		});
 
 		expect(fingerprint).lengthOf(32);
 		await token.loadAccessJWT(signer, exampleJWT, fingerprint);
