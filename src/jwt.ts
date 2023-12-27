@@ -33,12 +33,11 @@ export class PublicFederatedToken extends FederatedToken {
 	async createAccessJWT(signer: TokenSigner) {
 		const exp = this.getExpireTime();
 		const fingerprint = generateFingerprint();
-		const subject = await signer.getSubject(this);
 
 		const payload: JWTPayload = {
 			...this.values,
 			exp,
-			sub: subject,
+			sub: signer.getSubject(this),
 			jwe: await signer.encryptObject(this.tokens),
 			_fingerprint: hashFingerprint(fingerprint),
 		};

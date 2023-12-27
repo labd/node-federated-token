@@ -7,7 +7,7 @@ type TokenSignerOptions = {
 	signKeys: KeyManagerInterface;
 	audience: string;
 	issuer: string;
-	getSubject?: (token: PublicFederatedToken) => Promise<string>;
+	getSubject?: (token: PublicFederatedToken) => string;
 };
 
 export class ConfigurationError extends Error {}
@@ -54,7 +54,7 @@ export class TokenSigner {
 		return JSON.parse(data);
 	}
 
-	async getSubject(token: PublicFederatedToken): Promise<string | undefined> {
+	getSubject(token: PublicFederatedToken): string | undefined {
 		return this.config.getSubject ? this.config.getSubject(token) : undefined;
 	}
 

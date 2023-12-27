@@ -52,7 +52,7 @@ describe("PublicFederatedToken", async () => {
 	test("createAccessJWT with TokenSigner create hook", async () => {
 		const signer = new TokenSigner({
 			...signOptions,
-			getSubject: async (token) => token.tokens.exampleName?.sub,
+			getSubject: (token) => token.tokens.exampleName?.sub,
 		});
 
 		const token = new PublicFederatedToken();
