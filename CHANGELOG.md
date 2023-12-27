@@ -1,5 +1,12 @@
 # @labdigital/federated-token
 
+## 0.8.0
+
+### Minor Changes
+
+- 1d2b7b3: Make the serialization of tokens more robust
+- c2020cd: Add ability to set a jwt subject
+
 ## 0.7.0
 
 ### Minor Changes
