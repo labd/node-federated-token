@@ -26,13 +26,12 @@ export class TokenExpiredError extends Error {}
 export class TokenInvalidError extends Error {}
 
 export class PublicFederatedToken extends FederatedToken {
-
 	// Create the access JWT. This JWT is send to the client. It is send as
 	// signed token (not encrypted). The jwe attribute is encrypted however.
 	// This is all done when the GraphQL gateway sends the response back to the
 	// client.
 	async createAccessJWT(signer: TokenSigner) {
-		const exp = this.getExpireTime()
+		const exp = this.getExpireTime();
 		const fingerprint = generateFingerprint();
 		const subject = await signer.getSubject(this);
 
@@ -50,7 +49,6 @@ export class PublicFederatedToken extends FederatedToken {
 			fingerprint: fingerprint,
 		};
 	}
-
 
 	async loadAccessJWT(
 		signer: TokenSigner,
@@ -82,7 +80,16 @@ export class PublicFederatedToken extends FederatedToken {
 		}
 
 		this.tokens = await signer.decryptObject(payload.jwe);
-		const knownKeys = ["jwe", "iat", "exp", "aud", "sub", "jti", "iss", "_fingerprint"];
+		const knownKeys = [
+			"jwe",
+			"iat",
+			"exp",
+			"aud",
+			"sub",
+			"jti",
+			"iss",
+			"_fingerprint",
+		];
 		for (const k in payload) {
 			if (!knownKeys.includes(k)) {
 				this.values[k] = payload[k];

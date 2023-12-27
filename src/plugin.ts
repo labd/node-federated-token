@@ -5,7 +5,6 @@ import {
 } from "@apollo/server";
 import { FederatedToken, FederatedTokenContext } from "./token.js";
 
-
 // FederatedAuthPlugin is an Apollo plugin which should be used by all
 // downstream services. It reads the information from the request headers as
 // set by the GatewayAuthPlugin and sets the information on the response

@@ -106,7 +106,7 @@ describe("FederatedToken", () => {
 				values: {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
-				}
+				},
 			})
 		).toString("base64");
 
@@ -162,7 +162,7 @@ describe("FederatedToken", () => {
 				values: {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
-				}
+				},
 			})
 		).toString("base64");
 

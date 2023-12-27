@@ -2,7 +2,6 @@ import * as jose from "jose";
 import { PublicFederatedToken } from "jwt";
 import { KeyObject } from "node:crypto";
 
-
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
 	signKeys: KeyManagerInterface;
@@ -56,7 +55,7 @@ export class TokenSigner {
 	}
 
 	async getSubject(token: PublicFederatedToken): Promise<string | undefined> {
-		return this.config.getSubject ? this.config.getSubject(token) : undefined
+		return this.config.getSubject ? this.config.getSubject(token) : undefined;
 	}
 
 	async signJWT(payload: jose.JWTPayload) {
