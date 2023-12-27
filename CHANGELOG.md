@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.8.1
+
+### Patch Changes
+
+- 3df5163: Don't use a async call for getSubject
+
 ## 0.8.0
 
 ### Minor Changes
