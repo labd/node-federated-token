@@ -26,27 +26,31 @@ export class TokenExpiredError extends Error {}
 export class TokenInvalidError extends Error {}
 
 export class PublicFederatedToken extends FederatedToken {
-	async createAccessJWT(signer: TokenSigner) {
-		// Find the expire time of the first token that expires
-		const values = Object.values(this.tokens);
-		const sorted = values.sort((a, b) => a.exp - b.exp);
-		const exp = sorted[0].exp;
 
+	// Create the access JWT. This JWT is send to the client. It is send as
+	// signed token (not encrypted). The jwe attribute is encrypted however.
+	// This is all done when the GraphQL gateway sends the response back to the
+	// client.
+	async createAccessJWT(signer: TokenSigner) {
+		const exp = this.getExpireTime()
 		const fingerprint = generateFingerprint();
+		const subject = await signer.getSubject(this);
+
 		const payload: JWTPayload = {
-			exp: exp,
-			jwe: await signer.encryptObject(this.tokens),
 			...this.values,
+			exp,
+			sub: subject,
+			jwe: await signer.encryptObject(this.tokens),
 			_fingerprint: hashFingerprint(fingerprint),
 		};
 
-		const token = await signer.signJWT(payload, exp);
-
+		const token = await signer.signJWT(payload);
 		return {
 			accessToken: token,
 			fingerprint: fingerprint,
 		};
 	}
+
 
 	async loadAccessJWT(
 		signer: TokenSigner,
@@ -78,7 +82,7 @@ export class PublicFederatedToken extends FederatedToken {
 		}
 
 		this.tokens = await signer.decryptObject(payload.jwe);
-		const knownKeys = ["jwe", "iat", "exp", "aud", "iss", "_fingerprint"];
+		const knownKeys = ["jwe", "iat", "exp", "aud", "sub", "jti", "iss", "_fingerprint"];
 		for (const k in payload) {
 			if (!knownKeys.includes(k)) {
 				this.values[k] = payload[k];

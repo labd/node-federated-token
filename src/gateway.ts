@@ -17,6 +17,13 @@ type GatewayOptions = {
 	source: TokenSource;
 };
 
+/**
+ * This plugin is used to authenticate requests coming into the gateway. It
+ * reads the tokens from the request (using the token source provided),
+ * validates them. When sending back the response it will also set the tokens
+ * via the tokenSource on the response if the downstream services have
+ * created/modified them.
+ */
 export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {
@@ -55,7 +62,8 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const token = contextValue.federatedToken;
 
 		// Only load the access token if there is no refresh token. If a refresh
-		// token is present then we assume a refresh is happening
+		// token is present then we assume a refresh is happening and the
+		// accessToken is expired/invalid anyway
 		if (accessToken && !refreshToken) {
 			try {
 				await token.loadAccessJWT(this.signer, accessToken, fingerprint);
@@ -96,6 +104,10 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const token = contextValue?.federatedToken;
 		const { req: request, res: response } = contextValue;
 
+		// Downstream services modified the tokens, so create a new JWT and set
+		// it on the response
+		// TODO: We should optimize this, if only the values are modified then
+		// we shouldn't have to create a new nested JWE
 		if (token?.isAccessTokenModified() || token?.isValueModified()) {
 			const { accessToken, fingerprint } = await token.createAccessJWT(
 				this.signer
