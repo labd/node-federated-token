@@ -4,6 +4,11 @@ export type FederatedTokenContext = {
 	federatedToken?: FederatedToken;
 };
 
+type FederatedTokenValue = {
+	tokens: Record<string, AccessToken>;
+	values: Record<string, any>;
+};
+
 export interface AccessToken {
 	// Expire at, unixtime
 	token: string;
@@ -55,42 +60,50 @@ export class FederatedToken {
 		return this._valueModified;
 	}
 
-	loadAccessToken(at: string, trackModified = false) {
-		const token = JSON.parse(Buffer.from(at, "base64").toString("ascii"));
-
-		// TODO: Validate json
-
-		if (token.refreshTokens) {
-			throw new Error("Refresh tokens are not allowed in the Access Token");
-		}
-
-		// Merge tokens into this object
-		for (const k in token.tokens) {
-			if (trackModified && !isEqual(this.tokens[k], token.tokens[k])) {
-				this._accessTokenModified = true;
-			}
-
-			this.tokens[k] = token.tokens[k];
-		}
-
-		this.tokens = token.tokens;
-		for (const k in token) {
-			if (k !== "tokens") {
-				this.values[k] = token[k];
-			}
-		}
+	// Return the expire time of the first token that expires
+	getExpireTime() {
+		const values = Object.values(this.tokens);
+		const sorted = values.sort((a, b) => a.exp - b.exp);
+		return sorted[0].exp;
 	}
 
-	dumpAccessToken(): string | undefined {
-		const data = {
+	// serializeAccessToken serializes the tokens into a base64 encoded string
+	// in order to be sent to downstream services and from the downstream
+	// services back to the gatewa
+	// in order to be sent to downstream services and from the downstream
+	serializeAccessToken(): string | undefined {
+		const data: FederatedTokenValue = {
 			tokens: this.tokens,
-			...this.values,
+			values: this.values,
 		};
 
 		if (!data) {
 			return;
 		}
 		return Buffer.from(JSON.stringify(data)).toString("base64");
+	}
+
+	// deserializeAccessToken deserializes the tokens from a base64 encoded string
+	// as received from downstream services
+	deserializeAccessToken(at: string, trackModified = false) {
+		const token: FederatedTokenValue = JSON.parse(
+			Buffer.from(at, "base64").toString("ascii")
+		);
+
+		// Merge tokens into this object. Checking for modified tokens
+		for (const k in token.tokens) {
+			if (trackModified && !isEqual(this.tokens[k], token.tokens[k])) {
+				this._accessTokenModified = true;
+			}
+		}
+		this.tokens = {
+			...this.tokens,
+			...token.tokens,
+		};
+		this.values = {
+			...this.values,
+			...token.values,
+		};
 	}
 
 	loadRefreshToken(value: string, trackModified = false) {

@@ -46,7 +46,7 @@ describe("FederatedToken", () => {
 		assert.isTrue(federatedToken.isAccessTokenModified());
 	});
 
-	test("loadAccessToken", () => {
+	test("deserializeAccessToken", () => {
 		const at = Buffer.from(
 			JSON.stringify({
 				tokens: {
@@ -55,13 +55,15 @@ describe("FederatedToken", () => {
 						exp: 1234567890,
 					},
 				},
-				value1: "exampleValue1",
-				value2: "exampleValue2",
+				values: {
+					value1: "exampleValue1",
+					value2: "exampleValue2",
+				},
 			})
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
-		federatedToken.loadAccessToken(at);
+		federatedToken.deserializeAccessToken(at);
 
 		assert.deepStrictEqual(
 			federatedToken.tokens.exampleName,
@@ -87,7 +89,7 @@ describe("FederatedToken", () => {
 		);
 	});
 
-	test("loadAccessToken with trackModified = true", () => {
+	test("deserializeAccessToken with trackModified = true", () => {
 		const at = Buffer.from(
 			JSON.stringify({
 				tokens: {
@@ -96,13 +98,15 @@ describe("FederatedToken", () => {
 						exp: 1234567890,
 					},
 				},
-				value1: "exampleValue1",
-				value2: "exampleValue2",
+				values: {
+					value1: "exampleValue1",
+					value2: "exampleValue2",
+				}
 			})
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
-		federatedToken.loadAccessToken(at, true);
+		federatedToken.deserializeAccessToken(at, true);
 
 		assert.deepStrictEqual(
 			federatedToken.tokens.exampleName,
@@ -128,7 +132,7 @@ describe("FederatedToken", () => {
 		);
 	});
 
-	test("dumpAccessToken", () => {
+	test("serializeAccessToken", () => {
 		const federatedToken = new FederatedToken();
 		federatedToken.setAccessToken("exampleName", {
 			token: "exampleToken",
@@ -139,7 +143,7 @@ describe("FederatedToken", () => {
 			value2: "exampleValue2",
 		};
 
-		const expectedDump = Buffer.from(
+		const serialized = Buffer.from(
 			JSON.stringify({
 				tokens: {
 					exampleName: {
@@ -147,12 +151,14 @@ describe("FederatedToken", () => {
 						exp: 1234567890,
 					},
 				},
-				value1: "exampleValue1",
-				value2: "exampleValue2",
+				values: {
+					value1: "exampleValue1",
+					value2: "exampleValue2",
+				}
 			})
 		).toString("base64");
 
-		assert.equal(federatedToken.dumpAccessToken(), expectedDump);
+		assert.equal(federatedToken.serializeAccessToken(), serialized);
 	});
 
 	test("loadRefreshToken", () => {

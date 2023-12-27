@@ -18,7 +18,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 
 		const at = request.http?.headers.get("X-Access-Token");
 		if (at) {
-			contextValue.federatedToken.loadAccessToken(at);
+			contextValue.federatedToken.deserializeAccessToken(at);
 		}
 
 		const rt = request.http?.headers.get("X-Refresh-Token");
@@ -40,7 +40,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 		const t = contextValue.federatedToken;
 
 		if (t.isAccessTokenModified() || t.isValueModified()) {
-			const val = t.dumpAccessToken();
+			const val = t.serializeAccessToken();
 			if (val) {
 				response.http.headers.set("X-Access-Token", val);
 			}

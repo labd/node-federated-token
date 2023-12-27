@@ -21,7 +21,7 @@ export class FederatedGraphQLDataSource<
 
 		// TODO: We now blindly sent the access tokens and refresh tokens to all
 		// federated services. This is something we might want to whitelist.
-		const token = context.federatedToken.dumpAccessToken();
+		const token = context.federatedToken.serializeAccessToken();
 		if (token) {
 			headers.set("x-access-token", token);
 		}
@@ -49,7 +49,7 @@ export class FederatedGraphQLDataSource<
 			if (!context.federatedToken) {
 				context.federatedToken = new PublicFederatedToken();
 			}
-			context.federatedToken.loadAccessToken(token, true);
+			context.federatedToken.deserializeAccessToken(token, true);
 		}
 
 		const refreshToken = headers.get("x-refresh-token");
