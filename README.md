@@ -43,3 +43,5 @@ implemented via 4 cookies:
 - `refreshToken` - The refresh token, if any. It is stored as HTTP_ONLY cookie.
 - `refreshTokenExists` - A boolean value that indicates if a refresh token
   exists for the user. It is used to determine if the user is new or not.
+
+Note that this expects the "cookie-parser" express middleware to be used.
