@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.9.0
+
+### Minor Changes
+
+- 280da10: Improve cookie security settings by using \_\_Host- where needed
+
 ## 0.8.1
 
 ### Patch Changes
