@@ -1,5 +1,15 @@
 # @labdigital/federated-token
 
+## 0.9.1
+
+### Patch Changes
+
+- 58ded5e: Check for values modified in deserializeAccessToken
+
+  When you only set a value in a service, the token did not get updated in the gateway.
+  This was because the valueModified was only set after a token change, not just a value change.
+  This changes improves the check to fix that.
+
 ## 0.9.0
 
 ### Minor Changes
