@@ -136,6 +136,10 @@ describe("FederatedToken", () => {
 			federatedToken.isAccessTokenModified(),
 			"isModified should be true when trackModified is true and token is modified"
 		);
+		assert.isTrue(
+			federatedToken.isValueModified(),
+			"isModified should be true when trackModified is true and value is modified"
+		);
 	});
 
 	test("serializeAccessToken", () => {
