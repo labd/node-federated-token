@@ -93,13 +93,13 @@ export class FederatedToken {
 			Buffer.from(at, "base64").toString("ascii")
 		);
 
-		this._valueModified = trackModified && !isEqual(this.values, token.values);
+		if (trackModified) {
+			this._valueModified = !isEqual(this.values, token.values);
 
-		this._accessTokenModified =
-			trackModified &&
-			Object.keys(token.tokens).some(
+			this._accessTokenModified = Object.keys(token.tokens).some(
 				(key) => !isEqual(this.tokens[key], token.tokens[key])
 			);
+		}
 
 		// Merge tokens and values into "this" object.
 		this.tokens = {
