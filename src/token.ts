@@ -93,12 +93,17 @@ export class FederatedToken {
 			Buffer.from(at, "base64").toString("ascii")
 		);
 
-		// Merge tokens into this object. Checking for modified tokens
-		for (const k in token.tokens) {
-			if (trackModified && !isEqual(this.tokens[k], token.tokens[k])) {
-				this._accessTokenModified = true;
-			}
-		}
+		// The value is modified if:
+		this._valueModified =
+			trackModified &&
+			// either a value has been modified
+			(!isEqual(this.values, token.values) ||
+				// or at least 1 token has been modified
+				Object.keys(token.tokens).some(
+					(key) => !isEqual(this.tokens[key], token.tokens[key])
+				));
+
+		// Merge tokens and values into "this" object.
 		this.tokens = {
 			...this.tokens,
 			...token.tokens,
