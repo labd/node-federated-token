@@ -99,22 +99,44 @@ export class PublicFederatedToken extends FederatedToken {
 	// createRefreshJWT encrypts the refresh token and return a JWT. The token is
 	// valid for 90 days.
 	async createRefreshJWT(signer: TokenSigner) {
-		const payload = this.refreshTokens;
-		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
-		return signer.encryptJWT(payload, exp);
+		const DAYS = 60 * 60 * 24;
+
+		const exp = Math.floor(Date.now() / 1000) + 90 * DAYS;
+
+		const payload = {
+			...this.values,
+			exp,
+			sub: signer.getSubject(this),
+			jwe: await signer.encryptObject(this.refreshTokens),
+		};
+
+		const token = await signer.signJWT(payload);
+		return token;
 	}
 
 	async loadRefreshJWT(signer: TokenSigner, value: string) {
-		const result = await signer.decryptJWT(value);
+		const result = await signer.verifyJWT(value);
 		if (!result) {
 			throw new Error("Invalid JWT");
 		}
 
-		const payload = result.payload;
+		const payload = result.payload as JWTPayload;
+		if (!payload) {
+			throw new TokenInvalidError("Invalid JWT");
+		}
+
+		// The expire time should be absolute, now margin for error. The client
+		// should refresh the token X second before it expires.
+		const unixTime = Math.floor(Date.now() / 1000);
+		if (!payload.exp || payload.exp < unixTime) {
+			throw new TokenExpiredError("JWT expired");
+		}
+
+		this.refreshTokens = await signer.decryptObject(payload.jwe);
 		const knownKeys = ["jwe", "iat", "exp", "aud", "iss"];
 		for (const k in payload) {
 			if (!knownKeys.includes(k)) {
-				this.refreshTokens[k] = payload[k] as string;
+				this.values[k] = payload[k];
 			}
 		}
 	}
