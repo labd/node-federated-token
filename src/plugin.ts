@@ -27,7 +27,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 
 		const rt = request.http?.headers.get("X-Refresh-Token");
 		if (rt) {
-			contextValue.federatedToken.loadRefreshToken(rt);
+			contextValue.federatedToken.deserializeRefreshToken(rt);
 		}
 		return this;
 	}
@@ -51,7 +51,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 		}
 
 		if (t.isRefreshTokenModified()) {
-			const val = t.dumpRefreshToken();
+			const val = t.serializeRefreshToken();
 			if (val) {
 				response.http.headers.set("X-Refresh-Token", val);
 			}
