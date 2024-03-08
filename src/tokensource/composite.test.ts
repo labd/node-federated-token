@@ -1,7 +1,7 @@
 import httpMocks from "node-mocks-http";
 import { describe, expect, it, vi } from "vitest";
-import { TokenSource } from "./base.js";
-import { CompositeTokenSource } from "./composite.js";
+import { TokenSource } from "./base";
+import { CompositeTokenSource } from "./composite";
 
 // Mock tokens
 const mockAccessToken = "mockAccessToken";

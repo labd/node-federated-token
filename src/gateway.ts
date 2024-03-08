@@ -9,7 +9,7 @@ import {
 	PublicFederatedTokenContext,
 	TokenExpiredError,
 } from "./jwt.js";
-import { TokenSigner } from "./sign.js";
+import { TokenSigner } from "./sign";
 import { TokenSource } from "./tokensource";
 
 type GatewayOptions = {

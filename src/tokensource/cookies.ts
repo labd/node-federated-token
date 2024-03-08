@@ -1,5 +1,5 @@
 import { CookieOptions, Request, Response } from "express";
-import { TokenSource } from "./base.js";
+import { TokenSource } from "./base";
 
 type CookieSourceOptions = {
 	secure: boolean;

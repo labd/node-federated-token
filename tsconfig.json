@@ -5,7 +5,6 @@
 		"composite": false,
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
-		"baseUrl": "./src/",
 		"isolatedModules": true,
 		"module": "ES2022",
 		"moduleResolution": "bundler",
