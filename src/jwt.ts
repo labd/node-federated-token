@@ -7,6 +7,7 @@ import {
 } from "./fingerprint";
 import { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
+import { TokenExpiredError, TokenInvalidError } from "./errors";
 
 export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;
@@ -20,10 +21,6 @@ type JWTPayload = {
 	_fingerprint: string;
 	[key: string]: any;
 };
-
-export class TokenExpiredError extends Error {}
-
-export class TokenInvalidError extends Error {}
 
 export class PublicFederatedToken extends FederatedToken {
 	// Create the access JWT. This JWT is send to the client. It is send as
@@ -107,7 +104,7 @@ export class PublicFederatedToken extends FederatedToken {
 	async loadRefreshJWT(signer: TokenSigner, value: string) {
 		const result = await signer.decryptJWT(value);
 		if (!result) {
-			throw new Error("Invalid JWT");
+			throw new TokenInvalidError("Invalid JWT");
 		}
 
 		const payload = result.payload;

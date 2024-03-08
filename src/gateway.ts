@@ -4,13 +4,10 @@ import {
 	type GraphQLRequestListener,
 } from "@apollo/server";
 import { GraphQLError } from "graphql";
-import {
-	PublicFederatedToken,
-	PublicFederatedTokenContext,
-	TokenExpiredError,
-} from "./jwt.js";
+import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
 import { TokenSigner } from "./sign";
 import { TokenSource } from "./tokensource";
+import { TokenExpiredError } from "./errors";
 
 type GatewayOptions = {
 	signer: TokenSigner;
@@ -94,7 +91,11 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		}
 
 		if (refreshToken) {
-			await token.loadRefreshJWT(this.signer, refreshToken);
+			try {
+				await token.loadRefreshJWT(this.signer, refreshToken);
+			} catch (e: unknown) {
+				this.tokenSource.deleteRefreshToken(contextValue.res);
+			}
 		}
 	}
 
