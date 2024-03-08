@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.11.0
+
+### Minor Changes
+
+- c28e91c: Delete refreshToken if invalid
+
 ## 0.10.0
 
 ### Minor Changes
