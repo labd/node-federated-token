@@ -14,6 +14,12 @@ export class CompositeTokenSource implements TokenSource {
 		}
 	}
 
+	deleteRefreshToken(response: Response): void {
+		for (const source of this.sources) {
+			source.deleteRefreshToken(response);
+		}
+	}
+
 	getAccessToken(request: Request): string {
 		for (const source of this.sources) {
 			const token = source.getAccessToken(request);
