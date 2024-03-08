@@ -1,5 +1,9 @@
 import * as jose from "jose";
-import { PublicFederatedToken } from "jwt";
+import {
+	PublicFederatedToken,
+	TokenExpiredError,
+	TokenInvalidError,
+} from "./jwt";
 import { KeyObject } from "node:crypto";
 
 type TokenSignerOptions = {
@@ -70,15 +74,28 @@ export class TokenSigner {
 	}
 
 	async verifyJWT(value: string) {
-		return await jose.jwtVerify(
-			value,
-			this._signKeys.getKeyFunction.bind(this._signKeys),
-			{
-				algorithms: ["HS256"],
-				audience: this.config.audience,
-				issuer: this.config.issuer,
+		try {
+			return await jose.jwtVerify(
+				value,
+				this._signKeys.getKeyFunction.bind(this._signKeys),
+				{
+					algorithms: ["HS256"],
+					audience: this.config.audience,
+					issuer: this.config.issuer,
+				}
+			);
+		} catch (e) {
+			if (e instanceof jose.errors.JWTClaimValidationFailed) {
+				throw new TokenExpiredError(e.message);
 			}
-		);
+			if (e instanceof jose.errors.JWTExpired) {
+				throw new TokenExpiredError(e.message);
+			}
+			if (e instanceof Error) {
+				throw new TokenInvalidError(e.message);
+			}
+			throw e;
+		}
 	}
 
 	// For refresh token, encrypt the token (JWE)
@@ -96,14 +113,21 @@ export class TokenSigner {
 	}
 
 	async decryptJWT(jwt: string) {
-		return await jose.jwtDecrypt(
-			jwt,
-			this._encryptKeys.getKeyFunction.bind(this._encryptKeys),
-			{
-				audience: this.config.audience,
-				issuer: this.config.issuer,
+		try {
+			return await jose.jwtDecrypt(
+				jwt,
+				this._encryptKeys.getKeyFunction.bind(this._encryptKeys),
+				{
+					audience: this.config.audience,
+					issuer: this.config.issuer,
+				}
+			);
+		} catch (e) {
+			if (e instanceof jose.errors.JWTClaimValidationFailed) {
+				throw new TokenExpiredError(e.message);
 			}
-		);
+			throw new TokenInvalidError();
+		}
 	}
 }
 
