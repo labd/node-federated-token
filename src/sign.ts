@@ -1,10 +1,7 @@
 import * as jose from "jose";
-import {
-	PublicFederatedToken,
-	TokenExpiredError,
-	TokenInvalidError,
-} from "./jwt";
+import { createError } from "./errors";
 import { KeyObject } from "node:crypto";
+import { PublicFederatedToken } from "./jwt";
 
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
@@ -46,16 +43,20 @@ export class TokenSigner {
 		if (typeof value !== "string") {
 			throw new Error("Invalid value type");
 		}
-		const result = await jose.compactDecrypt(
-			value,
-			this._encryptKeys.getKeyFunction.bind(this._encryptKeys),
-			{
-				keyManagementAlgorithms: ["dir"],
-				contentEncryptionAlgorithms: ["A256GCM"],
-			}
-		);
-		const data = new TextDecoder().decode(result.plaintext.buffer);
-		return JSON.parse(data);
+		try {
+			const result = await jose.compactDecrypt(
+				value,
+				this._encryptKeys.getKeyFunction.bind(this._encryptKeys),
+				{
+					keyManagementAlgorithms: ["dir"],
+					contentEncryptionAlgorithms: ["A256GCM"],
+				}
+			);
+			const data = new TextDecoder().decode(result.plaintext.buffer);
+			return JSON.parse(data);
+		} catch (e) {
+			throw createError(e);
+		}
 	}
 
 	getSubject(token: PublicFederatedToken): string | undefined {
@@ -85,16 +86,7 @@ export class TokenSigner {
 				}
 			);
 		} catch (e) {
-			if (e instanceof jose.errors.JWTClaimValidationFailed) {
-				throw new TokenExpiredError(e.message);
-			}
-			if (e instanceof jose.errors.JWTExpired) {
-				throw new TokenExpiredError(e.message);
-			}
-			if (e instanceof Error) {
-				throw new TokenInvalidError(e.message);
-			}
-			throw e;
+			throw createError(e);
 		}
 	}
 
@@ -123,10 +115,7 @@ export class TokenSigner {
 				}
 			);
 		} catch (e) {
-			if (e instanceof jose.errors.JWTClaimValidationFailed) {
-				throw new TokenExpiredError(e.message);
-			}
-			throw new TokenInvalidError();
+			throw createError(e);
 		}
 	}
 }
