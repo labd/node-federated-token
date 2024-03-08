@@ -1,5 +1,12 @@
 # @labdigital/federated-token
 
+## 0.10.0
+
+### Minor Changes
+
+- b528dd5: Delete RefreshToken when a token is invalid (but not expired)
+- 438e344: Throw TokenInvalidError for invalid tokens
+
 ## 0.9.1
 
 ### Patch Changes
