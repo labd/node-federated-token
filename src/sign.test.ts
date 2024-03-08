@@ -79,4 +79,22 @@ describe("Strings", async () => {
 			iss: "exampleIssuer",
 		});
 	});
+
+	test("JWT Decrypt with invalid ISS", async () => {
+		const payload = {
+			foo: "bar",
+		};
+		const invalidSigner = new TokenSigner({
+			...signOptions,
+			issuer: "invalidIssuer",
+		});
+
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const token = await invalidSigner.encryptJWT(payload, exp);
+		expect(token).toBeDefined();
+
+		expect(() => signer.decryptJWT(token)).rejects.toThrowError(
+			`unexpected "iss" claim value`
+		);
+	});
 });
