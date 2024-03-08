@@ -50,6 +50,11 @@ export class CookieTokenSource implements TokenSource {
 		response.clearCookie(this.cookieNames.accessTokenHash);
 	}
 
+	deleteRefreshToken(response: Response<any, Record<string, any>>): void {
+		response.clearCookie(this.cookieNames.refreshToken);
+		response.clearCookie(this.cookieNames.refreshTokenExist);
+	}
+
 	getAccessToken(request: Request): string {
 		return request.cookies[this.cookieNames.accessToken];
 	}

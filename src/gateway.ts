@@ -68,8 +68,8 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			try {
 				await token.loadAccessJWT(this.signer, accessToken, fingerprint);
 			} catch (e: unknown) {
-				this.tokenSource.deleteAccessToken(contextValue.res);
 				if (e instanceof TokenExpiredError) {
+					this.tokenSource.deleteAccessToken(contextValue.res);
 					throw new GraphQLError("Your token has expired.", {
 						extensions: {
 							code: "UNAUTHENTICATED",
@@ -79,7 +79,8 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 						},
 					});
 				} else {
-					console.error(e);
+					this.tokenSource.deleteAccessToken(contextValue.res);
+					this.tokenSource.deleteRefreshToken(contextValue.res);
 					throw new GraphQLError("Your token is invalid.", {
 						extensions: {
 							code: "INVALID_TOKEN",

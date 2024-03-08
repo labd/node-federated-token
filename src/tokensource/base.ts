@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 export interface TokenSource {
 	deleteAccessToken(response: Response): void;
+	deleteRefreshToken(response: Response): void;
 	getAccessToken(request: Request): string;
 	getRefreshToken(request: Request): string;
 	getFingerprint(request: Request): string;
