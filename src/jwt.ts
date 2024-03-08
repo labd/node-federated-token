@@ -4,9 +4,9 @@ import {
 	generateFingerprint,
 	hashFingerprint,
 	validateFingerprint,
-} from "./fingerprint.js";
-import { TokenSigner } from "./sign.js";
-import { FederatedToken } from "./token.js";
+} from "./fingerprint";
+import { TokenSigner } from "./sign";
+import { FederatedToken } from "./token";
 
 export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;

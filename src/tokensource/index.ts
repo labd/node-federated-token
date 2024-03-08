@@ -1,4 +1,4 @@
-export { type TokenSource } from "./base.js";
-export { CompositeTokenSource } from "./composite.js";
-export { CookieTokenSource } from "./cookies.js";
-export { HeaderTokenSource } from "./headers.js";
+export { type TokenSource } from "./base";
+export { CompositeTokenSource } from "./composite";
+export { CookieTokenSource } from "./cookies";
+export { HeaderTokenSource } from "./headers";

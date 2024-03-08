@@ -2,9 +2,9 @@ import { ApolloServer, HeaderMap } from "@apollo/server";
 import * as crypto from "crypto";
 import httpMocks from "node-mocks-http";
 import { assert, describe, expect, it } from "vitest";
-import { GatewayAuthPlugin } from "./gateway.js";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt.js";
-import { KeyManager, TokenSigner } from "./sign.js";
+import { GatewayAuthPlugin } from "./gateway";
+import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
+import { KeyManager, TokenSigner } from "./sign";
 import { HeaderTokenSource } from "./tokensource";
 
 describe("GatewayAuthPlugin", () => {

@@ -3,7 +3,7 @@ import {
 	type GraphQLRequestContext,
 	type GraphQLRequestListener,
 } from "@apollo/server";
-import { FederatedToken, FederatedTokenContext } from "./token.js";
+import { FederatedToken, FederatedTokenContext } from "./token";
 
 // FederatedAuthPlugin is an Apollo plugin which should be used by all
 // downstream services. It reads the information from the request headers as

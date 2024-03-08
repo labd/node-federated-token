@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { KeyManager, TokenSigner } from "./sign.js";
+import { KeyManager, TokenSigner } from "./sign";
 
 describe("Strings", async () => {
 	const signOptions = {
