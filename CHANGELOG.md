@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.0
+
+### Minor Changes
+
+- 1f632f3: Add cookienames option to CookieTokenSource constructor
+
 ## 0.11.0
 
 ### Minor Changes
