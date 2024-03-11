@@ -20,7 +20,6 @@ const createMockResponse = () => {
 };
 
 describe("CookieTokenSource", () => {
-
 	it("should use default cookie names", () => {
 		const cookieTokenSource = new CookieTokenSource({
 			secure: false,
@@ -28,7 +27,7 @@ describe("CookieTokenSource", () => {
 			refreshTokenPath: "/refresh",
 		});
 
-		const result = cookieTokenSource['cookieNames']
+		const result = cookieTokenSource["cookieNames"];
 		expect(result).toStrictEqual({
 			accessToken: "authToken",
 			accessTokenHash: "authTokenHash",
@@ -43,19 +42,19 @@ describe("CookieTokenSource", () => {
 			sameSite: "strict",
 			refreshTokenPath: "/refresh",
 			cookieNames: {
-				accessToken: 'accessToken-overridden',
-				accessTokenHash: 'accessTokenHash-overridden',
-				refreshToken: 'refreshToken-overridden',
-				refreshTokenExist: 'refreshTokenExist-overridden'
-			}
+				accessToken: "accessToken-overridden",
+				accessTokenHash: "accessTokenHash-overridden",
+				refreshToken: "refreshToken-overridden",
+				refreshTokenExist: "refreshTokenExist-overridden",
+			},
 		});
 
-		const result = cookieTokenSource['cookieNames']
+		const result = cookieTokenSource["cookieNames"];
 		expect(result).toStrictEqual({
-			accessToken: 'accessToken-overridden',
-			accessTokenHash: 'accessTokenHash-overridden',
-			refreshToken: 'refreshToken-overridden',
-			refreshTokenExist: 'refreshTokenExist-overridden'
+			accessToken: "accessToken-overridden",
+			accessTokenHash: "accessTokenHash-overridden",
+			refreshToken: "refreshToken-overridden",
+			refreshTokenExist: "refreshTokenExist-overridden",
 		});
 	});
 
