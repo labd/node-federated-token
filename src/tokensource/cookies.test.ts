@@ -20,6 +20,45 @@ const createMockResponse = () => {
 };
 
 describe("CookieTokenSource", () => {
+
+	it("should use default cookie names", () => {
+		const cookieTokenSource = new CookieTokenSource({
+			secure: false,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+		});
+
+		const result = cookieTokenSource['cookieNames']
+		expect(result).toStrictEqual({
+			accessToken: "authToken",
+			accessTokenHash: "authTokenHash",
+			refreshToken: "authRefreshToken",
+			refreshTokenExist: "authRefreshTokenExist",
+		});
+	});
+
+	it("should override cookie names", () => {
+		const cookieTokenSource = new CookieTokenSource({
+			secure: false,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+			cookieNames: {
+				accessToken: 'accessToken-overridden',
+				accessTokenHash: 'accessTokenHash-overridden',
+				refreshToken: 'refreshToken-overridden',
+				refreshTokenExist: 'refreshTokenExist-overridden'
+			}
+		});
+
+		const result = cookieTokenSource['cookieNames']
+		expect(result).toStrictEqual({
+			accessToken: 'accessToken-overridden',
+			accessTokenHash: 'accessTokenHash-overridden',
+			refreshToken: 'refreshToken-overridden',
+			refreshTokenExist: 'refreshTokenExist-overridden'
+		});
+	});
+
 	it("should get the access token from cookies", () => {
 		const request = httpMocks.createRequest();
 		request.cookies = { authToken: "FOOBAR" };

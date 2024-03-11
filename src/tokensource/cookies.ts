@@ -1,15 +1,23 @@
 import { CookieOptions, Request, Response } from "express";
 import { TokenSource } from "./base";
 
+type CookieNames = {
+	accessToken: string
+	accessTokenHash: string
+	refreshToken: string
+	refreshTokenExist: string
+}
+
 type CookieSourceOptions = {
 	secure: boolean;
 	sameSite: CookieOptions["sameSite"];
 	refreshTokenPath: string;
+	cookieNames?: CookieNames
 	publicDomainFn?: (request: Request) => string | undefined;
 	privateDomainFn?: (request: Request) => string | undefined;
 };
 
-const DEFAULT_COOKIE_NAMES = {
+const DEFAULT_COOKIE_NAMES: CookieNames = {
 	accessToken: "authToken",
 	accessTokenHash: "authTokenHash",
 	refreshToken: "authRefreshToken",
@@ -35,7 +43,7 @@ export class CookieTokenSource implements TokenSource {
 
 	constructor(private options: CookieSourceOptions) {
 		this.cookieNames = {
-			...DEFAULT_COOKIE_NAMES,
+			...(options.cookieNames ?? DEFAULT_COOKIE_NAMES),
 		};
 
 		// If the secure option is set, we need to set the __Host- prefix for the
