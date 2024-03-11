@@ -2,17 +2,17 @@ import { CookieOptions, Request, Response } from "express";
 import { TokenSource } from "./base";
 
 type CookieNames = {
-	accessToken: string
-	accessTokenHash: string
-	refreshToken: string
-	refreshTokenExist: string
-}
+	accessToken: string;
+	accessTokenHash: string;
+	refreshToken: string;
+	refreshTokenExist: string;
+};
 
 type CookieSourceOptions = {
 	secure: boolean;
 	sameSite: CookieOptions["sameSite"];
 	refreshTokenPath: string;
-	cookieNames?: CookieNames
+	cookieNames?: CookieNames;
 	publicDomainFn?: (request: Request) => string | undefined;
 	privateDomainFn?: (request: Request) => string | undefined;
 };
