@@ -54,13 +54,22 @@ export class CookieTokenSource implements TokenSource {
 	}
 
 	deleteAccessToken(response: Response<any, Record<string, any>>): void {
-		response.clearCookie(this.cookieNames.accessToken);
-		response.clearCookie(this.cookieNames.accessTokenHash);
+		response.clearCookie(this.cookieNames.accessToken, {
+			domain: this.options?.publicDomainFn?.(response.req),
+		});
+		response.clearCookie(this.cookieNames.accessTokenHash, {
+			domain: this.options?.privateDomainFn?.(response.req),
+		});
 	}
 
 	deleteRefreshToken(response: Response<any, Record<string, any>>): void {
-		response.clearCookie(this.cookieNames.refreshToken);
-		response.clearCookie(this.cookieNames.refreshTokenExist);
+		response.clearCookie(this.cookieNames.refreshToken, {
+			path: this.options.refreshTokenPath,
+			domain: this.options?.privateDomainFn?.(response.req),
+		});
+		response.clearCookie(this.cookieNames.refreshTokenExist, {
+			domain: this.options?.publicDomainFn?.(response.req),
+		});
 	}
 
 	getAccessToken(request: Request): string {
