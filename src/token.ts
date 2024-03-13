@@ -9,6 +9,11 @@ type FederatedTokenValue = {
 	values: Record<string, any>;
 };
 
+type FederatedRefreshTokenValue = {
+	refreshTokens: Record<string, string>;
+	values: Record<string, any>;
+};
+
 export interface AccessToken {
 	// Expire at, unixtime
 	token: string;
@@ -80,9 +85,6 @@ export class FederatedToken {
 			values: this.values,
 		};
 
-		if (!data) {
-			return;
-		}
 		return Buffer.from(JSON.stringify(data)).toString("base64");
 	}
 
@@ -112,26 +114,34 @@ export class FederatedToken {
 		};
 	}
 
-	loadRefreshToken(value: string, trackModified = false) {
-		const refreshTokens: Record<string, string> = JSON.parse(
+	deserializeRefreshToken(value: string, trackModified = false) {
+		const token: FederatedRefreshTokenValue = JSON.parse(
 			Buffer.from(value, "base64").toString("ascii")
 		);
 
-		// TODO: Validate json
-
-		// Merge tokens in object
-		for (const k in refreshTokens) {
-			if (trackModified && !isEqual(this.refreshTokens[k], refreshTokens[k])) {
-				this._refreshTokenModified = true;
-			}
-			this.refreshTokens[k] = refreshTokens[k];
+		if (trackModified) {
+			this._valueModified = !isEqual(this.values, token.values);
+			this._refreshTokenModified = Object.keys(token.refreshTokens).some(
+				(key) => !isEqual(this.refreshTokens[key], token.refreshTokens[key])
+			);
 		}
+		this.refreshTokens = {
+			...this.refreshTokens,
+			...token.refreshTokens,
+		};
+		this.values = token.values;
 	}
 
-	dumpRefreshToken(): string | undefined {
+	serializeRefreshToken(): string | undefined {
 		if (!this.refreshTokens) {
 			return;
 		}
-		return Buffer.from(JSON.stringify(this.refreshTokens)).toString("base64");
+
+		const data: FederatedRefreshTokenValue = {
+			refreshTokens: this.refreshTokens,
+			values: this.values,
+		};
+
+		return Buffer.from(JSON.stringify(data)).toString("base64");
 	}
 }

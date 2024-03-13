@@ -173,15 +173,20 @@ describe("FederatedToken", () => {
 		assert.equal(federatedToken.serializeAccessToken(), serialized);
 	});
 
-	test("loadRefreshToken", () => {
+	test("deserializeRefreshToken", () => {
 		const value = Buffer.from(
 			JSON.stringify({
-				exampleName: "exampleToken",
+				refreshTokens: {
+					exampleName: "exampleToken",
+				},
+				values: {
+					test: 1,
+				},
 			})
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
-		federatedToken.loadRefreshToken(value);
+		federatedToken.deserializeRefreshToken(value);
 
 		assert.deepStrictEqual(
 			federatedToken.refreshTokens,
@@ -190,20 +195,31 @@ describe("FederatedToken", () => {
 			},
 			"Refresh tokens should be loaded correctly"
 		);
+		assert.deepStrictEqual(
+			federatedToken.values,
+			{
+				test: 1,
+			},
+			"Values of Refresh tokens should be loaded correctly"
+		);
 	});
 
-	test("dumpRefreshToken", () => {
+	test("serializeRefreshToken", () => {
 		const federatedToken = new FederatedToken();
 		federatedToken.refreshTokens = {
 			exampleName: "exampleToken",
 		};
+		federatedToken.values = { test: 1 };
 
 		const expectedDump = Buffer.from(
 			JSON.stringify({
-				exampleName: "exampleToken",
+				refreshTokens: {
+					exampleName: "exampleToken",
+				},
+				values: { test: 1 },
 			})
 		).toString("base64");
 
-		assert.equal(federatedToken.dumpRefreshToken(), expectedDump);
+		assert.equal(federatedToken.serializeRefreshToken(), expectedDump);
 	});
 });

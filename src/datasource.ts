@@ -57,7 +57,7 @@ export class FederatedGraphQLDataSource<
 			if (!context.federatedToken) {
 				context.federatedToken = new PublicFederatedToken();
 			}
-			context.federatedToken.loadRefreshToken(refreshToken, true);
+			context.federatedToken.deserializeRefreshToken(refreshToken, true);
 		}
 		return response;
 	}
