@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.1
+
+### Patch Changes
+
+- 9dc2517: Fix removing cookies for specific paths and domains
+
 ## 0.12.0
 
 ### Minor Changes
