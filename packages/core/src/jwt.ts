@@ -1,5 +1,3 @@
-import { type BaseContext } from "@apollo/server";
-import { type Request, type Response } from "express";
 import {
 	generateFingerprint,
 	hashFingerprint,
@@ -8,12 +6,6 @@ import {
 import { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
 import { TokenExpiredError, TokenInvalidError } from "./errors";
-
-export type PublicFederatedTokenContext = {
-	federatedToken?: PublicFederatedToken;
-	res: Response;
-	req: Request;
-} & BaseContext;
 
 type JWTPayload = {
 	exp: number;
@@ -49,7 +41,7 @@ export class PublicFederatedToken extends FederatedToken {
 	async loadAccessJWT(
 		signer: TokenSigner,
 		value: string,
-		fingerprint?: string
+		fingerprint?: string,
 	) {
 		const result = await signer.verifyJWT(value);
 		if (!result) {

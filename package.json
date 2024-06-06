@@ -1,6 +1,7 @@
 {
-	"name": "@labdigital/federated-token",
-	"version": "0.12.1",
+	"name": "federated-token",
+	"private": "true",
+	"version": "0.0.0",
 	"description": "Federate JWT tokens between Apollo servers",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -16,49 +17,24 @@
 		"type": "git",
 		"url": "https://github.com/labd/node-federated-token"
 	},
-	"publishConfig": {
-		"access": "public"
-	},
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
-		"build": "tsup",
+		"build": "pnpm turbo build",
+		"format": "turbo run format",
+		"lint": "turbo run lint",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
-		"test:ci": "vitest run --coverage",
-		"tsc": "tsc --noEmit",
-		"format": "eslint src --fix && prettier --write .",
-		"lint": "eslint src && prettier --check ."
+		"test:ci": "vitest run --coverage"
 	},
-	"files": [
-		"dist",
-		"src"
-	],
-	"dependencies": {
-		"jose": "4.14.4",
-		"lodash.isequal": "^4.5.0"
-	},
+	"packageManager": "pnpm@9.2.0",
 	"devDependencies": {
-		"@apollo/server": "^4.10.0",
-		"@apollo/gateway": ">= 2.4",
-		"@apollo/server-gateway-interface": "1.1.0",
-		"@changesets/cli": "^2.26.2",
-		"@sentry/types": "7.55.0",
-		"@types/cookie": "^0.6.0",
-		"@types/cookie-parser": "^1.4.3",
-		"@types/express": "^4.17.17",
-		"@types/lodash.isequal": "^4.5.6",
-		"@typescript-eslint/eslint-plugin": "^5.60.1",
-		"@vitest/coverage-v8": "0.32.2",
-		"cookie": "^0.6.0",
-		"eslint": "^8.40.0",
-		"eslint-plugin-unused-imports": "^2.0.0",
-		"node-mocks-http": "^1.12.2",
-		"tsup": "^7.1.0",
-		"typescript": "^5.1.5",
-		"vitest": "0.32.2"
+		"@changesets/cli": "^2.27.5",
+		"@vitest/coverage-v8": "1.6.0",
+		"vitest": "1.6.0"
 	},
-	"peerDependencies": {
-		"@apollo/gateway": ">= 2.4",
-		"@apollo/server": ">= 4.5",
-		"graphql": ">= 16.6.0"
+	"dependencies": {
+		"turbo": "^2.0.3"
 	}
 }

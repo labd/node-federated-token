@@ -90,14 +90,14 @@ export class FederatedToken {
 	// as received from downstream services
 	deserializeAccessToken(at: string, trackModified = false) {
 		const token: FederatedTokenValue = JSON.parse(
-			Buffer.from(at, "base64").toString("ascii")
+			Buffer.from(at, "base64").toString("ascii"),
 		);
 
 		if (trackModified) {
 			this._valueModified = !isEqual(this.values, token.values);
 
 			this._accessTokenModified = Object.keys(token.tokens).some(
-				(key) => !isEqual(this.tokens[key], token.tokens[key])
+				(key) => !isEqual(this.tokens[key], token.tokens[key]),
 			);
 		}
 
@@ -114,7 +114,7 @@ export class FederatedToken {
 
 	loadRefreshToken(value: string, trackModified = false) {
 		const refreshTokens: Record<string, string> = JSON.parse(
-			Buffer.from(value, "base64").toString("ascii")
+			Buffer.from(value, "base64").toString("ascii"),
 		);
 
 		// TODO: Validate json

@@ -6,11 +6,11 @@ import { CookieSerializeOptions } from "cookie";
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
 
-	// @ts-ignore
+	// @ts-expect-error cookies is not defined on the response
 	res.cookie = (
 		name: string,
 		value: string,
-		options: CookieSerializeOptions
+		options: CookieSerializeOptions,
 	) => {
 		res.cookies = res.cookies || {};
 		res.cookies[name] = { value, options };

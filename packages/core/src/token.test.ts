@@ -62,7 +62,7 @@ describe("FederatedToken", () => {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
 				},
-			})
+			}),
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
@@ -75,7 +75,7 @@ describe("FederatedToken", () => {
 				exp: 1234567890,
 				sub: "exampleSubject",
 			},
-			"Token object should be loaded correctly"
+			"Token object should be loaded correctly",
 		);
 
 		assert.deepStrictEqual(
@@ -84,12 +84,12 @@ describe("FederatedToken", () => {
 				value1: "exampleValue1",
 				value2: "exampleValue2",
 			},
-			"Values should be loaded correctly"
+			"Values should be loaded correctly",
 		);
 
 		assert.isFalse(
 			federatedToken.isAccessTokenModified(),
-			"isModified should be false when trackModified is false and token is modified"
+			"isModified should be false when trackModified is false and token is modified",
 		);
 	});
 
@@ -107,7 +107,7 @@ describe("FederatedToken", () => {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
 				},
-			})
+			}),
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
@@ -120,7 +120,7 @@ describe("FederatedToken", () => {
 				exp: 1234567890,
 				sub: "exampleSubject",
 			},
-			"Token object should be loaded correctly"
+			"Token object should be loaded correctly",
 		);
 
 		assert.deepStrictEqual(
@@ -129,16 +129,16 @@ describe("FederatedToken", () => {
 				value1: "exampleValue1",
 				value2: "exampleValue2",
 			},
-			"Values should be loaded correctly"
+			"Values should be loaded correctly",
 		);
 
 		assert.isTrue(
 			federatedToken.isAccessTokenModified(),
-			"isModified should be true when trackModified is true and token is modified"
+			"isModified should be true when trackModified is true and token is modified",
 		);
 		assert.isTrue(
 			federatedToken.isValueModified(),
-			"isModified should be true when trackModified is true and value is modified"
+			"isModified should be true when trackModified is true and value is modified",
 		);
 	});
 
@@ -167,7 +167,7 @@ describe("FederatedToken", () => {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
 				},
-			})
+			}),
 		).toString("base64");
 
 		assert.equal(federatedToken.serializeAccessToken(), serialized);
@@ -177,7 +177,7 @@ describe("FederatedToken", () => {
 		const value = Buffer.from(
 			JSON.stringify({
 				exampleName: "exampleToken",
-			})
+			}),
 		).toString("base64");
 
 		const federatedToken = new FederatedToken();
@@ -188,7 +188,7 @@ describe("FederatedToken", () => {
 			{
 				exampleName: "exampleToken",
 			},
-			"Refresh tokens should be loaded correctly"
+			"Refresh tokens should be loaded correctly",
 		);
 	});
 
@@ -201,7 +201,7 @@ describe("FederatedToken", () => {
 		const expectedDump = Buffer.from(
 			JSON.stringify({
 				exampleName: "exampleToken",
-			})
+			}),
 		).toString("base64");
 
 		assert.equal(federatedToken.dumpRefreshToken(), expectedDump);

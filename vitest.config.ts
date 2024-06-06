@@ -1,20 +1,29 @@
 import { defineConfig } from "vitest/config";
-import path from "path";
 
 export default defineConfig({
 	test: {
+		slowTestThreshold: 100,
 		coverage: {
 			provider: "v8",
+			reporter: [
+				"text",
+				["json-summary", { file: "coverage-summary.json" }],
+				["json", { file: "coverage.json" }],
+			],
+			reportsDirectory: "./coverage",
 			all: true,
-			include: ["src/**/*.ts"],
-			reportsDirectory: "./test-reports/",
-		},
-		passWithNoTests: true,
-	},
+			include: [
+				"packages/**/src/**/*.ts",
+			],
 
-	resolve: {
-		alias: {
-			"~src": path.join(__dirname, "src"),
+			// Ignore a number of type-only files. These files are included due to the
+			// usage of the `all: true`. We should eventually remove that
+			// See https://github.com/vitest-dev/vitest/issues/3605
+			exclude: ["**/src/**/*.generated.ts", "**/src/**/generated/**"],
+			// statements: 50,
+			// branches: 50,
+			// functions: 30,
+			// lines: 50,
 		},
 	},
 });

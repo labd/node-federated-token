@@ -3,9 +3,10 @@ import * as crypto from "crypto";
 import httpMocks from "node-mocks-http";
 import { assert, describe, expect, it } from "vitest";
 import { GatewayAuthPlugin } from "./gateway";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
-import { KeyManager, TokenSigner } from "./sign";
-import { HeaderTokenSource } from "./tokensource";
+import { PublicFederatedToken } from "@labdigital/federated-token";
+import { KeyManager, TokenSigner } from "@labdigital/federated-token";
+import { HeaderTokenSource } from "@labdigital/federated-token";
+import { PublicFederatedTokenContext } from "./context";
 
 describe("GatewayAuthPlugin", () => {
 	const signOptions = {
@@ -40,9 +41,9 @@ describe("GatewayAuthPlugin", () => {
 	const resolvers = {
 		Query: {
 			testToken: (
-				_: any,
+				_: unknown,
 				{ create, value }: { create: boolean; value: string },
-				context: PublicFederatedTokenContext
+				context: PublicFederatedTokenContext,
 			) => {
 				if (!context.federatedToken) {
 					throw new Error("No federated token");
@@ -62,7 +63,7 @@ describe("GatewayAuthPlugin", () => {
 
 				return JSON.stringify(context.federatedToken);
 			},
-			refreshToken: (_: any, context: PublicFederatedTokenContext) => {
+			refreshToken: (_: unknown, context: PublicFederatedTokenContext) => {
 				context.federatedToken?.setAccessToken("foo", {
 					token: "bar",
 					exp: Date.now() + 1000,
@@ -97,7 +98,7 @@ describe("GatewayAuthPlugin", () => {
 			},
 			{
 				contextValue: context,
-			}
+			},
 		);
 		expect(context.res.statusCode).toBe(200);
 		expect(context.res.get("x-access-token")).toBeDefined();
@@ -122,7 +123,7 @@ describe("GatewayAuthPlugin", () => {
 			},
 			{
 				contextValue: context,
-			}
+			},
 		);
 		expect(context.res.statusCode).toBe(200);
 		expect(context.res.get("x-access-token")).toBeDefined();
@@ -151,14 +152,14 @@ describe("GatewayAuthPlugin", () => {
 			},
 			{
 				contextValue: newContext,
-			}
+			},
 		);
 		expect(response.body.kind).toBe("single");
 		assert(response.body.kind === "single"); // Make typescript happy
 		expect(response.body.singleResult).toBeDefined();
 
 		const token = JSON.parse(
-			response.body.singleResult.data?.testToken as string
+			response.body.singleResult.data?.testToken as string,
 		) as PublicFederatedToken;
 		expect(token.tokens.foo.token).toBe("bar");
 		expect(newContext.res.get("x-access-token")).toBeUndefined();
@@ -183,7 +184,7 @@ describe("GatewayAuthPlugin", () => {
 			},
 			{
 				contextValue: context,
-			}
+			},
 		);
 		expect(context.res.statusCode).toBe(200);
 		expect(context.res.get("x-access-token")).toBeDefined();
@@ -213,7 +214,7 @@ describe("GatewayAuthPlugin", () => {
 			},
 			{
 				contextValue: newContext,
-			}
+			},
 		);
 		const newAccessToken = newContext.res.get("x-access-token");
 

@@ -4,17 +4,18 @@ import {
 } from "@apollo/gateway";
 import { HeaderMap } from "@apollo/server";
 import { type GatewayGraphQLResponse } from "@apollo/server-gateway-interface";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
+import { PublicFederatedToken } from "@labdigital/federated-token";
+import { PublicFederatedTokenContext } from "./context";
 
 // FederatedGraphQLDataSource is a RemoteGraphQLDataSource that adds the
 // x-access-token and x-refresh-token headers to the request and reads the
 // x-access-token and x-refresh-token headers from the response.
 // It works in conjunction with the GatewayAuthPlugin.
 export class FederatedGraphQLDataSource<
-	TContext extends PublicFederatedTokenContext
+	TContext extends PublicFederatedTokenContext,
 > extends RemoteGraphQLDataSource<TContext> {
 	willSendRequest(
-		options: GraphQLDataSourceProcessOptions
+		options: GraphQLDataSourceProcessOptions,
 	): void | Promise<void> {
 		const { request, context } = options;
 		const headers = request.http?.headers ?? new HeaderMap();

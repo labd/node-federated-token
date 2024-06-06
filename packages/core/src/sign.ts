@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import { createError } from "./errors";
+import { ConfigurationError, createError } from "./errors";
 import { KeyObject } from "node:crypto";
 import { PublicFederatedToken } from "./jwt";
 
@@ -10,8 +10,6 @@ type TokenSignerOptions = {
 	issuer: string;
 	getSubject?: (token: PublicFederatedToken) => string;
 };
-
-export class ConfigurationError extends Error {}
 
 export class TokenSigner {
 	private _encryptKeys: KeyManagerInterface;
@@ -50,7 +48,7 @@ export class TokenSigner {
 				{
 					keyManagementAlgorithms: ["dir"],
 					contentEncryptionAlgorithms: ["A256GCM"],
-				}
+				},
 			);
 			const data = new TextDecoder().decode(result.plaintext.buffer);
 			return JSON.parse(data);
@@ -83,7 +81,7 @@ export class TokenSigner {
 					algorithms: ["HS256"],
 					audience: this.config.audience,
 					issuer: this.config.issuer,
-				}
+				},
 			);
 		} catch (e) {
 			throw createError(e);
@@ -112,7 +110,7 @@ export class TokenSigner {
 				{
 					audience: this.config.audience,
 					issuer: this.config.issuer,
-				}
+				},
 			);
 		} catch (e) {
 			throw createError(e);
@@ -129,7 +127,7 @@ export interface KeyManagerInterface {
 	getActiveKey(): Promise<Key>;
 	getKeyFunction(
 		header: jose.JWTHeaderParameters | jose.CompactJWEHeaderParameters,
-		input: jose.FlattenedJWSInput | jose.FlattenedJWE
+		input: jose.FlattenedJWSInput | jose.FlattenedJWE,
 	): Uint8Array | jose.KeyLike | Promise<Uint8Array | jose.KeyLike>;
 }
 
@@ -152,7 +150,7 @@ export class KeyManager implements KeyManagerInterface {
 	// or decrypt the JWE.
 	getKeyFunction(
 		header: jose.JWTHeaderParameters | jose.CompactJWEHeaderParameters,
-		input: jose.FlattenedJWSInput | jose.FlattenedJWE
+		input: jose.FlattenedJWSInput | jose.FlattenedJWE,
 	): Uint8Array | jose.KeyLike | Promise<Uint8Array | jose.KeyLike> {
 		const kid = header?.kid;
 		if (!kid) {
@@ -166,7 +164,7 @@ export class KeyManager implements KeyManagerInterface {
 	}
 
 	convertKey(
-		key: KeyObject | jose.KeyLike | Uint8Array
+		key: KeyObject | jose.KeyLike | Uint8Array,
 	): Uint8Array | jose.KeyLike {
 		if (key instanceof KeyObject) {
 			return new Uint8Array(key.export());
