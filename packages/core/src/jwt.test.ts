@@ -93,7 +93,7 @@ describe("PublicFederatedToken", async () => {
 
 		const result = await signer.verifyJWT(exampleJWT);
 		expect(token.tokens).toStrictEqual(
-			await signer.decryptObject(result.payload.jwe as string)
+			await signer.decryptObject(result.payload.jwe as string),
 		);
 		expect(token.values).toStrictEqual({
 			value1: "exampleValue1",
@@ -117,7 +117,7 @@ describe("PublicFederatedToken", async () => {
 
 		const result = await signer.verifyJWT(exampleJWT);
 		expect(token.tokens).toStrictEqual(
-			await signer.decryptObject(result.payload.jwe as string)
+			await signer.decryptObject(result.payload.jwe as string),
 		);
 		expect(token.values).toStrictEqual({
 			value1: "exampleValue1",

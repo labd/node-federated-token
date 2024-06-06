@@ -94,7 +94,7 @@ describe("Strings", async () => {
 		expect(token).toBeDefined();
 
 		expect(() => signer.decryptJWT(token)).rejects.toThrowError(
-			`unexpected "iss" claim value`
+			`unexpected "iss" claim value`,
 		);
 	});
 });

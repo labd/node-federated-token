@@ -15,5 +15,5 @@ export const hashFingerprint = (fingerprint: string): string => {
 
 export const validateFingerprint = (
 	fingerprint: string,
-	hashedFingerprint: string
+	hashedFingerprint: string,
 ) => hashFingerprint(fingerprint) === hashedFingerprint;

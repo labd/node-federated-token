@@ -17,3 +17,5 @@ export const createError = (e: unknown): Error => {
 
 	return new TokenInvalidError();
 };
+
+export class ConfigurationError extends Error {}

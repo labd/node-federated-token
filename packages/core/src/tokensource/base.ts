@@ -11,6 +11,6 @@ export interface TokenSource {
 	setFingerprint(
 		request: Request,
 		response: Response,
-		fingerprint: string
+		fingerprint: string,
 	): void;
 }

@@ -3,7 +3,10 @@ import {
 	type GraphQLRequestContext,
 	type GraphQLRequestListener,
 } from "@apollo/server";
-import { FederatedToken, FederatedTokenContext } from "./token";
+import {
+	FederatedToken,
+	FederatedTokenContext,
+} from "@labdigital/federated-token";
 
 // FederatedAuthPlugin is an Apollo plugin which should be used by all
 // downstream services. It reads the information from the request headers as
@@ -13,7 +16,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {
 	public async requestDidStart(
-		requestContext: GraphQLRequestContext<TContext>
+		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<void | GraphQLRequestListener<TContext>> {
 		const { contextValue, request } = requestContext;
 		if (!contextValue.federatedToken) {
@@ -33,7 +36,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 	}
 
 	async willSendResponse(
-		requestContext: GraphQLRequestContext<TContext>
+		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<void> {
 		const { contextValue, response } = requestContext;
 

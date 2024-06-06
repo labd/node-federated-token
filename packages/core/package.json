@@ -1,0 +1,62 @@
+{
+	"name": "@labdigital/federated-token",
+	"version": "0.12.1",
+	"description": "Federate JWT tokens between Apollo servers",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"import": "./dist/index.js"
+		}
+	},
+	"type": "module",
+	"keywords": [
+		"graphql",
+		"authentication"
+	],
+	"author": "Lab Digital <opensource@labdigital.nl>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/labd/node-federated-token"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"test:ci": "vitest run --coverage",
+		"tsc": "tsc --noEmit",
+		"format": "eslint src --fix && prettier --write .",
+		"lint": "eslint src && prettier --check ."
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"dependencies": {
+		"jose": "5.4.0",
+		"lodash.isequal": "^4.5.0"
+	},
+	"devDependencies": {
+		"@types/cookie": "^0.6.0",
+		"@types/express": "^4.17.21",
+		"@types/lodash.isequal": "^4.5.8",
+		"@typescript-eslint/eslint-plugin": "^7.12.0",
+		"@vitest/coverage-v8": "1.6.0",
+		"cookie": "^0.6.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-jsdoc": "48.2.9",
+		"eslint-plugin-unused-imports": "^4.0.0",
+		"node-mocks-http": "^1.14.1",
+		"prettier": "^3.3.1",
+		"tsup": "^8.1.0",
+		"typescript": "^5.4.5",
+		"vitest": "1.6.0"
+	},
+	"peerDependencies": {
+		"graphql": ">= 16.6.0"
+	}
+}

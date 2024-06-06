@@ -4,10 +4,11 @@ import {
 	type GraphQLRequestListener,
 } from "@apollo/server";
 import { GraphQLError } from "graphql";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
-import { TokenSigner } from "./sign";
-import { TokenSource } from "./tokensource";
-import { TokenExpiredError } from "./errors";
+import { PublicFederatedToken } from "@labdigital/federated-token";
+import { TokenSigner } from "@labdigital/federated-token";
+import type { TokenSource } from "@labdigital/federated-token";
+import { TokenExpiredError } from "@labdigital/federated-token";
+import { PublicFederatedTokenContext } from "./context";
 
 type GatewayOptions = {
 	signer: TokenSigner;
@@ -33,13 +34,13 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	}
 
 	public async requestDidStart(
-		requestContext: GraphQLRequestContext<TContext>
+		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<void | GraphQLRequestListener<TContext>> {
 		return this;
 	}
 
 	public async didResolveOperation(
-		requestContext: GraphQLRequestContext<TContext>
+		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<void> {
 		const { contextValue } = requestContext;
 		const request = contextValue.req;
@@ -99,7 +100,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	}
 
 	async willSendResponse(
-		requestContext: GraphQLRequestContext<TContext>
+		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<void> {
 		const { contextValue } = requestContext;
 		const token = contextValue?.federatedToken;
@@ -111,7 +112,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		// we shouldn't have to create a new nested JWE
 		if (token?.isAccessTokenModified() || token?.isValueModified()) {
 			const { accessToken, fingerprint } = await token.createAccessJWT(
-				this.signer
+				this.signer,
 			);
 
 			if (accessToken && fingerprint) {
