@@ -3,11 +3,13 @@
 	"version": "0.13.0",
 	"description": "Federate JWT tokens between Apollo servers",
 	"module": "./dist/index.js",
+	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.ts",
 	"exports": {
 		"./package.json": "./package.json",
 		".": {
-			"import": "./dist/index.js"
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		}
 	},
 	"type": "module",
