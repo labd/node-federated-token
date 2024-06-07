@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 0.14.0
+
+### Minor Changes
+
+- 8cb1d63: Export `PublicFederatedTokenContext`
+
 ## 0.13.0
 
 ### Minor Changes

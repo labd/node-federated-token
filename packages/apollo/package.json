@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-apollo",
-	"version": "0.13.0",
+	"version": "0.14.0",
 	"description": "Federate JWT tokens between Apollo servers",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
