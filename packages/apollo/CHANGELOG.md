@@ -1,5 +1,13 @@
 # @labdigital/federated-token-apollo
 
+## 0.13.2
+
+### Patch Changes
+
+- 5026ab2: Create CommonJS exports
+- Updated dependencies [5026ab2]
+  - @labdigital/federated-token@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
