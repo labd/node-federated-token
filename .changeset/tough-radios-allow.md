@@ -1,5 +1,5 @@
 ---
-"@labdigital/federated-token-apollo": minor
+"@labdigital/federated-token-apollo": patch
 ---
 
 Export `PublicFederatedTokenContext`
