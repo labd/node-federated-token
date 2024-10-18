@@ -5,6 +5,7 @@ export type FederatedTokenContext = {
 };
 
 type FederatedTokenValue = {
+	isAuthenticated: boolean;
 	tokens: Record<string, AccessToken>;
 	values: Record<string, any>;
 };
@@ -27,13 +28,28 @@ export class FederatedToken {
 	private _refreshTokenModified: boolean;
 	private _valueModified: boolean;
 
+	private _isAuthenticated: boolean;
+
 	constructor() {
 		this.tokens = {};
 		this.refreshTokens = {};
 		this.values = {};
+		this._isAuthenticated = false;
 		this._accessTokenModified = false;
 		this._refreshTokenModified = false;
 		this._valueModified = false;
+	}
+
+	isAuthenticated(): boolean {
+		return this._isAuthenticated;
+	}
+
+	setIsAuthenticated(): void {
+		this._isAuthenticated = true;
+	}
+
+	setIsAnonymous(): void {
+		this._isAuthenticated = false;
 	}
 
 	setAccessToken(name: string, token: AccessToken) {
@@ -76,6 +92,7 @@ export class FederatedToken {
 	// in order to be sent to downstream services and from the downstream
 	serializeAccessToken(): string | undefined {
 		const data: FederatedTokenValue = {
+			isAuthenticated: this._isAuthenticated,
 			tokens: this.tokens,
 			values: this.values,
 		};
@@ -99,6 +116,12 @@ export class FederatedToken {
 			this._accessTokenModified = Object.keys(token.tokens).some(
 				(key) => !isEqual(this.tokens[key], token.tokens[key]),
 			);
+		}
+
+		// Set the authentication status, we only set it to true, never explicitly
+		// to false since other federated services can also set it to true
+		if (token.isAuthenticated) {
+			this.setIsAuthenticated();
 		}
 
 		// Merge tokens and values into "this" object.
