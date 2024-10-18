@@ -5,8 +5,10 @@ export type FederatedTokenContext = {
 };
 
 type FederatedTokenValue = {
-	tokens: Record<string, AccessToken>;
-	values: Record<string, any>;
+	isAuthenticated?: boolean;
+	destroyToken?: boolean;
+	tokens?: Record<string, AccessToken>;
+	values?: Record<string, any>;
 };
 
 export interface AccessToken {
@@ -23,17 +25,49 @@ export class FederatedToken {
 	refreshTokens: Record<string, string>;
 	values: Record<string, any>;
 
+	private _hasData: boolean;
 	private _accessTokenModified: boolean;
 	private _refreshTokenModified: boolean;
 	private _valueModified: boolean;
+
+	private _isAuthenticated: boolean;
+	private _destroyToken: boolean;
 
 	constructor() {
 		this.tokens = {};
 		this.refreshTokens = {};
 		this.values = {};
+		this._destroyToken = false;
+		this._isAuthenticated = false;
 		this._accessTokenModified = false;
 		this._refreshTokenModified = false;
 		this._valueModified = false;
+	}
+
+	isAuthenticated(): boolean {
+		return this._isAuthenticated;
+	}
+
+	shouldDestroyToken(): boolean {
+		return this._destroyToken;
+	}
+
+	setIsAuthenticated(): void {
+		this._isAuthenticated = true;
+	}
+
+	setIsAnonymous(): void {
+		this._isAuthenticated = false;
+	}
+
+	clear() {
+		this.tokens = {};
+		this.refreshTokens = {};
+		this._isAuthenticated = false;
+		this._refreshTokenModified = true;
+		this._accessTokenModified = true;
+		this._valueModified = true;
+		this._destroyToken = true;
 	}
 
 	setAccessToken(name: string, token: AccessToken) {
@@ -63,6 +97,10 @@ export class FederatedToken {
 		return this._valueModified;
 	}
 
+	isValid() {
+		return this._hasData;
+	}
+
 	// Return the expire time of the first token that expires
 	getExpireTime() {
 		const values = Object.values(this.tokens);
@@ -72,18 +110,29 @@ export class FederatedToken {
 
 	// serializeAccessToken serializes the tokens into a base64 encoded string
 	// in order to be sent to downstream services and from the downstream
-	// services back to the gatewa
-	// in order to be sent to downstream services and from the downstream
+	// services back to the gateway. We try to keep this token as small as
+	// possible, so empty / falsy fields are left out
 	serializeAccessToken(): string | undefined {
-		const data: FederatedTokenValue = {
-			tokens: this.tokens,
-			values: this.values,
-		};
+		const token: FederatedTokenValue = {};
+		if (Object.keys(this.tokens).length > 0) {
+			token.tokens = this.tokens;
+		}
+		if (Object.keys(this.values).length > 0) {
+			token.values = this.values;
+		}
 
-		if (!data) {
+		if (this._isAuthenticated) {
+			token.isAuthenticated = true;
+		}
+
+		if (this._destroyToken) {
+			token.destroyToken = true;
+		}
+
+		if (!token) {
 			return;
 		}
-		return Buffer.from(JSON.stringify(data)).toString("base64");
+		return Buffer.from(JSON.stringify(token)).toString("base64");
 	}
 
 	// deserializeAccessToken deserializes the tokens from a base64 encoded string
@@ -93,12 +142,23 @@ export class FederatedToken {
 			Buffer.from(at, "base64").toString("ascii"),
 		);
 
+		this._hasData = true;
+
 		if (trackModified) {
 			this._valueModified = !isEqual(this.values, token.values);
 
-			this._accessTokenModified = Object.keys(token.tokens).some(
-				(key) => !isEqual(this.tokens[key], token.tokens[key]),
+			this._accessTokenModified = Object.keys(token.tokens ?? []).some(
+				(key) => !isEqual(this.tokens[key], token.tokens?.[key]),
 			);
+		}
+		// Set the authentication status, we only set it to true, never explicitly
+		// to false since other federated services can also set it to true
+		if (token.isAuthenticated) {
+			this.setIsAuthenticated();
+		}
+
+		if (token.destroyToken) {
+			this._destroyToken = true;
 		}
 
 		// Merge tokens and values into "this" object.
@@ -116,6 +176,8 @@ export class FederatedToken {
 		const refreshTokens: Record<string, string> = JSON.parse(
 			Buffer.from(value, "base64").toString("ascii"),
 		);
+
+		this._hasData = true;
 
 		// TODO: Validate json
 

@@ -1,16 +1,33 @@
 import { Request, Response } from "express";
 
 export interface TokenSource {
-	deleteAccessToken(response: Response): void;
-	deleteRefreshToken(response: Response): void;
-	getAccessToken(request: Request): string;
-	getRefreshToken(request: Request): string;
-	getFingerprint(request: Request): string;
-	setAccessToken(request: Request, response: Response, token: string): void;
-	setRefreshToken(request: Request, response: Response, token: string): void;
-	setFingerprint(
+	deleteAccessToken(request: Request, response: Response): void;
+	deleteRefreshToken(request: Request, response: Response): void;
+	deleteDataToken(
+		request: Request,
+		response: Response<any, Record<string, any>>,
+	): void;
+
+	getAccessToken(request: Request): string | undefined;
+	getDataToken(request: Request): string | undefined;
+	getRefreshToken(request: Request): string | undefined;
+
+	setDataToken(
 		request: Request,
 		response: Response,
-		fingerprint: string,
+		token: string,
+		isAuthenticated?: boolean,
+	): void;
+	setAccessToken(
+		request: Request,
+		response: Response,
+		token: string,
+		isAuthenticated?: boolean,
+	): void;
+	setRefreshToken(
+		request: Request,
+		response: Response,
+		token: string,
+		isAuthenticated?: boolean,
 	): void;
 }

@@ -4,12 +4,24 @@ import { TokenSource } from "./base";
 export class HeaderTokenSource implements TokenSource {
 	headerNames = {
 		accessToken: "x-access-token",
+		dataToken: "x-data-token",
 		refreshToken: "x-refresh-token",
 	};
 
-	deleteAccessToken(response: Response<any, Record<string, any>>): void {}
+	deleteAccessToken(
+		request: Request,
+		response: Response<any, Record<string, any>>,
+	): void {}
 
-	deleteRefreshToken(response: Response<any, Record<string, any>>): void {}
+	deleteRefreshToken(
+		request: Request,
+		response: Response<any, Record<string, any>>,
+	): void {}
+
+	deleteDataToken(
+		request: Request,
+		response: Response<any, Record<string, any>>,
+	): void {}
 
 	getAccessToken(request: Request): string {
 		const authHeader = request.headers[this.headerNames.accessToken] as string;
@@ -20,8 +32,8 @@ export class HeaderTokenSource implements TokenSource {
 		return request.headers[this.headerNames.refreshToken] as string;
 	}
 
-	getFingerprint(request: Request): string {
-		return "";
+	getDataToken(request: Request): string {
+		return request.headers[this.headerNames.dataToken] as string;
 	}
 
 	setAccessToken(request: Request, response: Response, token: string) {
@@ -32,5 +44,7 @@ export class HeaderTokenSource implements TokenSource {
 		response.set(this.headerNames.refreshToken, token);
 	}
 
-	setFingerprint(request: Request, response: Response, fingerprint: string) {}
+	setDataToken(request: Request, response: Response, token: string) {
+		response.set(this.headerNames.dataToken, token);
+	}
 }

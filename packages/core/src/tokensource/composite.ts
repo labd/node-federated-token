@@ -8,15 +8,15 @@ export class CompositeTokenSource implements TokenSource {
 		this.sources = sources;
 	}
 
-	deleteAccessToken(response: Response): void {
+	deleteAccessToken(request: Request, response: Response): void {
 		for (const source of this.sources) {
-			source.deleteAccessToken(response);
+			source.deleteAccessToken(request, response);
 		}
 	}
 
-	deleteRefreshToken(response: Response): void {
+	deleteRefreshToken(request: Request, response: Response): void {
 		for (const source of this.sources) {
-			source.deleteRefreshToken(response);
+			source.deleteRefreshToken(request, response);
 		}
 	}
 
@@ -40,9 +40,9 @@ export class CompositeTokenSource implements TokenSource {
 		return "";
 	}
 
-	getFingerprint(request: Request): string {
+	getDataToken(request: Request): string {
 		for (const source of this.sources) {
-			const token = source.getFingerprint(request);
+			const token = source.getDataToken(request);
 			if (token) {
 				return token;
 			}
@@ -50,21 +50,42 @@ export class CompositeTokenSource implements TokenSource {
 		return "";
 	}
 
-	setAccessToken(request: Request, response: Response, token: string) {
+	setAccessToken(
+		request: Request,
+		response: Response,
+		token: string,
+		isAuthenticated = false,
+	) {
 		for (const source of this.sources) {
-			source.setAccessToken(request, response, token);
+			source.setAccessToken(request, response, token, isAuthenticated);
 		}
 	}
 
-	setRefreshToken(request: Request, response: Response, token: string) {
+	setRefreshToken(
+		request: Request,
+		response: Response,
+		token: string,
+		isAuthenticated = false,
+	) {
 		for (const source of this.sources) {
-			source.setRefreshToken(request, response, token);
+			source.setRefreshToken(request, response, token, isAuthenticated);
 		}
 	}
 
-	setFingerprint(request: Request, response: Response, fingerprint: string) {
+	setDataToken(
+		request: Request,
+		response: Response,
+		token: string,
+		isAuthenticated = false,
+	) {
 		for (const source of this.sources) {
-			source.setFingerprint(request, response, fingerprint);
+			source.setDataToken(request, response, token, isAuthenticated);
+		}
+	}
+
+	deleteDataToken(request: Request, response: Response): void {
+		for (const source of this.sources) {
+			source.deleteDataToken(request, response);
 		}
 	}
 }

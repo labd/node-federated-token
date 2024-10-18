@@ -11,12 +11,12 @@ describe("CompositeTokenSource", () => {
 	const createMockTokenSource = (): TokenSource => ({
 		getAccessToken: vi.fn().mockReturnValue(""),
 		getRefreshToken: vi.fn().mockReturnValue(""),
-		getFingerprint: vi.fn().mockReturnValue(""),
+		getDataToken: vi.fn().mockReturnValue(""),
 		deleteAccessToken: vi.fn(),
 		deleteRefreshToken: vi.fn(),
 		setAccessToken: vi.fn(),
 		setRefreshToken: vi.fn(),
-		setFingerprint: vi.fn(),
+		setDataToken: vi.fn(),
 	});
 
 	it("should get the access token from the first source that provides one", () => {
