@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 0.13.3
+
+### Patch Changes
+
+- 1f72aa6: Initial release of an Envelop plugin
+
 ## 0.13.1
 
 ### Patch Changes
