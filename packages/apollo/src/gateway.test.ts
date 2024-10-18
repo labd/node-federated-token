@@ -8,7 +8,7 @@ import { KeyManager, TokenSigner } from "@labdigital/federated-token";
 import { HeaderTokenSource } from "@labdigital/federated-token";
 import { PublicFederatedTokenContext } from "./context";
 
-describe("GatewayAuthPlugin", () => {
+describe("GatewayAuthPlugin", async () => {
 	const signOptions = {
 		encryptKeys: new KeyManager([
 			{
@@ -25,6 +25,7 @@ describe("GatewayAuthPlugin", () => {
 		audience: "exampleAudience",
 		issuer: "exampleIssuer",
 	};
+
 	const signer = new TokenSigner(signOptions);
 
 	const plugin = new GatewayAuthPlugin({
@@ -216,7 +217,7 @@ describe("GatewayAuthPlugin", () => {
 				contextValue: newContext,
 			},
 		);
-		const newAccessToken = newContext.res.get("x-access-token");
+		const newAccessToken = newContext.res.get("x-data-token");
 
 		assert.isNotEmpty(newAccessToken);
 		assert.notEqual(newAccessToken, accessToken);

@@ -50,12 +50,14 @@ describe("HeaderTokenSource", () => {
 		expect(response.get("x-refresh-token")).toBe("foobar");
 	});
 
-	it("should not set the fingerprint in the response headers", () => {
+	it("should set the data token in the response headers", () => {
 		const request = httpMocks.createRequest();
 		const response = httpMocks.createResponse();
 		const headerTokenSource = new HeaderTokenSource();
-		headerTokenSource.setFingerprint(request, response, "mockFingerprint");
+		headerTokenSource.setDataToken(request, response, "mock-data-token");
 
-		expect(response.getHeaders()).toStrictEqual({});
+		expect(response.getHeaders()).toStrictEqual({
+			"x-data-token": "mock-data-token",
+		});
 	});
 });

@@ -1,8 +1,3 @@
-import {
-	generateFingerprint,
-	hashFingerprint,
-	validateFingerprint,
-} from "./fingerprint";
 import { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
 import { TokenExpiredError, TokenInvalidError } from "./errors";
@@ -19,31 +14,33 @@ export class PublicFederatedToken extends FederatedToken {
 	// signed token (not encrypted). The jwe attribute is encrypted however.
 	// This is all done when the GraphQL gateway sends the response back to the
 	// client.
-	async createAccessJWT(signer: TokenSigner) {
-		const exp = this.getExpireTime();
-		const fingerprint = generateFingerprint();
 
-		const payload: JWTPayload = {
-			...this.values,
+	// Create the JWT for the client, this JWT is only signed and used to store
+	// JWT values
+	async createDataJWT(signer: TokenSigner): Promise<string | undefined> {
+		if (!this.values) {
+			return;
+		}
+
+		const exp = this.getExpireTime();
+		const payload = {
+			values: this.values,
 			exp,
 			sub: signer.getSubject(this),
-			jwe: await signer.encryptObject(this.tokens),
-			_fingerprint: hashFingerprint(fingerprint),
 		};
 
-		const token = await signer.signJWT(payload);
-		return {
-			accessToken: token,
-			fingerprint: fingerprint,
-		};
+		return await signer.signJWT(payload);
 	}
 
-	async loadAccessJWT(
-		signer: TokenSigner,
-		value: string,
-		fingerprint?: string,
-	) {
-		const result = await signer.verifyJWT(value);
+	// Create the access JWT. This JWT is send to the client. Is used in the
+	// userToken / guestToken and should be encrypted and HTTP_ONLY
+	async createAccessJWT(signer: TokenSigner) {
+		const exp = this.getExpireTime();
+		return await signer.encryptJWT({ tokens: this.tokens }, exp);
+	}
+
+	async loadAccessJWT(signer: TokenSigner, value: string, data?: string) {
+		const result = await signer.decryptJWT(value);
 		if (!result) {
 			throw new Error("Invalid JWT");
 		}
@@ -60,28 +57,10 @@ export class PublicFederatedToken extends FederatedToken {
 			throw new TokenExpiredError("JWT expired");
 		}
 
-		if (
-			fingerprint &&
-			!validateFingerprint(fingerprint, payload._fingerprint)
-		) {
-			throw new TokenInvalidError("Invalid fingerprint");
-		}
-
-		this.tokens = await signer.decryptObject(payload.jwe);
-		const knownKeys = [
-			"jwe",
-			"iat",
-			"exp",
-			"aud",
-			"sub",
-			"jti",
-			"iss",
-			"_fingerprint",
-		];
-		for (const k in payload) {
-			if (!knownKeys.includes(k)) {
-				this.values[k] = payload[k];
-			}
+		this.tokens = payload.tokens;
+		if (data) {
+			const result = await signer.verifyJWT(data);
+			this.values = result.payload.values as Record<string, any>;
 		}
 	}
 

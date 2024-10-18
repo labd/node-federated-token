@@ -47,7 +47,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 
 		const accessToken = this.tokenSource.getAccessToken(request);
 		const refreshToken = this.tokenSource.getRefreshToken(request);
-		const fingerprint = this.tokenSource.getFingerprint(request);
+		const dataToken = this.tokenSource.getDataToken(request);
 
 		if (!accessToken && !refreshToken) {
 			return;
@@ -64,9 +64,9 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		// accessToken is expired/invalid anyway
 		if (accessToken && !refreshToken) {
 			try {
-				await token.loadAccessJWT(this.signer, accessToken, fingerprint);
+				await token.loadAccessJWT(this.signer, accessToken, dataToken);
 			} catch (e: unknown) {
-				this.tokenSource.deleteAccessToken(contextValue.res);
+				this.tokenSource.deleteAccessToken(contextValue.req, contextValue.res);
 
 				if (e instanceof TokenExpiredError) {
 					throw new GraphQLError("Your token has expired.", {
@@ -94,7 +94,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			try {
 				await token.loadRefreshJWT(this.signer, refreshToken);
 			} catch (e: unknown) {
-				this.tokenSource.deleteRefreshToken(contextValue.res);
+				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
 			}
 		}
 	}
@@ -106,24 +106,47 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const token = contextValue?.federatedToken;
 		const { req: request, res: response } = contextValue;
 
+		if (token?.shouldDestroyToken()) {
+			this.tokenSource.deleteAccessToken(request, response);
+			this.tokenSource.deleteRefreshToken(request, response);
+			this.tokenSource.deleteDataToken(request, response);
+			return;
+		}
+
 		// Downstream services modified the tokens, so create a new JWT and set
 		// it on the response
-		// TODO: We should optimize this, if only the values are modified then
-		// we shouldn't have to create a new nested JWE
-		if (token?.isAccessTokenModified() || token?.isValueModified()) {
-			const { accessToken, fingerprint } = await token.createAccessJWT(
-				this.signer,
-			);
+		if (token?.isAccessTokenModified()) {
+			const accessToken = await token.createAccessJWT(this.signer);
+			if (accessToken) {
+				this.tokenSource.setAccessToken(
+					request,
+					response,
+					accessToken,
+					token.isAuthenticated(),
+				);
+			}
+		}
 
-			if (accessToken && fingerprint) {
-				this.tokenSource.setAccessToken(request, response, accessToken);
-				this.tokenSource.setFingerprint(request, response, fingerprint);
+		if (token?.isValueModified()) {
+			const dataToken = await token.createDataJWT(this.signer);
+			if (dataToken) {
+				this.tokenSource.setDataToken(
+					request,
+					response,
+					dataToken,
+					token.isAuthenticated(),
+				);
 			}
 		}
 
 		if (token?.isRefreshTokenModified()) {
 			const refreshToken = await token.createRefreshJWT(this.signer);
-			this.tokenSource.setRefreshToken(request, response, refreshToken);
+			this.tokenSource.setRefreshToken(
+				request,
+				response,
+				refreshToken,
+				token.isAuthenticated(),
+			);
 		}
 	}
 }

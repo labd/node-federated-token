@@ -142,8 +142,32 @@ describe("FederatedToken", () => {
 		);
 	});
 
+	test("serializeAccessToken empty", () => {
+		const federatedToken = new FederatedToken();
+		federatedToken.setAccessToken("exampleName", {
+			token: "exampleToken",
+			exp: 1234567890,
+			sub: "exampleSubject",
+		});
+
+		const serialized = Buffer.from(
+			JSON.stringify({
+				tokens: {
+					exampleName: {
+						token: "exampleToken",
+						exp: 1234567890,
+						sub: "exampleSubject",
+					},
+				},
+			}),
+		).toString("base64");
+
+		assert.equal(federatedToken.serializeAccessToken(), serialized);
+	});
+
 	test("serializeAccessToken", () => {
 		const federatedToken = new FederatedToken();
+		federatedToken.setIsAuthenticated();
 		federatedToken.setAccessToken("exampleName", {
 			token: "exampleToken",
 			exp: 1234567890,
@@ -167,6 +191,7 @@ describe("FederatedToken", () => {
 					value1: "exampleValue1",
 					value2: "exampleValue2",
 				},
+				isAuthenticated: true,
 			}),
 		).toString("base64");
 
