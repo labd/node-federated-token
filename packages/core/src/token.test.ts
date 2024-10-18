@@ -156,6 +156,7 @@ describe("FederatedToken", () => {
 
 		const serialized = Buffer.from(
 			JSON.stringify({
+				isAuthenticated: false,
 				tokens: {
 					exampleName: {
 						token: "exampleToken",
