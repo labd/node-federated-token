@@ -1,0 +1,65 @@
+{
+	"name": "@labdigital/federated-token-react",
+	"version": "0.13.2",
+	"description": "Federate JWT tokens for React clients",
+	"module": "./dist/index.js",
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"keywords": [
+		"graphql",
+		"authentication",
+		"react"
+	],
+	"author": "Lab Digital <opensource@labdigital.nl>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/labd/node-federated-token"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"test:ci": "vitest run --coverage",
+		"tsc": "tsc --noEmit",
+		"format": "eslint src --fix && prettier --write .",
+		"lint": "eslint src && prettier --check ."
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"dependencies": {
+		"js-cookie": "3.0.5",
+		"jsonwebtoken": "9.0.2"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"@types/js-cookie": "3.0.6",
+		"@types/jsonwebtoken": "9.0.6",
+		"@types/react": "18.3.3",
+		"@typescript-eslint/eslint-plugin": "^7.12.0",
+		"@vitest/coverage-v8": "1.6.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-unused-imports": "^4.0.0",
+		"node-mocks-http": "^1.14.1",
+		"prettier": "^3.3.1",
+		"tsup": "^8.1.0",
+		"typescript": "^5.4.5",
+		"vitest": "1.6.0"
+	},
+	"peerDependencies": {
+		"react": ">= 18.0.0",
+		"graphql": ">= 16.6.0"
+	}
+}
