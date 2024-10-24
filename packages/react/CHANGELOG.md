@@ -1,4 +1,4 @@
-# @labdigital/federated-token
+# @labdigital/federated-token-react
 
 ## 1.0.0-beta.0
 
@@ -12,15 +12,6 @@
   Please refer to the README.md for more information on how to upgrade your
   existing implementation.
 
-## 0.13.2
-
 ### Patch Changes
 
-- 5026ab2: Create CommonJS exports
-
-## 0.13.0
-
-### Minor Changes
-
-- 5d091fd: Split the package in a `core` and a `apollo` specific package. This makes it
-  possible to support other gateways/servers in the future
+- 74df0d0: Initial version

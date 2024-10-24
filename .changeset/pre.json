@@ -7,5 +7,8 @@
     "@labdigital/federated-token-envelop": "0.13.3",
     "@labdigital/federated-token-react": "0.13.2"
   },
-  "changesets": []
+  "changesets": [
+    "brown-fans-study",
+    "tiny-spoons-arrive"
+  ]
 }
