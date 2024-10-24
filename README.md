@@ -3,45 +3,73 @@
 [![npm](https://img.shields.io/npm/v/@labdigital/federated-token.svg)](https://www.npmjs.com/package/@labdigital/federated-token)
 
 This package provides support for using JWT tokens for clients and passing
-that information to all federated services. The JWT token includes a JWE token
-for sensitive information like the client specific access tokens of third party
-systems.
+that information to all federated services (upstream and downstream).
 
-It provides three Apollo specific classes:
+## Packages
+ - `@labdigital/federated-token` - The core package that provides the token
+	 handling and token sources.
+ - `@labdigital/federated-token-apollo` - A plugin for Apollo Server (and gateway).
+ - `@labdigital/federated-token-envelop` - An Envelop plugin for e.g. Yoga.
+ - `@labdigital/federated-token-react` - A React context provider for managing the
+	 token state in a React application.
 
-- `GatewayAuthPlugin` - An Apollo plugin for the GraphQL gateway that verifies
-  the signature of the token passed and decrypts the embedded JWE property. It
-  stores the verified and decrypted token on the context as `federatedToken`.
 
-- `FederatedGraphQLDataSource` - An Apollo GraphQL data source used in the
-  GraphQL Gateway which passes the `federatedToken` from the context to the
-  datasource (federated service) as `x-access-token` HTTP header.
+# Upgrading from 0.x to 1.x
+The 1.x release is a considerable rewrite of the package to allow better
+distinction between authenticated users and guest users. This primarily impacts
+the `CookieTokenSource` This allows you to control on your CDN which cookies are
+white-listed and which are not.
 
-- `FederatedAuthPlugin` - An Apollo plugin for federated services that reads
-  the token passed in the `x-access-token` header and stores it on the context
-  as `federatedToken`.
+For ease of implementation and migrating users with existing cookies you need to
+make sure that both the refresh-token and the refresh-token-exists cookie names
+match the old names.
 
-When a federated services creates a new token (when non exist) it can also
-return a refresh token in the `x-refresh-token` header. The gateway will then
-encrypt all refresh tokens and encrypt them before passing them to the client
-as `x-refresh-token` header.
+```ts
+const server = new ApolloServer({
+	// ...
+	plugins: [
+		// ...
+		new GatewayAuthPlugin({
+			signer: createTokenSigner(),
+			source: new CompositeTokenSource([
+				new CookieTokenSource({
+					refreshTokenPath: "/auth/graphql",
+					secure: true,
+					sameSite: "Lax",
+					publicDomainFn: (request: express.Request) => config.COOKIE_DOMAIN,
+					cookieNames: {
+						refreshToken: "authRefreshToken",
+						guestRefreshTokenExists: "authRefreshTokenExist",
+					}
+				}),
+				new HeaderTokenSource(),
+			]),
+		}),
+		// ...
+	],
+	// ...
+});
+```
+
 
 # Token sources
-
 Public tokens can be passed via either HTTP headers or cookies. For browser
 clients cookies are the preferred way since these are easiest to store safely in
 the browser using a combination of HTTP_ONLY cookies and non-HTTP_ONLY cookies.
 
+
 ## Cookie Token Source
+This token source is used for browser clients to safely store the token. It
+differentiates the tokens using a prefix for user tokens and guest tokens.
 
-This token source is used for browser clients to safely store the token. It is
-implemented via 4 cookies:
-
-- `accessToken` - The JWT token
-- `tokenFingerprint` - A random string that is used to protect the AccessToken
-  cookie from CSRF attacks. It is stored as HTTP_ONLY cookie.
+- `userToken` / `guestToken` - The JWT token, HTTP_ONLY
+- `userData` / `guestData` - Value data for keeping state, can be used to for
+	example store some user information so it can be used in a frontend,
+	non-HTTP_ONLY
 - `refreshToken` - The refresh token, if any. It is stored as HTTP_ONLY cookie.
-- `guestRefreshTokenExists` - A boolean value that indicates if a refresh token
-  exists for the user. It is used to determine if the user is new or not.
+- `userRefreshTokenExists` / `guestRefreshTokenExists` - A boolean value that
+indicates if a refresh token exists. It is used to determine if we can refresh
+an existing token.
+
 
 Note that this expects the "cookie-parser" express middleware to be used.
