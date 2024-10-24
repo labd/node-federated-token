@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@labdigital/federated-token-apollo": "0.13.2",
+    "@labdigital/federated-token": "0.13.2",
+    "@labdigital/federated-token-envelop": "0.13.3",
+    "@labdigital/federated-token-react": "0.13.2"
+  },
+  "changesets": []
+}
