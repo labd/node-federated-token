@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- 394eed5: Properly mark token as valid
+
 ## 1.0.0-beta.0
 
 ### Major Changes

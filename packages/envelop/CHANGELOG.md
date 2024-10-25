@@ -1,5 +1,12 @@
 # @labdigital/federated-token-apollo
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [394eed5]
+  - @labdigital/federated-token@1.0.0-beta.1
+
 ## 1.0.0-beta.0
 
 ### Major Changes
