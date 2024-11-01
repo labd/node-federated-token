@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.0.0-beta.2
+
+### Patch Changes
+
+- 240b33f: Expose refreshToken() via `useAuth()`
+
 ## 1.0.0-beta.0
 
 ### Major Changes
