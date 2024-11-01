@@ -50,6 +50,7 @@ type AuthContextType = {
 	logout: () => Promise<void>;
 	validateLocalToken: () => void;
 	checkToken: () => Promise<void>;
+	refreshToken: () => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -92,7 +93,10 @@ export function AuthProvider({
 	options: AuthProviderProps;
 }) {
 	const [authState, setAuthState] = useState<
-		Omit<AuthContextType, "logout" | "validateLocalToken" | "checkToken">
+		Omit<
+			AuthContextType,
+			"logout" | "validateLocalToken" | "checkToken" | "refreshToken"
+		>
 	>({
 		isAuthenticated: false,
 		hasToken: false,
@@ -275,15 +279,17 @@ export function AuthProvider({
 			Cookie.get(cookieNames.userRefreshTokenExists) ??
 			Cookie.get(cookieNames.guestRefreshTokenExists);
 		if (hasRefreshToken) {
-			await refreshAccessToken();
-			return getJWT();
+			const success = await refreshAccessToken();
+			if (success) {
+				return getJWT();
+			}
 		}
 
 		// No token exists
 		return undefined;
 	};
 
-	const refreshAccessToken = async () => {
+	const refreshAccessToken = async (): Promise<boolean> => {
 		// Since we are storing the refresh token in a cookie this will be sent
 		// automatically by the browser.
 		const response = await fetch(options.authEndpoint, {
@@ -295,9 +301,7 @@ export function AuthProvider({
 			credentials: "include",
 		});
 
-		if (!response.ok) {
-			throw new Error(`Failed to refresh token: ${response.statusText}`);
-		}
+		return response.ok;
 	};
 
 	const clearTokens = async () => {
@@ -323,6 +327,7 @@ export function AuthProvider({
 				logout,
 				validateLocalToken,
 				checkToken,
+				refreshToken: refreshAccessToken,
 			}}
 		>
 			{children}
