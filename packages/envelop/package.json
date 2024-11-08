@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-envelop",
-	"version": "1.0.0-beta.1",
+	"version": "1.0.0",
 	"description": "Federate JWT tokens between GraphQL servers",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
