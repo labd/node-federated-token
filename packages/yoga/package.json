@@ -1,0 +1,60 @@
+{
+	"name": "@labdigital/federated-token-yoga",
+	"version": "0.0.0",
+	"description": "Federated token plugin for GraphQL Yoga",
+	"module": "./dist/index.js",
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"keywords": [
+		"graphql",
+		"authentication",
+		"yoga"
+	],
+	"author": "Lab Digital <opensource@labdigital.nl>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/labd/node-federated-token"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"test:ci": "vitest run --coverage",
+		"tsc": "tsc --noEmit",
+		"format": "eslint src --fix && prettier --write .",
+		"lint": "eslint src && prettier --check ."
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"dependencies": {
+		"@labdigital/federated-token": "workspace:*",
+		"graphql-yoga": "^5.9.0"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"@typescript-eslint/eslint-plugin": "^7.18.0",
+		"@vitest/coverage-v8": "1.6.0",
+		"eslint": "^8.57.1",
+		"eslint-plugin-unused-imports": "^4.1.4",
+		"node-mocks-http": "^1.16.1",
+		"prettier": "^3.3.3",
+		"tsup": "^8.3.0",
+		"typescript": "^5.6.3",
+		"vitest": "1.6.0"
+	},
+	"peerDependencies": {
+		"graphql": ">= 16.6.0"
+	}
+}
