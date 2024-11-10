@@ -1,5 +1,5 @@
 ---
-"@labdigital/federated-token-yoga": major
+"@labdigital/federated-token-yoga": patch
 ---
 
 First release of yoga plugin
