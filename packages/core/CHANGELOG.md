@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.0.2
+
+### Patch Changes
+
+- 8faa026: Fix passing the authenticated state properly
+
 ## 1.0.0
 
 ### Major Changes
