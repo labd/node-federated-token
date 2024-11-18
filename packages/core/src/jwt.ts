@@ -39,7 +39,7 @@ export class PublicFederatedToken extends FederatedToken {
 		const data = {
 			tokens: this.tokens,
 			isAuthenticated: this.isAuthenticated(),
-		}
+		};
 		return await signer.encryptJWT(data, exp);
 	}
 
@@ -65,7 +65,7 @@ export class PublicFederatedToken extends FederatedToken {
 		if (payload.isAuthenticated) {
 			this.setIsAuthenticated();
 		} else {
-			this.setIsAnonymous()
+			this.setIsAnonymous();
 		}
 
 		if (data) {
