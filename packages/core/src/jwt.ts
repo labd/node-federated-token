@@ -36,7 +36,11 @@ export class PublicFederatedToken extends FederatedToken {
 	// userToken / guestToken and should be encrypted and HTTP_ONLY
 	async createAccessJWT(signer: TokenSigner) {
 		const exp = this.getExpireTime();
-		return await signer.encryptJWT({ tokens: this.tokens }, exp);
+		const data = {
+			tokens: this.tokens,
+			isAuthenticated: this.isAuthenticated(),
+		}
+		return await signer.encryptJWT(data, exp);
 	}
 
 	async loadAccessJWT(signer: TokenSigner, value: string, data?: string) {
@@ -58,6 +62,12 @@ export class PublicFederatedToken extends FederatedToken {
 		}
 
 		this.tokens = payload.tokens;
+		if (payload.isAuthenticated) {
+			this.setIsAuthenticated();
+		} else {
+			this.setIsAnonymous()
+		}
+
 		if (data) {
 			const result = await signer.verifyJWT(data);
 			this.values = result.payload.values as Record<string, any>;
