@@ -301,7 +301,20 @@ export function AuthProvider({
 			credentials: "include",
 		});
 
-		return response.ok;
+		if (!response.ok) {
+			throw new Error("Failed to refresh token");
+		}
+
+		const data = await response.json();
+		if (!data) {
+			throw new Error("Failed to refresh token");
+		}
+
+		// Check if there is a GraphQL error
+		if (data.errors.length > 0) {
+			throw new Error("Failed to refresh token");
+		}
+		return true;
 	};
 
 	const clearTokens = async () => {
