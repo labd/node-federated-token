@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-react",
-	"version": "1.0.0",
+	"version": "1.0.3",
 	"description": "Federate JWT tokens for React clients",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
