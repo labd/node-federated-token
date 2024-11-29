@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.1.0
+
+### Minor Changes
+
+- 40138e6: Split GraphQL endpoint for refresh vs logout
+
 ## 1.0.4
 
 ### Patch Changes
