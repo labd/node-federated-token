@@ -132,7 +132,7 @@ export class FederatedToken {
 			token.destroyToken = true;
 		}
 
-		if (!token) {
+		if (Object.keys(token).length < 1) {
 			return;
 		}
 		return Buffer.from(JSON.stringify(token)).toString("base64");
@@ -194,7 +194,7 @@ export class FederatedToken {
 	}
 
 	dumpRefreshToken(): string | undefined {
-		if (!this.refreshTokens) {
+		if (!this.refreshTokens || Object.keys(this.refreshTokens).length < 1) {
 			return;
 		}
 		return Buffer.from(JSON.stringify(this.refreshTokens)).toString("base64");
