@@ -1,5 +1,13 @@
 # @labdigital/federated-token-apollo
 
+## 1.0.4
+
+### Patch Changes
+
+- d6b8b5e: minor optimalization when setting tokens
+- Updated dependencies [b31f72e]
+  - @labdigital/federated-token@1.0.4
+
 ## 1.0.2
 
 ### Patch Changes
