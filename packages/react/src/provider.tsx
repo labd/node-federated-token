@@ -56,8 +56,9 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export type AuthProviderProps = {
-	authEndpoint: string;
+	refreshTokenEndpoint: string;
 	refreshTokenMutation: string;
+	logoutEndpoint: string;
 	logoutMutation: string;
 	cookieNames?: CookieNames;
 };
@@ -159,7 +160,7 @@ export function AuthProvider({
 	const checkToken = useCallback(async () => {
 		const token = await getAccessToken();
 		updateAuthState(token);
-	}, [options.authEndpoint, updateAuthState]);
+	}, [options.refreshTokenEndpoint, updateAuthState]);
 
 	// Load initial auth state when mounting the application
 	useEffect(() => {
@@ -292,7 +293,7 @@ export function AuthProvider({
 	const refreshAccessToken = async (): Promise<boolean> => {
 		// Since we are storing the refresh token in a cookie this will be sent
 		// automatically by the browser.
-		const response = await fetch(options.authEndpoint, {
+		const response = await fetch(options.refreshTokenEndpoint, {
 			method: "POST",
 			body: options.refreshTokenMutation,
 			headers: {
@@ -320,7 +321,7 @@ export function AuthProvider({
 	const clearTokens = async () => {
 		// Since we are storing the refresh token in a cookie this will be sent
 		// automatically by the browser.
-		const response = await fetch(options.authEndpoint, {
+		const response = await fetch(options.logoutEndpoint, {
 			method: "POST",
 			body: options.logoutMutation,
 			headers: {
