@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.0.4
+
+### Patch Changes
+
+- ae838c2: throw exception on server error when refreshing token
+
 ## 1.0.3
 
 ### Patch Changes

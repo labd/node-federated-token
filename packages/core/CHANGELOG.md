@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.0.4
+
+### Patch Changes
+
+- b31f72e: Only serialize tokens when not empty
+
 ## 1.0.2
 
 ### Patch Changes
