@@ -106,6 +106,8 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const token = contextValue?.federatedToken;
 		const { req: request, res: response } = contextValue;
 
+		const isAuthenticated = token?.isAuthenticated() ?? false;
+
 		if (token?.shouldDestroyToken()) {
 			this.tokenSource.deleteAccessToken(request, response);
 			this.tokenSource.deleteRefreshToken(request, response);
@@ -122,7 +124,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 					request,
 					response,
 					accessToken,
-					token.isAuthenticated(),
+					isAuthenticated,
 				);
 			}
 		}
@@ -134,7 +136,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 					request,
 					response,
 					dataToken,
-					token.isAuthenticated(),
+					isAuthenticated,
 				);
 			}
 		}
@@ -145,7 +147,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				request,
 				response,
 				refreshToken,
-				token.isAuthenticated(),
+				isAuthenticated,
 			);
 		}
 	}
