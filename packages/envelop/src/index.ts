@@ -1,1 +1,0 @@
-export { federatedAuthPlugin } from "./plugin";
