@@ -6,26 +6,26 @@ type FederatedTokenContext = {
 };
 
 export const useFederatedToken = <T extends FederatedTokenContext>(): Plugin<
-	object,
+	T,
 	T
 > => ({
-	onRequest: ({ request, serverContext }) => {
-		// Initialize FederatedToken and add it to the context
-		const federatedToken = serverContext.federatedToken ?? new FederatedToken();
+	onContextBuilding: ({ context, extendContext }) => {
+		if (!context.federatedToken) {
+			throw new Error("Federated token not found in context");
+		}
+		if (!context.request) {
+			throw new Error("Request not found in context");
+		}
 
-		// Retrieve tokens from headers using the serverContext
-		const accessToken = request.headers.get("x-access-token") as string;
-		const refreshToken = request.headers.get("x-refresh-token") as string;
-
+		const { request, federatedToken } = context;
+		const accessToken = request.headers.get("x-access-token");
+		const refreshToken = request.headers.get("x-refresh-token");
 		if (accessToken) {
 			federatedToken.deserializeAccessToken(accessToken);
 		}
-
 		if (refreshToken) {
 			federatedToken.loadRefreshToken(refreshToken);
 		}
-
-		serverContext.federatedToken = federatedToken;
 	},
 
 	onResponse: async ({ response, serverContext }) => {
