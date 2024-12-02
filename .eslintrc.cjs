@@ -12,7 +12,6 @@ module.exports = {
 			},
 		],
 		"unused-imports/no-unused-imports": "error",
-		"arrow-body-style": ["error", "as-needed"],
 		"no-console": [
 			"error",
 			{
