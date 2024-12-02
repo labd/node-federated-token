@@ -1,5 +1,11 @@
 # @labdigital/federated-token-yoga
 
+## 1.2.0
+
+### Minor Changes
+
+- ad1f72a: Require the FederatedToken to already exist on the context
+
 ## 1.0.4
 
 ### Patch Changes
