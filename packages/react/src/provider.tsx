@@ -312,7 +312,7 @@ export function AuthProvider({
 		}
 
 		// Check if there is a GraphQL error
-		if (data.errors.length > 0) {
+		if (data.errors && data.errors.length > 0) {
 			throw new Error("Failed to refresh token");
 		}
 		return true;
