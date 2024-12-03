@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.2.1
+
+### Patch Changes
+
+- 353d4aa: Fix error when refreshing access token
+
 ## 1.1.0
 
 ### Minor Changes
