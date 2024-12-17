@@ -56,11 +56,15 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export type AuthProviderProps = {
-	refreshTokenEndpoint: string;
-	refreshTokenMutation: string;
-	logoutEndpoint: string;
-	logoutMutation: string;
 	cookieNames?: CookieNames;
+	logoutHandler?: () => void;
+	refreshHandler?: () => Promise<boolean>;
+
+	// Deprecated
+	refreshTokenEndpoint?: string;
+	refreshTokenMutation?: string;
+	logoutEndpoint?: string;
+	logoutMutation?: string;
 };
 
 /**
@@ -291,6 +295,14 @@ export function AuthProvider({
 	};
 
 	const refreshAccessToken = async (): Promise<boolean> => {
+		if (options.refreshHandler) {
+			return await options.refreshHandler();
+		}
+
+		if (!options.refreshTokenEndpoint || !options.refreshTokenMutation) {
+			throw new Error("No refresh token endpoint or mutation provided");
+		}
+
 		// Since we are storing the refresh token in a cookie this will be sent
 		// automatically by the browser.
 		const response = await fetch(options.refreshTokenEndpoint, {
@@ -319,6 +331,15 @@ export function AuthProvider({
 	};
 
 	const clearTokens = async () => {
+		if (options.logoutHandler) {
+			await options.logoutHandler();
+			return;
+		}
+
+		if (!options.logoutEndpoint || !options.logoutMutation) {
+			throw new Error("No logout endpoint or mutation provided");
+		}
+
 		// Since we are storing the refresh token in a cookie this will be sent
 		// automatically by the browser.
 		const response = await fetch(options.logoutEndpoint, {
