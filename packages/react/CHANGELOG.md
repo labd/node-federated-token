@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.3.0
+
+### Minor Changes
+
+- e04dd55: Support passing custom handlers for logout and refresh actions
+
 ## 1.2.1
 
 ### Patch Changes
