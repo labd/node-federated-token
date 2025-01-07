@@ -8,7 +8,7 @@ type FederatedTokenValue = {
 	isAuthenticated?: boolean;
 	destroyToken?: boolean;
 	tokens?: Record<string, AccessToken>;
-	values?: Record<string, any>;
+	values?: Record<string, unknown>;
 };
 
 export interface AccessToken {
@@ -23,7 +23,7 @@ export interface AccessToken {
 export class FederatedToken {
 	tokens: Record<string, AccessToken>;
 	refreshTokens: Record<string, string>;
-	values: Record<string, any>;
+	values: Record<string, unknown>;
 
 	private _hasData: boolean;
 	private _accessTokenModified: boolean;
@@ -82,7 +82,7 @@ export class FederatedToken {
 		this._hasData = true;
 	}
 
-	setValue(name: string, value: any): void {
+	setValue(name: string, value: unknown): void {
 		this.values[name] = value;
 		this._valueModified = true;
 		this._hasData = true;

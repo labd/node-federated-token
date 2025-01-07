@@ -1,11 +1,11 @@
-import {
-	type ApolloServerPlugin,
-	type GraphQLRequestContext,
-	type GraphQLRequestListener,
+import type {
+	ApolloServerPlugin,
+	GraphQLRequestContext,
+	GraphQLRequestListener,
 } from "@apollo/server";
 import {
 	FederatedToken,
-	FederatedTokenContext,
+	type FederatedTokenContext,
 } from "@labdigital/federated-token";
 
 // FederatedAuthPlugin is an Apollo plugin which should be used by all
@@ -17,7 +17,7 @@ export class FederatedAuthPlugin<TContext extends FederatedTokenContext>
 {
 	public async requestDidStart(
 		requestContext: GraphQLRequestContext<TContext>,
-	): Promise<void | GraphQLRequestListener<TContext>> {
+	): Promise<GraphQLRequestListener<TContext>> {
 		const { contextValue, request } = requestContext;
 		if (!contextValue.federatedToken) {
 			contextValue.federatedToken = new FederatedToken();

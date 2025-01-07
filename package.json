@@ -7,23 +7,18 @@
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
 	"type": "module",
-	"keywords": [
-		"graphql",
-		"authentication"
-	],
+	"keywords": ["graphql", "authentication"],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/labd/node-federated-token"
 	},
-	"workspaces": [
-		"packages/*"
-	],
+	"workspaces": ["packages/*"],
 	"scripts": {
 		"build": "pnpm turbo build",
-		"format": "turbo run format",
-		"lint": "turbo run lint",
+		"format": "biome format --fix",
+		"lint": "biome check",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage"
@@ -35,6 +30,7 @@
 		"vitest": "1.6.0"
 	},
 	"dependencies": {
+		"@biomejs/biome": "^1.9.4",
 		"turbo": "^2.2.3"
 	}
 }

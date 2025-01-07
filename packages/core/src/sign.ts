@@ -1,7 +1,7 @@
+import { KeyObject } from "node:crypto";
 import * as jose from "jose";
 import { ConfigurationError, createError } from "./errors";
-import { KeyObject } from "node:crypto";
-import { PublicFederatedToken } from "./jwt";
+import type { PublicFederatedToken } from "./jwt";
 
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
@@ -89,7 +89,7 @@ export class TokenSigner {
 	}
 
 	// For refresh token, encrypt the token (JWE)
-	async encryptJWT(payload: any, exp: number) {
+	async encryptJWT(payload: jose.JWTPayload, exp: number) {
 		const { id, key } = await this._encryptKeys.getActiveKey();
 
 		const data = await new jose.EncryptJWT(payload)

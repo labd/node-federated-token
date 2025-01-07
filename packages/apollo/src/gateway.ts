@@ -1,14 +1,14 @@
-import {
-	type ApolloServerPlugin,
-	type GraphQLRequestContext,
-	type GraphQLRequestListener,
+import type {
+	ApolloServerPlugin,
+	GraphQLRequestContext,
+	GraphQLRequestListener,
 } from "@apollo/server";
-import { GraphQLError } from "graphql";
 import { PublicFederatedToken } from "@labdigital/federated-token";
-import { TokenSigner } from "@labdigital/federated-token";
+import type { TokenSigner } from "@labdigital/federated-token";
 import type { TokenSource } from "@labdigital/federated-token";
 import { TokenExpiredError } from "@labdigital/federated-token";
-import { PublicFederatedTokenContext } from "./context";
+import { GraphQLError } from "graphql";
+import type { PublicFederatedTokenContext } from "./context";
 
 type GatewayOptions = {
 	signer: TokenSigner;
@@ -35,7 +35,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 
 	public async requestDidStart(
 		requestContext: GraphQLRequestContext<TContext>,
-	): Promise<void | GraphQLRequestListener<TContext>> {
+	): Promise<GraphQLRequestListener<TContext>> {
 		return this;
 	}
 

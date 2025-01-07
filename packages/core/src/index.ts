@@ -8,4 +8,4 @@ export {
 	type TokenSource,
 } from "./tokensource/index";
 export { TokenExpiredError, TokenInvalidError } from "./errors";
-export { type FederatedTokenContext } from "./token";
+export type { FederatedTokenContext } from "./token";

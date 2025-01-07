@@ -3,11 +3,7 @@
 	"changelog": "@changesets/cli/changelog",
 	"commit": false,
 	"fixed": [],
-	"linked": [
-		[
-			"@labdigital/federated-token*"
-		]
-	],
+	"linked": [["@labdigital/federated-token*"]],
 	"access": "restricted",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",

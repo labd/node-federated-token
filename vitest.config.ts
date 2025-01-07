@@ -12,9 +12,7 @@ export default defineConfig({
 			],
 			reportsDirectory: "./coverage",
 			all: true,
-			include: [
-				"packages/**/src/**/*.ts",
-			],
+			include: ["packages/**/src/**/*.ts"],
 
 			// Ignore a number of type-only files. These files are included due to the
 			// usage of the `all: true`. We should eventually remove that

@@ -1,5 +1,5 @@
+import type { FederatedToken } from "@labdigital/federated-token";
 import type { Plugin } from "graphql-yoga";
-import { FederatedToken } from "@labdigital/federated-token";
 
 type FederatedTokenContext = {
 	federatedToken: FederatedToken;

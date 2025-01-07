@@ -1,13 +1,13 @@
-import { createSchema, createYoga } from "graphql-yoga";
-import { describe, it, expect } from "vitest";
-import { useFederatedToken } from ".";
 import { FederatedToken } from "@labdigital/federated-token";
+import { createSchema, createYoga } from "graphql-yoga";
+import { describe, expect, it } from "vitest";
+import { useFederatedToken } from ".";
 
 type FederatedTokenContext = {
 	federatedToken: FederatedToken;
 };
 
-export function assertSingleValue<TValue extends object>(
+function assertSingleValue<TValue extends object>(
 	value: TValue | AsyncIterable<TValue>,
 ): asserts value is TValue {
 	if (Symbol.asyncIterator in value) {

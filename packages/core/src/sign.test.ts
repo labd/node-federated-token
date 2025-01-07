@@ -1,4 +1,4 @@
-import * as crypto from "crypto";
+import * as crypto from "node:crypto";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { KeyManager, TokenSigner } from "./sign";
 

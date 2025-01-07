@@ -1,11 +1,11 @@
 import {
-	RemoteGraphQLDataSource,
 	type GraphQLDataSourceProcessOptions,
+	RemoteGraphQLDataSource,
 } from "@apollo/gateway";
 import { HeaderMap } from "@apollo/server";
-import { type GatewayGraphQLResponse } from "@apollo/server-gateway-interface";
+import type { GatewayGraphQLResponse } from "@apollo/server-gateway-interface";
 import { PublicFederatedToken } from "@labdigital/federated-token";
-import { PublicFederatedTokenContext } from "./context";
+import type { PublicFederatedTokenContext } from "./context";
 
 // FederatedGraphQLDataSource is a RemoteGraphQLDataSource that adds the
 // x-access-token and x-refresh-token headers to the request and reads the

@@ -2,32 +2,22 @@
 	"$schema": "https://turbo.build/schema.json",
 	"tasks": {
 		"topo": {
-			"dependsOn": [
-				"^topo"
-			]
+			"dependsOn": ["^topo"]
 		},
 		"build": {
-			"dependsOn": [
-				"^build"
-			],
-			"outputs": [
-				"dist/**",
-				"README.md"
-			]
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", "README.md"]
+		},
+		"tsc": {
+			"dependsOn": ["topo"]
 		},
 		"lint": {
-			"dependsOn": [
-				"topo"
-			],
-			"outputs": [
-				"node_modules/.cache/.eslintcache"
-			],
+			"dependsOn": ["topo"],
+			"outputs": ["node_modules/.cache/.eslintcache"],
 			"outputLogs": "new-only"
 		},
 		"format": {
-			"dependsOn": [
-				"topo"
-			],
+			"dependsOn": ["topo"],
 			"outputLogs": "new-only"
 		}
 	},
