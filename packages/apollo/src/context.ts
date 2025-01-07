@@ -1,6 +1,6 @@
-import { BaseContext } from "@apollo/server";
-import { PublicFederatedToken } from "@labdigital/federated-token";
-import { type Request, type Response } from "express";
+import type { BaseContext } from "@apollo/server";
+import type { PublicFederatedToken } from "@labdigital/federated-token";
+import type { Request, Response } from "express";
 
 export type PublicFederatedTokenContext = {
 	federatedToken?: PublicFederatedToken;

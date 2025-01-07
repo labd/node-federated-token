@@ -1,5 +1,5 @@
-import { CookieOptions, Request, Response } from "express";
-import { TokenSource } from "./base";
+import type { CookieOptions, Request, Response } from "express";
+import type { TokenSource } from "./base";
 
 type CookieNames = {
 	// Anonymous cookies
@@ -52,10 +52,7 @@ export class CookieTokenSource implements TokenSource {
 		};
 	}
 
-	deleteAccessToken(
-		request: Request,
-		response: Response<any, Record<string, any>>,
-	): void {
+	deleteAccessToken(request: Request, response: Response): void {
 		const names = [this.cookieNames.userToken, this.cookieNames.guestToken];
 
 		for (const name of names) {
@@ -63,10 +60,7 @@ export class CookieTokenSource implements TokenSource {
 		}
 	}
 
-	deleteRefreshToken(
-		request: Request,
-		response: Response<any, Record<string, any>>,
-	): void {
+	deleteRefreshToken(request: Request, response: Response): void {
 		response.clearCookie(this.cookieNames.refreshToken, {
 			path: this.options.refreshTokenPath,
 			domain: this.options?.privateDomainFn?.(response.req),
@@ -84,10 +78,7 @@ export class CookieTokenSource implements TokenSource {
 		);
 	}
 
-	deleteDataToken(
-		request: Request,
-		response: Response<any, Record<string, any>>,
-	): void {
+	deleteDataToken(request: Request, response: Response): void {
 		const names = [this.cookieNames.userData, this.cookieNames.guestData];
 
 		for (const name of names) {
@@ -97,7 +88,7 @@ export class CookieTokenSource implements TokenSource {
 
 	deleteAccessTokenByName(
 		request: Request,
-		response: Response<any, Record<string, any>>,
+		response: Response,
 		name: string,
 	): void {
 		if (request.cookies[name]) {
@@ -109,7 +100,7 @@ export class CookieTokenSource implements TokenSource {
 
 	deleteRefreshTokenExistsByName(
 		request: Request,
-		response: Response<any, Record<string, any>>,
+		response: Response,
 		name: string,
 	): void {
 		if (request.cookies[name]) {

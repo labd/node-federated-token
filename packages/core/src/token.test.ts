@@ -1,5 +1,5 @@
 import { assert, describe, test } from "vitest";
-import { AccessToken, FederatedToken } from "./token";
+import { type AccessToken, FederatedToken } from "./token";
 
 describe("FederatedToken", () => {
 	test("setAccessToken", () => {

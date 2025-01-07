@@ -1,6 +1,6 @@
-import { TokenSigner } from "./sign";
-import { FederatedToken } from "./token";
 import { TokenExpiredError, TokenInvalidError } from "./errors";
+import type { TokenSigner } from "./sign";
+import { FederatedToken } from "./token";
 
 type JWTPayload = {
 	exp: number;

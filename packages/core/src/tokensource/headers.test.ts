@@ -9,7 +9,7 @@ describe("HeaderTokenSource", () => {
 	it("should get the access token from headers", () => {
 		const headerTokenSource = new HeaderTokenSource();
 		const request = httpMocks.createRequest({
-			headers: { "x-access-token": `Bearer FOOBAR` },
+			headers: { "x-access-token": "Bearer FOOBAR" },
 		});
 		const result = headerTokenSource.getAccessToken(request);
 		expect(result).toBe("FOOBAR");

@@ -1,6 +1,6 @@
 import httpMocks from "node-mocks-http";
 import { describe, expect, it, vi } from "vitest";
-import { TokenSource } from "./base";
+import type { TokenSource } from "./base";
 import { CompositeTokenSource } from "./composite";
 
 // Mock tokens
@@ -14,6 +14,7 @@ describe("CompositeTokenSource", () => {
 		getDataToken: vi.fn().mockReturnValue(""),
 		deleteAccessToken: vi.fn(),
 		deleteRefreshToken: vi.fn(),
+		deleteDataToken: vi.fn(),
 		setAccessToken: vi.fn(),
 		setRefreshToken: vi.fn(),
 		setDataToken: vi.fn(),

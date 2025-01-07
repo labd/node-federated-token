@@ -36,6 +36,7 @@ export type TokenData = {
 	values: TokenValues;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: fixme
 export type TokenValues = Record<string, any>;
 
 type TokenPayload = {
@@ -161,6 +162,7 @@ export function AuthProvider({
 	 * - If successful, a new access token is returned and the auth state is updated.
 	 * - If unsuccessful, the auth state is updated to unauthenticated.
 	 */
+	// biome-ignore lint/correctness/useExhaustiveDependencies: fixme
 	const checkToken = useCallback(async () => {
 		const token = await getAccessToken();
 		updateAuthState(token);
@@ -236,6 +238,7 @@ export function AuthProvider({
 			const skipKeys = ["exp"];
 			return Object.keys(tokenPayload).reduce(
 				(acc, key) =>
+					// biome-ignore lint/performance/noAccumulatingSpread: fixme
 					skipKeys.includes(key) ? acc : { ...acc, [key]: tokenPayload[key] },
 				{},
 			);

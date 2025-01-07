@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 export interface TokenSource {
 	deleteAccessToken(request: Request, response: Response): void;

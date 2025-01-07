@@ -1,12 +1,12 @@
+import * as crypto from "node:crypto";
 import { ApolloServer, HeaderMap } from "@apollo/server";
-import * as crypto from "crypto";
-import httpMocks from "node-mocks-http";
-import { assert, describe, expect, it } from "vitest";
-import { GatewayAuthPlugin } from "./gateway";
 import { PublicFederatedToken } from "@labdigital/federated-token";
 import { KeyManager, TokenSigner } from "@labdigital/federated-token";
 import { HeaderTokenSource } from "@labdigital/federated-token";
-import { PublicFederatedTokenContext } from "./context";
+import httpMocks from "node-mocks-http";
+import { assert, describe, expect, it } from "vitest";
+import type { PublicFederatedTokenContext } from "./context";
+import { GatewayAuthPlugin } from "./gateway";
 
 describe("GatewayAuthPlugin", async () => {
 	const signOptions = {

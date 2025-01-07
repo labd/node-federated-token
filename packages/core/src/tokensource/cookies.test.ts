@@ -1,7 +1,7 @@
+import type { CookieSerializeOptions } from "cookie";
 import httpMocks from "node-mocks-http";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { CookieTokenSource } from "./cookies";
-import { CookieSerializeOptions } from "cookie";
 
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
