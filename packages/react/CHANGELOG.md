@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.4.0
+
+### Patch Changes
+
+- df48774: Switch to biomejs for linting and formatting
+
 ## 1.3.0
 
 ### Minor Changes
