@@ -25,7 +25,6 @@ export class FederatedToken {
 	refreshTokens: Record<string, string>;
 	values: Record<string, unknown>;
 
-	private _hasData: boolean;
 	private _accessTokenModified: boolean;
 	private _refreshTokenModified: boolean;
 	private _valueModified: boolean;
@@ -73,19 +72,16 @@ export class FederatedToken {
 	setAccessToken(name: string, token: AccessToken) {
 		this.tokens[name] = token;
 		this._accessTokenModified = true;
-		this._hasData = true;
 	}
 
 	setRefreshToken(name: string, token: string) {
 		this.refreshTokens[name] = token;
 		this._refreshTokenModified = true;
-		this._hasData = true;
 	}
 
 	setValue(name: string, value: unknown): void {
 		this.values[name] = value;
 		this._valueModified = true;
-		this._hasData = true;
 	}
 
 	isAccessTokenModified() {
@@ -100,8 +96,11 @@ export class FederatedToken {
 		return this._valueModified;
 	}
 
-	isValid() {
-		return this._hasData;
+	public isValid(): boolean {
+		return (
+			Object.keys(this.tokens).length > 0 ||
+			Object.keys(this.refreshTokens).length > 0
+		);
 	}
 
 	// Return the expire time of the first token that expires
@@ -145,8 +144,6 @@ export class FederatedToken {
 			Buffer.from(at, "base64").toString("ascii"),
 		);
 
-		this._hasData = true;
-
 		if (trackModified) {
 			this._valueModified = !isEqual(this.values, token.values);
 
@@ -179,8 +176,6 @@ export class FederatedToken {
 		const refreshTokens: Record<string, string> = JSON.parse(
 			Buffer.from(value, "base64").toString("ascii"),
 		);
-
-		this._hasData = true;
 
 		// TODO: Validate json
 
