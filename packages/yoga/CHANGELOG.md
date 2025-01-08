@@ -1,5 +1,13 @@
 # @labdigital/federated-token-yoga
 
+## 1.4.1
+
+### Patch Changes
+
+- 4e538e9: resolve issue with release process and formatting
+- Updated dependencies [4e538e9]
+  - @labdigital/federated-token@1.4.1
+
 ## 1.4.0
 
 ### Patch Changes
