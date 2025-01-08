@@ -36,12 +36,6 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	public async requestDidStart(
 		requestContext: GraphQLRequestContext<TContext>,
 	): Promise<GraphQLRequestListener<TContext>> {
-		return this;
-	}
-
-	public async didResolveOperation(
-		requestContext: GraphQLRequestContext<TContext>,
-	): Promise<void> {
 		const { contextValue } = requestContext;
 		const request = contextValue.req;
 
@@ -50,7 +44,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 		const dataToken = this.tokenSource.getDataToken(request);
 
 		if (!accessToken && !refreshToken) {
-			return;
+			return this;
 		}
 
 		if (!contextValue.federatedToken) {
@@ -97,6 +91,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
 			}
 		}
+		return this;
 	}
 
 	async willSendResponse(
