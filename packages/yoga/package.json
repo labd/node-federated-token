@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-yoga",
-	"version": "1.2.0",
+	"version": "1.4.0",
 	"description": "Federated token plugin for GraphQL Yoga",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
@@ -12,7 +12,11 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"keywords": ["graphql", "authentication", "yoga"],
+	"keywords": [
+		"graphql",
+		"authentication",
+		"yoga"
+	],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -28,7 +32,10 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
+	"files": [
+		"dist",
+		"src"
+	],
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*",
 		"graphql-yoga": "^5.9.0"

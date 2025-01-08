@@ -1,5 +1,15 @@
 # @labdigital/federated-token
 
+## 1.4.0
+
+### Minor Changes
+
+- c592ac0: Modify `Token.isValid()` on availability of tokens instead of manually tracking it
+
+### Patch Changes
+
+- df48774: Switch to biomejs for linting and formatting
+
 ## 1.0.4
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @labdigital/federated-token-apollo
 
+## 1.4.0
+
+### Minor Changes
+
+- b3b2cd6: Handle token processing in `requestDidStart()` hook so other plugins can use the result
+
+### Patch Changes
+
+- df48774: Switch to biomejs for linting and formatting
+- Updated dependencies [df48774]
+- Updated dependencies [c592ac0]
+  - @labdigital/federated-token@1.4.0
+
 ## 1.0.4
 
 ### Patch Changes

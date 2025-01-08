@@ -1,5 +1,14 @@
 # @labdigital/federated-token-yoga
 
+## 1.4.0
+
+### Patch Changes
+
+- df48774: Switch to biomejs for linting and formatting
+- Updated dependencies [df48774]
+- Updated dependencies [c592ac0]
+  - @labdigital/federated-token@1.4.0
+
 ## 1.2.0
 
 ### Minor Changes
