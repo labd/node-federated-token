@@ -12,11 +12,7 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"keywords": [
-		"graphql",
-		"authentication",
-		"apollo"
-	],
+	"keywords": ["graphql", "authentication", "apollo"],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -32,10 +28,7 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": [
-		"dist",
-		"src"
-	],
+	"files": ["dist", "src"],
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*"
 	},

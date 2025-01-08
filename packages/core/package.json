@@ -13,10 +13,7 @@
 		}
 	},
 	"type": "module",
-	"keywords": [
-		"graphql",
-		"authentication"
-	],
+	"keywords": ["graphql", "authentication"],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -32,10 +29,7 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": [
-		"dist",
-		"src"
-	],
+	"files": ["dist", "src"],
 	"dependencies": {
 		"jose": "5.4.0",
 		"lodash.isequal": "^4.5.0"
