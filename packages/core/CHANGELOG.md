@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.4.1
+
+### Patch Changes
+
+- 4e538e9: resolve issue with release process and formatting
+
 ## 1.4.0
 
 ### Minor Changes
