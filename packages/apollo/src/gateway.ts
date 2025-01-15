@@ -53,10 +53,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 
 		const token = contextValue.federatedToken;
 
-		// Only load the access token if there is no refresh token. If a refresh
-		// token is present then we assume a refresh is happening and the
-		// accessToken is expired/invalid anyway
-		if (accessToken && !refreshToken) {
+		if (accessToken) {
 			try {
 				await token.loadAccessJWT(this.signer, accessToken, dataToken);
 			} catch (e: unknown) {
