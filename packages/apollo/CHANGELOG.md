@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 1.4.2
+
+### Patch Changes
+
+- b5ca950: Removed check for existing refreshToken when setting accessToken
+
 ## 1.4.1
 
 ### Patch Changes
