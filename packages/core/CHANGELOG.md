@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.4.3
+
+### Patch Changes
+
+- 1909c30: Added separate load and verify for data token
+
 ## 1.4.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @labdigital/federated-token-yoga
 
+## 1.4.3
+
+### Patch Changes
+
+- 1909c30: Added separate load and verify for data token
+- Updated dependencies [1909c30]
+  - @labdigital/federated-token@1.4.3
+
 ## 1.4.1
 
 ### Patch Changes
