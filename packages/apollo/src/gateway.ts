@@ -55,7 +55,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 
 		if (accessToken) {
 			try {
-				await token.loadAccessJWT(this.signer, accessToken, dataToken);
+				await token.loadAccessJWT(this.signer, accessToken);
 			} catch (e: unknown) {
 				this.tokenSource.deleteAccessToken(contextValue.req, contextValue.res);
 
@@ -86,6 +86,33 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				await token.loadRefreshJWT(this.signer, refreshToken);
 			} catch (e: unknown) {
 				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
+			}
+		}
+
+		if (dataToken) {
+			try {
+				await token.loadDataJWT(this.signer, dataToken);
+			} catch (e: unknown) {
+				this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
+				if (e instanceof TokenExpiredError) {
+					throw new GraphQLError("Your token has expired.", {
+						extensions: {
+							code: "UNAUTHENTICATED",
+							http: {
+								statusCode: 401,
+							},
+						},
+					});
+				} else {
+					throw new GraphQLError("Your token is invalid.", {
+						extensions: {
+							code: "INVALID_TOKEN",
+							http: {
+								statusCode: 400,
+							},
+						},
+					});
+				}
 			}
 		}
 		return this;
