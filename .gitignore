@@ -5,6 +5,6 @@ node_modules/*
 **/*.log
 coverage/*
 dist/*
-test-reports/*
+**/test-reports/*
 
 .turbo/

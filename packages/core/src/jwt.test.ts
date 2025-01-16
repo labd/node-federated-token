@@ -32,19 +32,11 @@ describe("PublicFederatedToken", async () => {
 				sub: "exampleSubject",
 			},
 		};
-		token.values = {
-			value1: "exampleValue1",
-			value2: "exampleValue2",
-		};
-
 		const accessToken = await token.createAccessJWT(signer);
-		const dataToken = await token.createDataJWT(signer);
 
 		const newToken = new PublicFederatedToken();
-		await newToken.loadAccessJWT(signer, accessToken, dataToken);
+		await newToken.loadAccessJWT(signer, accessToken);
 		expect(newToken.tokens).toStrictEqual(token.tokens);
-		expect(newToken.refreshTokens).toStrictEqual(token.refreshTokens);
-		expect(newToken.values).toStrictEqual(token.values);
 	});
 
 	test("createAccessJWT with TokenSigner create hook", async () => {
@@ -62,31 +54,15 @@ describe("PublicFederatedToken", async () => {
 				sub: "exampleSubject",
 			},
 		};
-		token.values = {
-			value1: "exampleValue1",
-			value2: "exampleValue2",
-		};
-
 		const accessToken = await token.createAccessJWT(signer);
-		const dataToken = await token.createDataJWT(signer);
 
 		const newToken = new PublicFederatedToken();
-		await newToken.loadAccessJWT(signer, accessToken, dataToken);
+		await newToken.loadAccessJWT(signer, accessToken);
 		expect(newToken.tokens).toStrictEqual(token.tokens);
-		expect(newToken.refreshTokens).toStrictEqual(token.refreshTokens);
-		expect(newToken.values).toStrictEqual(token.values);
 	});
 
 	test("loadAccessJWT", async () => {
 		const time = 1729258233173;
-
-		const dataJWT = await signer.signJWT({
-			exp: Date.now() + 1000,
-			values: {
-				value1: "exampleValue1",
-				value2: "exampleValue2",
-			},
-		});
 		const tokenJWT = await signer.encryptJWT(
 			{
 				tokens: {
@@ -101,17 +77,13 @@ describe("PublicFederatedToken", async () => {
 		);
 
 		const token = new PublicFederatedToken();
-		await token.loadAccessJWT(signer, tokenJWT, dataJWT);
+		await token.loadAccessJWT(signer, tokenJWT);
 		expect(token.tokens).toStrictEqual({
 			exampleName: {
 				token: "exampleToken",
 				exp: time,
 				sub: "exampleSubject",
 			},
-		});
-		expect(token.values).toStrictEqual({
-			value1: "exampleValue1",
-			value2: "exampleValue2",
 		});
 	});
 
@@ -124,5 +96,47 @@ describe("PublicFederatedToken", async () => {
 
 		const jwt = await token.createRefreshJWT(signer);
 		expect(jwt).toBeDefined();
+	});
+
+	test("loadRefreshJWT", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const payload = {
+			values: { value1: "exampleValue1" },
+			exp,
+		};
+
+		const jwt = await signer.encryptJWT(payload, exp);
+
+		const token = new PublicFederatedToken();
+		await token.loadRefreshJWT(signer, jwt);
+		expect(token.refreshTokens).toBeDefined();
+		expect(token.refreshTokens.values).toStrictEqual(payload.values);
+	});
+
+	test("createDataJWT", async () => {
+		// Write tests for createRefreshJWT if needed
+		const token = new PublicFederatedToken();
+		token.values = {
+			value1: "exampleValue1",
+			value2: "exampleValue2",
+		};
+
+		const jwt = await token.createDataJWT(signer);
+		expect(jwt).toBeDefined();
+	});
+
+	test("loadDataJWT", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const payload = {
+			values: { value1: "exampleValue1" },
+			exp,
+		};
+
+		const jwt = await signer.signJWT(payload);
+
+		const token = new PublicFederatedToken();
+		await token.loadDataJWT(signer, jwt);
+		expect(token.values).toBeDefined();
+		expect(token.values).toStrictEqual(payload.values);
 	});
 });

@@ -10,8 +10,8 @@ type JWTPayload = {
 };
 
 export class PublicFederatedToken extends FederatedToken {
-	// Create the access JWT. This JWT is send to the client. It is send as
-	// signed token (not encrypted). The jwe attribute is encrypted however.
+	// Create the access JWT. This JWT is sent to the client. It is sent as
+	// signed token (not encrypted). The jwe attribute is encrypted, however.
 	// This is all done when the GraphQL gateway sends the response back to the
 	// client.
 
@@ -22,7 +22,7 @@ export class PublicFederatedToken extends FederatedToken {
 			return;
 		}
 
-		const exp = this.getExpireTime();
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const payload = {
 			values: this.values,
 			exp,
@@ -32,7 +32,7 @@ export class PublicFederatedToken extends FederatedToken {
 		return await signer.signJWT(payload);
 	}
 
-	// Create the access JWT. This JWT is send to the client. Is used in the
+	// Create the access JWT. This JWT is sent to the client. Is used in the
 	// userToken / guestToken and should be encrypted and HTTP_ONLY
 	async createAccessJWT(signer: TokenSigner) {
 		const exp = this.getExpireTime();
@@ -43,7 +43,16 @@ export class PublicFederatedToken extends FederatedToken {
 		return await signer.encryptJWT(data, exp);
 	}
 
-	async loadAccessJWT(signer: TokenSigner, value: string, data?: string) {
+	async loadDataJWT(signer: TokenSigner, value: string) {
+		const result = await signer.verifyJWT(value);
+		if (!result) {
+			throw new TokenInvalidError("Invalid JWT");
+		}
+
+		this.values = result.payload.values as Record<string, any>;
+	}
+
+	async loadAccessJWT(signer: TokenSigner, value: string) {
 		const result = await signer.decryptJWT(value);
 		if (!result) {
 			throw new Error("Invalid JWT");
@@ -54,7 +63,7 @@ export class PublicFederatedToken extends FederatedToken {
 			throw new TokenInvalidError("Invalid JWT");
 		}
 
-		// The expire time should be absolute, now margin for error. The client
+		// The expiry time should be absolute, now margin for error. The client
 		// should refresh the token X second before it expires.
 		const unixTime = Math.floor(Date.now() / 1000);
 		if (!payload.exp || payload.exp < unixTime) {
@@ -66,11 +75,6 @@ export class PublicFederatedToken extends FederatedToken {
 			this.setIsAuthenticated();
 		} else {
 			this.setIsAnonymous();
-		}
-
-		if (data) {
-			const result = await signer.verifyJWT(data);
-			this.values = result.payload.values as Record<string, any>;
 		}
 	}
 
