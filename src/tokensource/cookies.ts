@@ -11,10 +11,11 @@ type CookieNames = {
 type CookieSourceOptions = {
 	secure: boolean;
 	sameSite: CookieOptions["sameSite"];
-	refreshTokenPath: string;
+	refreshTokenPath: string | ((request: Request) => string | undefined);
 	cookieNames?: CookieNames;
 	publicDomainFn?: (request: Request) => string | undefined;
 	privateDomainFn?: (request: Request) => string | undefined;
+	cookiePathFn?: (request: Request) => string | undefined;
 };
 
 const DEFAULT_COOKIE_NAMES: CookieNames = {
@@ -64,7 +65,7 @@ export class CookieTokenSource implements TokenSource {
 
 	deleteRefreshToken(response: Response<any, Record<string, any>>): void {
 		response.clearCookie(this.cookieNames.refreshToken, {
-			path: this.options.refreshTokenPath,
+			path: this._getRefreshTokenPath(response.req),
 			domain: this.options?.privateDomainFn?.(response.req),
 		});
 		response.clearCookie(this.cookieNames.refreshTokenExist, {
@@ -90,6 +91,7 @@ export class CookieTokenSource implements TokenSource {
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.options?.publicDomainFn?.(request),
+			path: this.options?.cookiePathFn?.(request),
 		});
 	}
 
@@ -101,7 +103,7 @@ export class CookieTokenSource implements TokenSource {
 		// cookie has a different path.
 		response.cookie(this.cookieNames.refreshToken, token, {
 			httpOnly: true,
-			path: this.options.refreshTokenPath,
+			path: this._getRefreshTokenPath(request),
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			expires: expiresAt,
@@ -116,6 +118,7 @@ export class CookieTokenSource implements TokenSource {
 			sameSite: this.options.sameSite,
 			expires: expiresAt,
 			domain: this.options?.publicDomainFn?.(request),
+			path: this.options?.cookiePathFn?.(request),
 		});
 	}
 
@@ -127,6 +130,12 @@ export class CookieTokenSource implements TokenSource {
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.options?.privateDomainFn?.(request),
+			path: this.options?.cookiePathFn?.(request),
 		});
+	}
+
+	private _getRefreshTokenPath(req: Request): string | undefined {
+		const path = this.options.refreshTokenPath;
+		return typeof path === "function" ? path(req) : path;
 	}
 }
