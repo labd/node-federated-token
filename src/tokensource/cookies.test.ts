@@ -105,6 +105,7 @@ describe("CookieTokenSource", () => {
 			httpOnly: false,
 			sameSite: "strict",
 			secure: false,
+			path: undefined,
 		});
 	});
 
@@ -128,6 +129,7 @@ describe("CookieTokenSource", () => {
 			httpOnly: true,
 			sameSite: "strict",
 			secure: true,
+			path: undefined,
 		});
 	});
 
@@ -151,6 +153,7 @@ describe("CookieTokenSource", () => {
 			httpOnly: true,
 			sameSite: "strict",
 			secure: false,
+			path: undefined,
 		});
 	});
 
@@ -186,6 +189,57 @@ describe("CookieTokenSource", () => {
 			httpOnly: false,
 			sameSite: "none",
 			secure: true,
+			path: undefined,
+		});
+	});
+
+	it("should set the cookie path in the refreshToken as function", () => {
+		const request = httpMocks.createRequest();
+		const response = createMockResponse();
+
+		const cookieTokenSource = new CookieTokenSource({
+			secure: true,
+			sameSite: "none",
+			refreshTokenPath: () => "/refresh",
+		});
+
+		cookieTokenSource.setRefreshToken(request, response, "FOOBAR");
+
+		expect(Object.values(response.cookies)).toHaveLength(2);
+
+		expect(response.cookies["authRefreshToken"].value).toBe("FOOBAR");
+		expect(response.cookies["authRefreshToken"].options).toStrictEqual({
+			domain: undefined,
+			expires: expect.any(Date),
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			path: "/refresh",
+		})
+	});
+
+	it("should set the cookie path in the accessToken as function", () => {
+		const request = httpMocks.createRequest();
+		const response = createMockResponse();
+
+		const cookieTokenSource = new CookieTokenSource({
+			secure: true,
+			sameSite: "none",
+			refreshTokenPath: "/refresh",
+			cookiePathFn: () => "/cookie-path",
+		});
+
+		cookieTokenSource.setAccessToken(request, response, "FOOBAR");
+
+		expect(Object.values(response.cookies)).toHaveLength(1);
+
+		expect(response.cookies["authToken"].value).toBe("FOOBAR");
+		expect(response.cookies["authToken"].options).toStrictEqual({
+			domain: undefined,
+			httpOnly: false,
+			secure: true,
+			sameSite: "none",
+			path: "/cookie-path",
 		});
 	});
 });
