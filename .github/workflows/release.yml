@@ -1,7 +1,5 @@
 name: Release
-on:
-  push:
-  workflow_dispatch:
+on: [push]
 
 env:
   CI: true
@@ -47,7 +45,7 @@ jobs:
   release:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main'
     needs: build
     steps:
       - name: Checkout
