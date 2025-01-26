@@ -3,6 +3,7 @@
 	"version": "0.12.1",
 	"description": "Federate JWT tokens between Apollo servers",
 	"main": "./dist/index.js",
+	"packageManager": "pnpm@9.15.4",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
 	"type": "module",
