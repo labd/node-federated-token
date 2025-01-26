@@ -215,7 +215,7 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "none",
 			path: "/refresh",
-		})
+		});
 	});
 
 	it("should set the cookie path in the accessToken as function", () => {
