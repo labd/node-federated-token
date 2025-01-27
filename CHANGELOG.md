@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.3
+
+### Patch Changes
+
+- 75d2876: add clear function
+
 ## 0.12.2
 
 ### Patch Changes
