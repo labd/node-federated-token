@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.2
+
+### Patch Changes
+
+- 5f55cd8: add support for cookie path
+
 ## 0.12.1
 
 ### Patch Changes
