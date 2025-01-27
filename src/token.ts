@@ -36,6 +36,15 @@ export class FederatedToken {
 		this._valueModified = false;
 	}
 
+	clear() {
+		this.tokens = {};
+		this.refreshTokens = {};
+		this.values = {};
+		this._accessTokenModified = true;
+		this._refreshTokenModified = true;
+		this._valueModified = true;
+	}
+
 	setAccessToken(name: string, token: AccessToken) {
 		this.tokens[name] = token;
 		this._accessTokenModified = true;
