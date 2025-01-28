@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.4
+
+### Patch Changes
+
+- 94a36dd: provide cookie path when clearing cookie
+
 ## 0.12.3
 
 ### Patch Changes
