@@ -1,5 +1,5 @@
-import { CookieOptions, Request, Response } from "express";
-import { TokenSource } from "./base";
+import type { CookieOptions, Request, Response } from "express";
+import type { TokenSource } from "./base";
 
 type CookieNames = {
 	accessToken: string;
@@ -10,6 +10,7 @@ type CookieNames = {
 
 type CookieSourceOptions = {
 	secure: boolean;
+	stripHostPrefix?: boolean;
 	sameSite: CookieOptions["sameSite"];
 	refreshTokenPath: string | ((request: Request) => string | undefined);
 	cookieNames?: CookieNames;
@@ -46,6 +47,12 @@ export class CookieTokenSource implements TokenSource {
 		this.cookieNames = {
 			...(options.cookieNames ?? DEFAULT_COOKIE_NAMES),
 		};
+
+		// If the secure option is set, we need to set the __Host- prefix for the
+		// fingerprint cookie.
+		if (options.secure && this.options.stripHostPrefix !== true) {
+			this.cookieNames.accessTokenHash = `__Host-${this.cookieNames.accessTokenHash}`;
+		}
 	}
 
 	deleteAccessToken(response: Response<any, Record<string, any>>): void {
@@ -55,7 +62,10 @@ export class CookieTokenSource implements TokenSource {
 		});
 		response.clearCookie(this.cookieNames.accessTokenHash, {
 			domain: this.options?.privateDomainFn?.(response.req),
-			path: this.options?.cookiePathFn?.(response.req),
+			path:
+				this.options.stripHostPrefix === true
+					? this.options?.cookiePathFn?.(response.req)
+					: undefined,
 		});
 	}
 
@@ -127,7 +137,10 @@ export class CookieTokenSource implements TokenSource {
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.options?.privateDomainFn?.(request),
-			path: this.options?.cookiePathFn?.(request),
+			path:
+				this.options.stripHostPrefix === true
+					? this.options?.cookiePathFn?.(request)
+					: undefined,
 		});
 	}
 
