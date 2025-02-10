@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 0.12.5
+
+### Patch Changes
+
+- 174ef4a: Improves security by throwing an error if token fingerprint cookie is not present. Also optionally removes the \_\_host prefix from the fingerprint cookie, to allow for a fingerprint on path level, thereby enbaling authentication flows per path.
+
 ## 0.12.4
 
 ### Patch Changes
