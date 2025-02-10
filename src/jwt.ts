@@ -1,11 +1,11 @@
-import { type BaseContext } from "@apollo/server";
-import { type Request, type Response } from "express";
+import type { BaseContext } from "@apollo/server";
+import type { Request, Response } from "express";
 import {
 	generateFingerprint,
 	hashFingerprint,
 	validateFingerprint,
 } from "./fingerprint";
-import { TokenSigner } from "./sign";
+import type { TokenSigner } from "./sign";
 import { FederatedToken } from "./token";
 import { TokenExpiredError, TokenInvalidError } from "./errors";
 
@@ -46,11 +46,7 @@ export class PublicFederatedToken extends FederatedToken {
 		};
 	}
 
-	async loadAccessJWT(
-		signer: TokenSigner,
-		value: string,
-		fingerprint?: string
-	) {
+	async loadAccessJWT(signer: TokenSigner, value: string, fingerprint: string) {
 		const result = await signer.verifyJWT(value);
 		if (!result) {
 			throw new Error("Invalid JWT");
@@ -68,10 +64,7 @@ export class PublicFederatedToken extends FederatedToken {
 			throw new TokenExpiredError("JWT expired");
 		}
 
-		if (
-			fingerprint &&
-			!validateFingerprint(fingerprint, payload._fingerprint)
-		) {
+		if (!validateFingerprint(fingerprint, payload._fingerprint)) {
 			throw new TokenInvalidError("Invalid fingerprint");
 		}
 

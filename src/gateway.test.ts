@@ -1,11 +1,12 @@
 import { ApolloServer, HeaderMap } from "@apollo/server";
-import * as crypto from "crypto";
+import * as crypto from "node:crypto";
 import httpMocks from "node-mocks-http";
-import { assert, describe, expect, it } from "vitest";
+import { assert, describe, expect, it, vi } from "vitest";
 import { GatewayAuthPlugin } from "./gateway";
-import { PublicFederatedToken, PublicFederatedTokenContext } from "./jwt";
+import { PublicFederatedToken, type PublicFederatedTokenContext } from "./jwt";
 import { KeyManager, TokenSigner } from "./sign";
 import { HeaderTokenSource } from "./tokensource";
+import * as fingerPrint from "./fingerprint";
 
 describe("GatewayAuthPlugin", () => {
 	const signOptions = {
@@ -105,6 +106,7 @@ describe("GatewayAuthPlugin", () => {
 	});
 
 	it("Use generated token", async () => {
+		vi.spyOn(fingerPrint, "validateFingerprint").mockReturnValue(true);
 		const context = {
 			federatedToken: new PublicFederatedToken(),
 			res: httpMocks.createResponse(),
@@ -219,5 +221,73 @@ describe("GatewayAuthPlugin", () => {
 
 		assert.isNotEmpty(newAccessToken);
 		assert.notEqual(newAccessToken, accessToken);
+	});
+
+	it("throws an error if the fingerprint is not valid", async () => {
+		vi.spyOn(fingerPrint, "validateFingerprint").mockReturnValue(false);
+		const context = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest(),
+		};
+		await testServer.executeOperation(
+			{
+				query: "query testToken { testToken(create: true) }",
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: context,
+			}
+		);
+		expect(context.res.statusCode).toBe(200);
+		expect(context.res.get("x-access-token")).toBeDefined();
+		expect(context.res.get("x-refresh-token")).toBeDefined();
+		const accessToken = context.res.get("x-access-token");
+
+		// Set received token
+		const newContext = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest({
+				headers: {
+					"x-access-token": `Bearer ${accessToken}`,
+				},
+			}),
+		};
+		const response = await testServer.executeOperation(
+			{
+				query: "query testToken { testToken(create: false) }",
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: newContext,
+			}
+		);
+		expect(response.body.kind).toBe("single");
+		assert(response.body.kind === "single"); // Make typescript happy
+		expect(response.body.singleResult).toBeDefined();
+
+		const data = response.body.singleResult.data;
+		const errors = response.body.singleResult.errors;
+		expect(data).toBeUndefined();
+		expect(errors).toBeDefined();
+		expect(errors).toEqual([
+			{
+				message: "Your token is invalid.",
+				extensions: {
+					code: "INVALID_TOKEN",
+				},
+			},
+		]);
 	});
 });

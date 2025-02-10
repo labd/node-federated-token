@@ -1,8 +1,9 @@
-import * as crypto from "crypto";
-import { describe, expect, test } from "vitest";
+import * as crypto from "node:crypto";
+import { describe, expect, test, vi } from "vitest";
 import { generateFingerprint, hashFingerprint } from "./fingerprint";
 import { PublicFederatedToken } from "./jwt";
 import { KeyManager, TokenSigner } from "./sign";
+import * as fingerPrint from "./fingerprint";
 
 describe("PublicFederatedToken", async () => {
 	const signOptions = {
@@ -81,6 +82,7 @@ describe("PublicFederatedToken", async () => {
 	});
 
 	test("loadAccessJWT", async () => {
+		vi.spyOn(fingerPrint, "validateFingerprint").mockReturnValue(true);
 		const token = new PublicFederatedToken();
 		const exampleJWT = await signer.signJWT({
 			exp: Date.now() + 1000,
