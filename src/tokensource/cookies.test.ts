@@ -123,6 +123,31 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(1);
 
+		expect(response.cookies["__Host-authTokenHash"].value).toBe("FOOBAR");
+		expect(response.cookies["__Host-authTokenHash"].options).toStrictEqual({
+			domain: undefined,
+			httpOnly: true,
+			sameSite: "strict",
+			secure: true,
+			path: undefined,
+		});
+	});
+
+	it("should access token in fingerprint in cookies (secure) without the __Host prefix if the 'stripHostPrefix' option is set", () => {
+		const request = httpMocks.createRequest();
+		const response = createMockResponse();
+
+		const cookieTokenSource = new CookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+			stripHostPrefix: true,
+		});
+
+		cookieTokenSource.setFingerprint(request, response, "FOOBAR");
+
+		expect(Object.values(response.cookies)).toHaveLength(1);
+
 		expect(response.cookies.authTokenHash.value).toBe("FOOBAR");
 		expect(response.cookies.authTokenHash.options).toStrictEqual({
 			domain: undefined,
