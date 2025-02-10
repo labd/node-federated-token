@@ -1,7 +1,7 @@
 import httpMocks from "node-mocks-http";
 import { describe, it, expect } from "vitest";
 import { CookieTokenSource } from "./cookies";
-import { CookieSerializeOptions } from "cookie";
+import type { CookieSerializeOptions } from "cookie";
 
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
@@ -123,8 +123,8 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(1);
 
-		expect(response.cookies["__Host-authTokenHash"].value).toBe("FOOBAR");
-		expect(response.cookies["__Host-authTokenHash"].options).toStrictEqual({
+		expect(response.cookies.authTokenHash.value).toBe("FOOBAR");
+		expect(response.cookies.authTokenHash.options).toStrictEqual({
 			domain: undefined,
 			httpOnly: true,
 			sameSite: "strict",
@@ -147,8 +147,8 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(1);
 
-		expect(response.cookies["authTokenHash"].value).toBe("FOOBAR");
-		expect(response.cookies["authTokenHash"].options).toStrictEqual({
+		expect(response.cookies.authTokenHash.value).toBe("FOOBAR");
+		expect(response.cookies.authTokenHash.options).toStrictEqual({
 			domain: undefined,
 			httpOnly: true,
 			sameSite: "strict",
@@ -172,8 +172,8 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(2);
 
-		expect(response.cookies["authRefreshToken"].value).toBe("FOOBAR");
-		expect(response.cookies["authRefreshToken"].options).toStrictEqual({
+		expect(response.cookies.authRefreshToken.value).toBe("FOOBAR");
+		expect(response.cookies.authRefreshToken.options).toStrictEqual({
 			domain: undefined,
 			expires: expect.any(Date),
 			httpOnly: true,
@@ -182,8 +182,8 @@ describe("CookieTokenSource", () => {
 			secure: true,
 		});
 
-		expect(response.cookies["authRefreshTokenExist"].value).toBe("1");
-		expect(response.cookies["authRefreshTokenExist"].options).toStrictEqual({
+		expect(response.cookies.authRefreshTokenExist.value).toBe("1");
+		expect(response.cookies.authRefreshTokenExist.options).toStrictEqual({
 			domain: ".example.com",
 			expires: expect.any(Date),
 			httpOnly: false,
@@ -207,8 +207,8 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(2);
 
-		expect(response.cookies["authRefreshToken"].value).toBe("FOOBAR");
-		expect(response.cookies["authRefreshToken"].options).toStrictEqual({
+		expect(response.cookies.authRefreshToken.value).toBe("FOOBAR");
+		expect(response.cookies.authRefreshToken.options).toStrictEqual({
 			domain: undefined,
 			expires: expect.any(Date),
 			httpOnly: true,
@@ -233,8 +233,8 @@ describe("CookieTokenSource", () => {
 
 		expect(Object.values(response.cookies)).toHaveLength(1);
 
-		expect(response.cookies["authToken"].value).toBe("FOOBAR");
-		expect(response.cookies["authToken"].options).toStrictEqual({
+		expect(response.cookies.authToken.value).toBe("FOOBAR");
+		expect(response.cookies.authToken.options).toStrictEqual({
 			domain: undefined,
 			httpOnly: false,
 			secure: true,

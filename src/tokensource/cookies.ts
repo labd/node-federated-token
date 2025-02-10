@@ -46,12 +46,6 @@ export class CookieTokenSource implements TokenSource {
 		this.cookieNames = {
 			...(options.cookieNames ?? DEFAULT_COOKIE_NAMES),
 		};
-
-		// If the secure option is set, we need to set the __Host- prefix for the
-		// fingerprint cookie. The refresh token cookie is
-		if (options.secure) {
-			this.cookieNames.accessTokenHash = `__Host-${this.cookieNames.accessTokenHash}`;
-		}
 	}
 
 	deleteAccessToken(response: Response<any, Record<string, any>>): void {
