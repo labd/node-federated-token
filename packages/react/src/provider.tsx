@@ -240,7 +240,7 @@ export function AuthProvider({
 				(acc, key) =>
 					// biome-ignore lint/performance/noAccumulatingSpread: fixme
 					skipKeys.includes(key) ? acc : { ...acc, [key]: tokenPayload[key] },
-				{}
+				{},
 			);
 		};
 		if (userToken) {
