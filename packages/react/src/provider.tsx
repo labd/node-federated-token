@@ -1,7 +1,7 @@
 // Auth context for the site
 "use client";
+import { decodeJwt } from "jose";
 import Cookie from "js-cookie";
-import { decode as jwtDecode } from "jsonwebtoken";
 import {
 	createContext,
 	useCallback,
@@ -240,7 +240,7 @@ export function AuthProvider({
 				(acc, key) =>
 					// biome-ignore lint/performance/noAccumulatingSpread: fixme
 					skipKeys.includes(key) ? acc : { ...acc, [key]: tokenPayload[key] },
-				{},
+				{}
 			);
 		};
 		if (userToken) {
@@ -403,7 +403,7 @@ export function useAuth() {
 }
 
 export const decodeToken = (token: string): TokenPayload | undefined => {
-	const decodedToken = jwtDecode(token, { complete: true });
+	const decodedToken = decodeJwt(token);
 	if (
 		!decodedToken ||
 		!decodedToken.payload ||
