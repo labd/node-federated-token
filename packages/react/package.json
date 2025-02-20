@@ -13,7 +13,11 @@
 			"types": "./dist/index.d.ts"
 		}
 	},
-	"keywords": ["graphql", "authentication", "react"],
+	"keywords": [
+		"graphql",
+		"authentication",
+		"react"
+	],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -29,15 +33,17 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
+	"files": [
+		"dist",
+		"src"
+	],
 	"dependencies": {
-		"js-cookie": "3.0.5",
-		"jsonwebtoken": "9.0.2"
+		"jose": "5.4.0",
+		"js-cookie": "3.0.5"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.21",
 		"@types/js-cookie": "3.0.6",
-		"@types/jsonwebtoken": "9.0.6",
 		"@types/react": "18.3.3",
 		"@vitest/coverage-v8": "1.6.0",
 		"node-mocks-http": "^1.16.1",
