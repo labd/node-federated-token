@@ -376,7 +376,7 @@ export function AuthProvider({
 /**
  * Custom hook to access authentication context.
  *
- * @returns {Object} An object containing:
+ * @returns An object containing:
  *   - isAuthenticated: boolean indicating if the user is authenticated
  *   - values: object containing all values from the token
  *   - loading: boolean indicating if the authentication state is being loaded
@@ -404,12 +404,8 @@ export function useAuth() {
 
 export const decodeToken = (token: string): TokenPayload | undefined => {
 	const decodedToken = decodeJwt(token);
-	if (
-		!decodedToken ||
-		!decodedToken.payload ||
-		typeof decodedToken.payload === "string"
-	) {
+	if (!decodedToken) {
 		return undefined;
 	}
-	return decodedToken.payload as TokenPayload;
+	return decodedToken as TokenPayload;
 };
