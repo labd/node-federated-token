@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.5.0
+
+### Minor Changes
+
+- 7cdf39c: Replace jsonwebtoken with jose as jsonwebtoken relies on built-in node modules.
+
 ## 1.4.1
 
 ### Patch Changes
