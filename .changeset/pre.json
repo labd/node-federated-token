@@ -1,6 +1,6 @@
 {
 	"mode": "pre",
-	"tag": "1.6.0-beta.0",
+	"tag": "beta.0",
 	"initialVersions": {
 		"@labdigital/federated-token-apollo": "1.4.3",
 		"@labdigital/federated-token": "1.4.3",
