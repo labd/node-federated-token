@@ -24,7 +24,7 @@ describe("PublicFederatedToken", async () => {
 
 	test("createAccessJWT", async () => {
 		const token = new PublicFederatedToken();
-		const expireAt = Date.now() + 60;
+		const expireAt = Math.floor(Date.now() / 1000 + 60);
 		token.tokens = {
 			exampleName: {
 				token: "exampleToken",
@@ -46,7 +46,7 @@ describe("PublicFederatedToken", async () => {
 		});
 
 		const token = new PublicFederatedToken();
-		const expireAt = Date.now() + 60;
+		const expireAt = Math.floor(Date.now() / 1000 + 60);
 		token.tokens = {
 			exampleName: {
 				token: "exampleToken",
@@ -73,7 +73,7 @@ describe("PublicFederatedToken", async () => {
 					},
 				},
 			},
-			Date.now() + 1000,
+			Math.floor(Date.now() / 1000 + 1000),
 		);
 
 		const token = new PublicFederatedToken();

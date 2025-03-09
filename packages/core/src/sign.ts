@@ -50,7 +50,7 @@ export class TokenSigner {
 					contentEncryptionAlgorithms: ["A256GCM"],
 				},
 			);
-			const data = new TextDecoder().decode(result.plaintext.buffer);
+			const data = new TextDecoder().decode(result.plaintext);
 			return JSON.parse(data);
 		} catch (e) {
 			throw createError(e);

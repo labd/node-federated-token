@@ -1,6 +1,7 @@
 import type {
 	ApolloServerPlugin,
 	GraphQLRequestContext,
+	GraphQLRequestContextDidResolveSource,
 	GraphQLRequestListener,
 } from "@apollo/server";
 import { PublicFederatedToken } from "@labdigital/federated-token";
@@ -60,23 +61,37 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				this.tokenSource.deleteAccessToken(contextValue.req, contextValue.res);
 
 				if (e instanceof TokenExpiredError) {
-					throw new GraphQLError("Your token has expired.", {
-						extensions: {
-							code: "UNAUTHENTICATED",
-							http: {
-								statusCode: 401,
-							},
+					return {
+						didResolveOperation: async (
+							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+						) => {
+							requestContext.response.http.status = 401;
+							throw new GraphQLError("Your token has expired.", {
+								extensions: {
+									code: "UNAUTHENTICATED",
+									http: {
+										statusCode: 401,
+									},
+								},
+							});
 						},
-					});
+					};
 				} else {
-					throw new GraphQLError("Your token is invalid.", {
-						extensions: {
-							code: "INVALID_TOKEN",
-							http: {
-								statusCode: 400,
-							},
+					return {
+						didResolveOperation: async (
+							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+						) => {
+							requestContext.response.http.status = 401;
+							throw new GraphQLError("Your token is invalid.", {
+								extensions: {
+									code: "INVALID_TOKEN",
+									http: {
+										statusCode: 400,
+									},
+								},
+							});
 						},
-					});
+					};
 				}
 			}
 		}
@@ -95,23 +110,37 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 			} catch (e: unknown) {
 				this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
 				if (e instanceof TokenExpiredError) {
-					throw new GraphQLError("Your token has expired.", {
-						extensions: {
-							code: "UNAUTHENTICATED",
-							http: {
-								statusCode: 401,
-							},
+					return {
+						didResolveOperation: async (
+							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+						) => {
+							requestContext.response.http.status = 401;
+							throw new GraphQLError("Your token has expired.", {
+								extensions: {
+									code: "UNAUTHENTICATED",
+									http: {
+										statusCode: 401,
+									},
+								},
+							});
 						},
-					});
+					};
 				} else {
-					throw new GraphQLError("Your token is invalid.", {
-						extensions: {
-							code: "INVALID_TOKEN",
-							http: {
-								statusCode: 400,
-							},
+					return {
+						didResolveOperation: async (
+							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+						) => {
+							requestContext.response.http.status = 401;
+							throw new GraphQLError("Your token is invalid.", {
+								extensions: {
+									code: "INVALID_TOKEN",
+									http: {
+										statusCode: 400,
+									},
+								},
+							});
 						},
-					});
+					};
 				}
 			}
 		}
