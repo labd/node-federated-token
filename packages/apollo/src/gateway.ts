@@ -101,6 +101,21 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 				await token.loadRefreshJWT(this.signer, refreshToken);
 			} catch (e: unknown) {
 				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
+				return {
+					didResolveOperation: async (
+						requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+					) => {
+						requestContext.response.http.status = 401;
+						throw new GraphQLError("Your refresh token is invalid.", {
+							extensions: {
+								code: "INVALID_TOKEN",
+								http: {
+									statusCode: 400,
+								},
+							},
+						});
+					},
+				};
 			}
 		}
 
