@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 1.6.0-beta.2
+
+### Minor Changes
+
+- bd7b6b6: fix: return GraphQLError when refresh token is invalid
+
 ## 1.6.0-beta.1
 
 ### Minor Changes
