@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 1.6.0-1.6.0-beta.0.0
+
+### Minor Changes
+
+- 8b81410: Properly return GraphQLError when token is expired/invalid
+
 ## 1.4.3
 
 ### Patch Changes
