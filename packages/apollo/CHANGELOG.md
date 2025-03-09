@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 1.6.0-beta.1
+
+### Minor Changes
+
+- 3cc7b1e: Fix version naming
+
 ## 1.6.0-1.6.0-beta.0.0
 
 ### Minor Changes
