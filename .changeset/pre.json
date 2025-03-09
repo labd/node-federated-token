@@ -7,5 +7,5 @@
 		"@labdigital/federated-token-react": "1.5.0",
 		"@labdigital/federated-token-yoga": "1.4.3"
 	},
-	"changesets": ["neat-lies-train"]
+	"changesets": ["calm-tips-attend", "neat-lies-train"]
 }
