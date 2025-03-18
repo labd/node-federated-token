@@ -1,5 +1,19 @@
 # @labdigital/federated-token-apollo
 
+## 1.6.0
+
+### Minor Changes
+
+- 3cc7b1e: Fix version naming
+- bd7b6b6: fix: return GraphQLError when refresh token is invalid
+- 8b81410: Properly return GraphQLError when token is expired/invalid
+- 134df7c: Add ability to support multiple http frameworks and implement fastify
+
+### Patch Changes
+
+- Updated dependencies [134df7c]
+  - @labdigital/federated-token@1.6.0
+
 ## 1.6.0-beta.3
 
 ### Minor Changes
