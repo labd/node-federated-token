@@ -1,19 +1,19 @@
 {
-  "mode": "exit",
-  "tag": "beta",
-  "initialVersions": {
-    "@labdigital/federated-token-apollo": "1.4.3",
-    "@labdigital/federated-token": "1.4.3",
-    "@labdigital/federated-token-react": "1.5.0",
-    "@labdigital/federated-token-yoga": "1.4.3",
-    "@labdigital/federated-token-express-adapter": "1.6.0-beta.2",
-    "@labdigital/federated-token-fastify-adapter": "1.6.0-beta.2"
-  },
-  "changesets": [
-    "calm-tips-attend",
-    "fair-geckos-leave",
-    "lemon-elephants-sing",
-    "neat-lies-train",
-    "neat-tigers-taste"
-  ]
+	"mode": "exit",
+	"tag": "beta",
+	"initialVersions": {
+		"@labdigital/federated-token-apollo": "1.4.3",
+		"@labdigital/federated-token": "1.4.3",
+		"@labdigital/federated-token-react": "1.5.0",
+		"@labdigital/federated-token-yoga": "1.4.3",
+		"@labdigital/federated-token-express-adapter": "1.6.0-beta.2",
+		"@labdigital/federated-token-fastify-adapter": "1.6.0-beta.2"
+	},
+	"changesets": [
+		"calm-tips-attend",
+		"fair-geckos-leave",
+		"lemon-elephants-sing",
+		"neat-lies-train",
+		"neat-tigers-taste"
+	]
 }
