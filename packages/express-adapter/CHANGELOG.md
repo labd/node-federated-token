@@ -1,5 +1,11 @@
 # @labdigital/federated-token-express-adapter
 
+## 1.6.0-beta.4
+
+### Patch Changes
+
+- cdbc926: Properly export HeaderTokenSource from package
+
 ## 1.6.0-beta.3
 
 ### Minor Changes
