@@ -1,9 +1,9 @@
-import type { Request, Response } from "express";
 import {
 	type BaseHeaderSourceOptions,
 	BaseHeaderTokenSource,
 	type HeaderAdapter,
-} from "./headers-base";
+} from "@labdigital/federated-token/tokensource";
+import type { Request, Response } from "express";
 
 class ExpressHeaderAdapter implements HeaderAdapter<Request, Response> {
 	getHeader(request: Request, name: string): string | undefined {
@@ -15,7 +15,7 @@ class ExpressHeaderAdapter implements HeaderAdapter<Request, Response> {
 	}
 }
 
-export class ExpressHeaderTokenSource extends BaseHeaderTokenSource<
+export class HeaderTokenSource extends BaseHeaderTokenSource<
 	Request,
 	Response
 > {
@@ -24,12 +24,5 @@ export class ExpressHeaderTokenSource extends BaseHeaderTokenSource<
 	constructor(options?: BaseHeaderSourceOptions) {
 		super(options);
 		this.adapter = new ExpressHeaderAdapter();
-
-		process.emitWarning(
-			"Please import HeaderTokenSource from the @labdigital/federated-token-express-adapter",
-			"DeprecationWarning",
-		);
 	}
 }
-
-export const HeaderTokenSource = ExpressHeaderTokenSource;

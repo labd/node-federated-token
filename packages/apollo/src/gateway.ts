@@ -13,7 +13,7 @@ import type { PublicFederatedTokenContext } from "./context";
 
 type GatewayOptions = {
 	signer: TokenSigner;
-	source: TokenSource;
+	source: TokenSource<unknown, unknown>;
 };
 
 /**
@@ -27,7 +27,7 @@ export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
 	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {
 	private signer: TokenSigner;
-	private tokenSource: TokenSource;
+	private tokenSource: TokenSource<unknown, unknown>;
 
 	constructor(options: GatewayOptions) {
 		this.signer = options.signer;

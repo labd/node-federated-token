@@ -1,32 +1,27 @@
-import type { Request, Response } from "express";
+export interface TokenSource<TRequest, TResponse> {
+	deleteAccessToken(request: TRequest, response: TResponse): void;
+	deleteRefreshToken(request: TRequest, response: TResponse): void;
+	deleteDataToken(request: TRequest, response: TResponse): void;
 
-export interface TokenSource {
-	deleteAccessToken(request: Request, response: Response): void;
-	deleteRefreshToken(request: Request, response: Response): void;
-	deleteDataToken(
-		request: Request,
-		response: Response<any, Record<string, any>>,
-	): void;
-
-	getAccessToken(request: Request): string | undefined;
-	getDataToken(request: Request): string | undefined;
-	getRefreshToken(request: Request): string | undefined;
+	getAccessToken(request: TRequest): string | undefined;
+	getDataToken(request: TRequest): string | undefined;
+	getRefreshToken(request: TRequest): string | undefined;
 
 	setDataToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated?: boolean,
 	): void;
 	setAccessToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated?: boolean,
 	): void;
 	setRefreshToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated?: boolean,
 	): void;

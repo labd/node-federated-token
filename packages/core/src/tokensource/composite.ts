@@ -1,26 +1,28 @@
 import type { Request, Response } from "express";
 import type { TokenSource } from "./base";
 
-export class CompositeTokenSource implements TokenSource {
-	private sources: TokenSource[];
+export class CompositeTokenSource<TRequest = Request, TResponse = Response>
+	implements TokenSource<TRequest, TResponse>
+{
+	private sources: TokenSource<TRequest, TResponse>[];
 
-	constructor(sources: TokenSource[]) {
+	constructor(sources: TokenSource<TRequest, TResponse>[]) {
 		this.sources = sources;
 	}
 
-	deleteAccessToken(request: Request, response: Response): void {
+	deleteAccessToken(request: TRequest, response: TResponse): void {
 		for (const source of this.sources) {
 			source.deleteAccessToken(request, response);
 		}
 	}
 
-	deleteRefreshToken(request: Request, response: Response): void {
+	deleteRefreshToken(request: TRequest, response: TResponse): void {
 		for (const source of this.sources) {
 			source.deleteRefreshToken(request, response);
 		}
 	}
 
-	getAccessToken(request: Request): string {
+	getAccessToken(request: TRequest): string {
 		for (const source of this.sources) {
 			const token = source.getAccessToken(request);
 			if (token) {
@@ -30,7 +32,7 @@ export class CompositeTokenSource implements TokenSource {
 		return "";
 	}
 
-	getRefreshToken(request: Request): string {
+	getRefreshToken(request: TRequest): string {
 		for (const source of this.sources) {
 			const token = source.getRefreshToken(request);
 			if (token) {
@@ -40,7 +42,7 @@ export class CompositeTokenSource implements TokenSource {
 		return "";
 	}
 
-	getDataToken(request: Request): string {
+	getDataToken(request: TRequest): string {
 		for (const source of this.sources) {
 			const token = source.getDataToken(request);
 			if (token) {
@@ -51,8 +53,8 @@ export class CompositeTokenSource implements TokenSource {
 	}
 
 	setAccessToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated = false,
 	) {
@@ -62,8 +64,8 @@ export class CompositeTokenSource implements TokenSource {
 	}
 
 	setRefreshToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated = false,
 	) {
@@ -73,8 +75,8 @@ export class CompositeTokenSource implements TokenSource {
 	}
 
 	setDataToken(
-		request: Request,
-		response: Response,
+		request: TRequest,
+		response: TResponse,
 		token: string,
 		isAuthenticated = false,
 	) {
@@ -83,7 +85,7 @@ export class CompositeTokenSource implements TokenSource {
 		}
 	}
 
-	deleteDataToken(request: Request, response: Response): void {
+	deleteDataToken(request: TRequest, response: TResponse): void {
 		for (const source of this.sources) {
 			source.deleteDataToken(request, response);
 		}
