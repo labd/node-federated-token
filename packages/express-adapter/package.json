@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-express-adapter",
-	"version": "1.6.0-beta.3",
+	"version": "1.6.0-beta.4",
 	"description": "Express Adapter for @labdigital/federated-token",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
