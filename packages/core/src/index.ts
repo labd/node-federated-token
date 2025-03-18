@@ -2,6 +2,8 @@ export { PublicFederatedToken } from "./jwt";
 export { KeyManager, TokenSigner, type KeyManagerInterface } from "./sign";
 export { FederatedToken } from "./token";
 export {
+	type BaseCookieSourceOptions,
+	BaseCookieTokenSource,
 	CompositeTokenSource,
 	CookieTokenSource,
 	HeaderTokenSource,

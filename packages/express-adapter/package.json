@@ -1,25 +1,18 @@
 {
-	"name": "@labdigital/federated-token",
-	"version": "1.4.3",
-	"description": "Federate JWT tokens between Apollo servers",
+	"name": "@labdigital/federated-token-express-adapter",
+	"version": "1.6.0-beta.2",
+	"description": "Express Adapter for @labdigital/federated-token",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"exports": {
-		"./package.json": "./package.json",
 		".": {
 			"import": "./dist/index.js",
-			"require": "./dist/index.cjs",
-			"types": "./dist/index.d.ts"
-		},
-		"./tokensource": {
-			"import": "./dist/tokensource/index.js",
-			"require": "./dist/tokensource/index.cjs",
-			"types": "./dist/tokensource/index.d.ts"
+			"require": "./dist/index.cjs"
 		}
 	},
-	"keywords": ["graphql", "authentication"],
+	"keywords": ["graphql", "authentication", "fastify"],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -37,21 +30,16 @@
 	},
 	"files": ["dist", "src"],
 	"dependencies": {
-		"jose": "5.4.0",
-		"lodash.isequal": "^4.5.0"
+		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
-		"@types/cookie": "^0.6.0",
+		"@fastify/cookie": "11.0.2",
 		"@types/express": "^4.17.21",
-		"@types/lodash.isequal": "^4.5.8",
 		"@vitest/coverage-v8": "1.6.0",
-		"cookie": "^0.6.0",
+		"fastify": "5.2.1",
 		"node-mocks-http": "^1.16.1",
 		"tsup": "^8.3.0",
 		"typescript": "^5.8.2",
 		"vitest": "1.6.0"
-	},
-	"peerDependencies": {
-		"graphql": ">= 16.6.0"
 	}
 }

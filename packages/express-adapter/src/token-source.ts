@@ -1,9 +1,9 @@
-import type { CookieOptions, Request, Response } from "express";
 import {
 	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
 	type CookieAdapter,
-} from "./cookies-base";
+} from "@labdigital/federated-token/tokensource";
+import type { CookieOptions, Request, Response } from "express";
 
 type ExpressCookieSourceOptions = BaseCookieSourceOptions & {
 	publicDomainFn?: (request: Request) => string | undefined;
@@ -54,11 +54,6 @@ export class ExpressCookieTokenSource extends BaseCookieTokenSource<
 	constructor(options: ExpressCookieSourceOptions) {
 		super(options);
 		this.adapter = new ExpressCookieAdapter(options);
-
-		process.emitWarning(
-			"Please import CookieTokenSource from the @labdigital/federated-token-express-adapter",
-			"DeprecationWarning",
-		);
 	}
 }
 
