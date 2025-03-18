@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-yoga",
-	"version": "1.6.0-beta.3",
+	"version": "1.6.0",
 	"description": "Federated token plugin for GraphQL Yoga",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
