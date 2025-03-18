@@ -1,5 +1,12 @@
 # @labdigital/federated-token-yoga
 
+## 1.6.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies [134df7c]
+  - @labdigital/federated-token@1.6.0-beta.3
+
 ## 1.4.3
 
 ### Patch Changes
