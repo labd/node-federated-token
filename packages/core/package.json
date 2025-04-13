@@ -46,9 +46,9 @@
 		"@types/lodash.isequal": "^4.5.8",
 		"@vitest/coverage-v8": "1.6.0",
 		"cookie": "^0.6.0",
-		"node-mocks-http": "^1.16.1",
-		"tsup": "^8.3.0",
-		"typescript": "^5.8.2",
+		"node-mocks-http": "^1.16.2",
+		"tsup": "^8.4.0",
+		"typescript": "^5.8.3",
 		"vitest": "1.6.0"
 	},
 	"peerDependencies": {
