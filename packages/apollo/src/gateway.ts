@@ -23,7 +23,7 @@ type GatewayOptions = {
  * via the tokenSource on the response if the downstream services have
  * created/modified them.
  */
-export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext>
+export class GatewayAuthPlugin<TContext extends PublicFederatedTokenContext<unknown, unknown>>
 	implements ApolloServerPlugin, GraphQLRequestListener<TContext>
 {
 	private signer: TokenSigner;
