@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.6.1
+
+### Patch Changes
+
+- 7ee79e7: Explictly set the cookie path to fix issue with fastify, which otherwise uses the wrong default path
+
 ## 1.6.0
 
 ### Minor Changes

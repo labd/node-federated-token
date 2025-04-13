@@ -1,5 +1,13 @@
 # @labdigital/federated-token-apollo
 
+## 1.6.1
+
+### Patch Changes
+
+- 48871e9: Fix a typing issue when using fastify instead of express
+- Updated dependencies [7ee79e7]
+  - @labdigital/federated-token@1.6.1
+
 ## 1.6.0
 
 ### Minor Changes
