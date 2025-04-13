@@ -113,6 +113,7 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
+			path: "/",
 		});
 	});
 
@@ -135,6 +136,7 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
+			path: "/",
 		});
 	});
 
