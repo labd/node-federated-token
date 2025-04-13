@@ -12,7 +12,7 @@ import type { PublicFederatedTokenContext } from "./context";
 // x-access-token and x-refresh-token headers from the response.
 // It works in conjunction with the GatewayAuthPlugin.
 export class FederatedGraphQLDataSource<
-	TContext extends PublicFederatedTokenContext<unknown, unknown>
+	TContext extends PublicFederatedTokenContext<unknown, unknown>,
 > extends RemoteGraphQLDataSource<TContext> {
 	willSendRequest(
 		options: GraphQLDataSourceProcessOptions,
