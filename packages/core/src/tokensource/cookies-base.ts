@@ -159,6 +159,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.adapter.getPublicDomain(request),
+			path: "/",
 		};
 
 		if (isAuthenticated) {
@@ -212,6 +213,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.adapter.getPublicDomain(request),
+			path: "/",
 		};
 
 		if (isAuthenticated) {
