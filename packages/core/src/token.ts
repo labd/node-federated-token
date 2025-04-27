@@ -1,4 +1,4 @@
-import isEqual from "lodash.isequal";
+import { isDeepStrictEqual } from "node:util";
 
 export type FederatedTokenContext = {
 	federatedToken?: FederatedToken;
@@ -145,10 +145,10 @@ export class FederatedToken {
 		);
 
 		if (trackModified) {
-			this._valueModified = !isEqual(this.values, token.values);
+			this._valueModified = !isDeepStrictEqual(this.values, token.values);
 
 			this._accessTokenModified = Object.keys(token.tokens ?? []).some(
-				(key) => !isEqual(this.tokens[key], token.tokens?.[key]),
+				(key) => !isDeepStrictEqual(this.tokens[key], token.tokens?.[key]),
 			);
 		}
 		// Set the authentication status, we only set it to true, never explicitly
@@ -181,7 +181,10 @@ export class FederatedToken {
 
 		// Merge tokens in object
 		for (const k in refreshTokens) {
-			if (trackModified && !isEqual(this.refreshTokens[k], refreshTokens[k])) {
+			if (
+				trackModified &&
+				!isDeepStrictEqual(this.refreshTokens[k], refreshTokens[k])
+			) {
 				this._refreshTokenModified = true;
 			}
 			this.refreshTokens[k] = refreshTokens[k];
