@@ -1,5 +1,12 @@
 # @labdigital/federated-token-fastify-adapter
 
+## 1.7.0
+
+### Patch Changes
+
+- Updated dependencies [47f6a6a]
+  - @labdigital/federated-token@1.7.0
+
 ## 1.6.1
 
 ### Patch Changes

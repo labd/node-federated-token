@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 1.7.0
+
+### Minor Changes
+
+- 47f6a6a: Replace lodash.isEqual with node:util `isDeepStrictEqual`
+
 ## 1.6.1
 
 ### Patch Changes
