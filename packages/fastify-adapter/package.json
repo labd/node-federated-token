@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-fastify-adapter",
-	"version": "1.6.1",
+	"version": "1.7.0",
 	"description": "Fastify Adapter for @labdigital/federated-token",
 	"module": "./dist/index.js",
 	"main": "./dist/index.cjs",
