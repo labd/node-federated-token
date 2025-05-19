@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 1.7.1
+
+### Patch Changes
+
+- 92b186d: Use cookieNames from options when setting up auth provider
+
 ## 1.5.1
 
 ## 1.5.0
