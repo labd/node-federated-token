@@ -110,7 +110,10 @@ export function AuthProvider({
 		loading: true,
 	});
 
-	const cookieNames = DEFAULT_COOKIE_NAMES;
+	const cookieNames = {
+		...DEFAULT_COOKIE_NAMES,
+		...options.cookieNames,
+	};
 
 	const updateAuthState = useCallback((token?: TokenData) => {
 		if (token?.isAuthenticated) {
