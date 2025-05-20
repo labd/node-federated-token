@@ -5,7 +5,6 @@ export {
 	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
 	CompositeTokenSource,
-	HeaderTokenSource,
 	type TokenSource,
 } from "./tokensource/index";
 export { TokenExpiredError, TokenInvalidError } from "./errors";
