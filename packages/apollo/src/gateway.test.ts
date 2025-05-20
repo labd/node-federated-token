@@ -76,7 +76,10 @@ describe("GatewayAuthPlugin", async () => {
 			) => {
 				return `Hello ${name}`;
 			},
-			refreshToken: (_: unknown, context: PublicFederatedTokenContext<Request, Response>) => {
+			refreshToken: (
+				_: unknown,
+				context: PublicFederatedTokenContext<Request, Response>,
+			) => {
 				context.federatedToken?.setAccessToken("foo", {
 					token: "bar",
 					exp: Math.floor(Date.now() / 1000 - 1000),

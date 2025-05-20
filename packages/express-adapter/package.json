@@ -29,6 +29,9 @@
 		"typescript": "^5.8.2",
 		"vitest": "1.6.0"
 	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
 	"files": ["dist", "src"],
 	"module": "./dist/index.js",
 	"publishConfig": {
