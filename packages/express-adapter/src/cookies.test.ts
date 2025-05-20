@@ -128,7 +128,7 @@ describe("CookieTokenSource", () => {
 			refreshTokenPath: "/refresh",
 			userToken: {
 				expiresIn: 30,
-			}
+			},
 		});
 
 		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);

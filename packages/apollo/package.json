@@ -1,26 +1,18 @@
 {
 	"name": "@labdigital/federated-token-apollo",
 	"version": "1.7.0",
+	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federate JWT tokens between Apollo servers",
-	"module": "./dist/index.js",
+	"keywords": ["apollo", "authentication", "graphql"],
+	"license": "MIT",
+	"type": "module",
 	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.ts",
-	"type": "module",
 	"exports": {
 		".": {
 			"import": "./dist/index.js",
 			"require": "./dist/index.cjs"
 		}
-	},
-	"keywords": ["graphql", "authentication", "apollo"],
-	"author": "Lab Digital <opensource@labdigital.nl>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"scripts": {
 		"build": "tsup",
@@ -28,7 +20,6 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*"
 	},
@@ -43,9 +34,15 @@
 		"typescript": "^5.8.2",
 		"vitest": "1.6.0"
 	},
+	"files": ["dist", "src"],
+	"module": "./dist/index.js",
 	"peerDependencies": {
 		"@apollo/gateway": ">= 2.4",
 		"@apollo/server": ">= 4.5",
 		"graphql": ">= 16.6.0"
-	}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": "labd/node-federated-token"
 }
