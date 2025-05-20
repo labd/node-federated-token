@@ -45,6 +45,9 @@ importers:
       '@apollo/server-gateway-interface':
         specifier: 1.1.1
         version: 1.1.1(graphql@16.9.0)
+      '@apollo/utils.logger':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@labdigital/federated-token-express-adapter':
         specifier: workspace:*
         version: link:../express-adapter
@@ -315,6 +318,10 @@ packages:
   '@apollo/utils.logger@2.0.1':
     resolution: {integrity: sha512-YuplwLHaHf1oviidB7MxnCXAdHp3IqYV8n0momZ3JfLniae92eYqMIx+j5qJFX6WKJPs6q7bczmV4lXIsTu5Pg==}
     engines: {node: '>=14'}
+
+  '@apollo/utils.logger@3.0.0':
+    resolution: {integrity: sha512-M8V8JOTH0F2qEi+ktPfw4RL7MvUycDfKp7aEap2eWXfL5SqWHN6jTLbj5f5fj1cceHpyaUSOZlvlaaryaxZAmg==}
+    engines: {node: '>=16'}
 
   '@apollo/utils.printwithreducedwhitespace@2.0.1':
     resolution: {integrity: sha512-9M4LUXV/fQBh8vZWlLvb/HyyhjJ77/I5ZKu+NBWV/BmYGyRmoEP9EVAy7LCVoY3t8BDcyCAGfxJaLFCSuQkPUg==}
@@ -3748,6 +3755,8 @@ snapshots:
       lru-cache: 7.18.3
 
   '@apollo/utils.logger@2.0.1': {}
+
+  '@apollo/utils.logger@3.0.0': {}
 
   '@apollo/utils.printwithreducedwhitespace@2.0.1(graphql@16.9.0)':
     dependencies:
