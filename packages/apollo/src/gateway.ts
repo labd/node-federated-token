@@ -4,16 +4,19 @@ import type {
 	GraphQLRequestContextDidResolveSource,
 	GraphQLRequestListener,
 } from "@apollo/server";
+import type { Logger } from "@apollo/utils.logger";
 import { PublicFederatedToken } from "@labdigital/federated-token";
 import type { TokenSigner } from "@labdigital/federated-token";
 import type { TokenSource } from "@labdigital/federated-token";
 import { TokenExpiredError } from "@labdigital/federated-token";
 import { GraphQLError } from "graphql";
 import type { PublicFederatedTokenContext } from "./context";
+import { maskToken } from "./utils";
 
 type GatewayOptions = {
 	signer: TokenSigner;
 	source: TokenSource<unknown, unknown>;
+	logger?: Logger;
 };
 
 /**
@@ -30,9 +33,12 @@ export class GatewayAuthPlugin<
 	private signer: TokenSigner;
 	private tokenSource: TokenSource<unknown, unknown>;
 
+	private logger: Logger | undefined;
+
 	constructor(options: GatewayOptions) {
 		this.signer = options.signer;
 		this.tokenSource = options.source;
+		this.logger = options.logger;
 	}
 
 	public async requestDidStart(
@@ -78,6 +84,12 @@ export class GatewayAuthPlugin<
 						},
 					};
 				} else {
+					this.logger?.error({
+						msg: "Error during loading of the access token",
+						accessToken: maskToken(accessToken),
+						err: e,
+					});
+
 					return {
 						didResolveOperation: async (
 							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
@@ -101,6 +113,12 @@ export class GatewayAuthPlugin<
 			try {
 				await token.loadRefreshJWT(this.signer, refreshToken);
 			} catch (e: unknown) {
+				this.logger?.error({
+					msg: "Error during loading of the refresh token",
+					refreshToken: maskToken(refreshToken),
+					err: e,
+				});
+
 				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
 				return {
 					didResolveOperation: async (
@@ -142,6 +160,11 @@ export class GatewayAuthPlugin<
 						},
 					};
 				} else {
+					this.logger?.error({
+						msg: "Error during loading of the data token",
+						dataToken: maskToken(dataToken),
+						err: e,
+					});
 					return {
 						didResolveOperation: async (
 							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
