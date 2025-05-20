@@ -5,7 +5,6 @@ export {
 	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
 	CompositeTokenSource,
-	CookieTokenSource,
 	HeaderTokenSource,
 	type TokenSource,
 } from "./tokensource/index";

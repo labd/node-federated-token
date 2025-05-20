@@ -19,7 +19,10 @@
 			"types": "./dist/tokensource/index.d.ts"
 		}
 	},
-	"keywords": ["graphql", "authentication"],
+	"keywords": [
+		"graphql",
+		"authentication"
+	],
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"license": "MIT",
 	"repository": {
@@ -35,9 +38,13 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
+	"files": [
+		"dist",
+		"src"
+	],
 	"dependencies": {
-		"jose": "5.4.0"
+		"jose": "5.4.0",
+		"node-mock-http": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/cookie": "^0.6.0",
