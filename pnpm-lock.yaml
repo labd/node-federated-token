@@ -70,6 +70,9 @@ importers:
       jose:
         specifier: 5.4.0
         version: 5.4.0
+      node-mock-http:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@types/cookie':
         specifier: ^0.6.0
@@ -102,18 +105,15 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@fastify/cookie':
-        specifier: 11.0.2
-        version: 11.0.2
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.7.9))
-      fastify:
-        specifier: 5.2.1
-        version: 5.2.1
       node-mocks-http:
         specifier: ^1.16.1
         version: 1.16.1(@types/express@4.17.21)(@types/node@22.7.9)
@@ -2392,6 +2392,9 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-mock-http@1.0.0:
+    resolution: {integrity: sha512-0uGYQ1WQL1M5kKvGRXWQ3uZCHtLTO8hln3oBjIusM75WoesZ909uQJs/Hb946i2SS+Gsrhkaa6iAO17jRIv6DQ==}
 
   node-mocks-http@1.16.1:
     resolution: {integrity: sha512-Q2m5bmIE1KFeeKI6OsSn+c4XDara5NWnUJgzqnIkhiCNukYX+fqu0ADSeKOlpWtbCwgRnJ69F+7RUiQltzTKXA==}
@@ -5589,6 +5592,8 @@ snapshots:
       whatwg-url: 5.0.0
     optionalDependencies:
       encoding: 0.1.13
+
+  node-mock-http@1.0.0: {}
 
   node-mocks-http@1.16.1(@types/express@4.17.21)(@types/node@22.7.9):
     dependencies:
