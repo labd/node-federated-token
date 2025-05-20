@@ -1,4 +1,5 @@
 import * as crypto from "node:crypto";
+import { decodeProtectedHeader } from "jose";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { KeyManager, TokenSigner } from "./sign";
 
@@ -68,6 +69,9 @@ describe("Strings", async () => {
 		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const token = await signer.encryptJWT(payload, exp);
 		expect(token).toBeDefined();
+
+		const header = decodeProtectedHeader(token);
+		expect(header.exp).toStrictEqual(exp);
 
 		const result = await signer.decryptJWT(token);
 		expect(result).toBeDefined();
