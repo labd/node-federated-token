@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 2.0.0-beta.1
+
+### Minor Changes
+
+- 9c25b37: Allow passing a logger instance to GatewayAuthPlugin
+
 ## 2.0.0-beta.0
 
 ### Major Changes

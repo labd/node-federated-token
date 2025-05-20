@@ -10,6 +10,7 @@
 		"@labdigital/federated-token-yoga": "1.7.0"
 	},
 	"changesets": [
+		"blue-squids-fetch",
 		"eleven-items-bake",
 		"famous-lemons-listen",
 		"modern-hairs-decide",
