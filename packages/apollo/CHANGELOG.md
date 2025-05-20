@@ -1,5 +1,11 @@
 # @labdigital/federated-token-apollo
 
+## 2.0.0-beta.2
+
+### Patch Changes
+
+- ad2c4ec: Improve masking of tokens when logging errors
+
 ## 2.0.0-beta.1
 
 ### Minor Changes
