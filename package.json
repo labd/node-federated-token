@@ -20,15 +20,13 @@
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage"
 	},
-	"dependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"turbo": "^2.2.3"
-	},
 	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
 		"@changesets/cli": "^2.27.9",
-		"@vitest/coverage-v8": "1.6.0",
+		"@vitest/coverage-v8": "3.1.4",
 		"syncpack": "13.0.4",
-		"vitest": "1.6.0"
+		"turbo": "^2.2.3",
+		"vitest": "3.1.4"
 	},
 	"module": "./dist/index.mjs",
 	"packageManager": "pnpm@9.2.0",

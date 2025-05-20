@@ -1,4 +1,4 @@
-import { type CookieSerializeOptions, parse, serialize } from "cookie";
+import { type SerializeOptions, parse, serialize } from "cookie";
 import { describe, expect, it } from "vitest";
 import {
 	type BaseCookieSourceOptions,
@@ -27,7 +27,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		response: Response,
 		name: string,
 		value: string,
-		options: CookieSerializeOptions,
+		options: SerializeOptions,
 	): void {
 		const cookieStr = serialize(name, value, options);
 		response.headers.append("Set-Cookie", cookieStr);
@@ -37,7 +37,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		request: Request,
 		response: Response,
 		name: string,
-		options?: CookieSerializeOptions,
+		options?: SerializeOptions,
 	): void {
 		const cookieStr = serialize(name, "", options);
 		response.headers.append("Set-Cookie", cookieStr);
@@ -61,7 +61,9 @@ class TestCookieTokenSource extends BaseCookieTokenSource<Request, Response> {
 	}
 }
 
-const getCookies = (response: Response): Record<string, string>[] => {
+const getCookies = (
+	response: Response,
+): Record<string, string | undefined>[] => {
 	const raw = response.headers.get("Set-Cookie");
 	if (!raw) return [];
 
@@ -153,7 +155,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{ userToken: "FOOBAR", Path: "/", SameSite: "Strict" },
 		]);
 	});
@@ -175,7 +177,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{
 				userToken: "FOOBAR",
 				Path: "/",
@@ -199,7 +201,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.setAccessToken(request, response, "FOOBAR", false);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{ guestToken: "FOOBAR", Path: "/", SameSite: "Strict" },
 		]);
 	});
@@ -218,7 +220,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.setRefreshToken(request, response, "FOOBAR", false);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{
 				refreshToken: "FOOBAR",
 				Path: "/refresh",
@@ -247,7 +249,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.setRefreshToken(request, response, "FOOBAR", true);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{
 				refreshToken: "FOOBAR",
 				Path: "/refresh",
@@ -280,7 +282,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteAccessToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([{ userToken: "" }, { guestToken: "" }]);
+		expect(cookies).toEqual([{ userToken: "" }, { guestToken: "" }]);
 	});
 
 	// Test for deleting refresh tokens
@@ -301,7 +303,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteRefreshToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
+		expect(cookies).toEqual([
 			{ refreshToken: "", Path: "/refresh" },
 			{ guestRefreshTokenExists: "" },
 			{ userRefreshTokenExists: "" },
@@ -326,6 +328,6 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteRefreshToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([{ refreshToken: "", Path: "/refresh" }]);
+		expect(cookies).toEqual([{ refreshToken: "", Path: "/refresh" }]);
 	});
 });

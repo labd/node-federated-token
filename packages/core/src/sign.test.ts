@@ -97,7 +97,7 @@ describe("Strings", async () => {
 		const token = await invalidSigner.encryptJWT(payload, exp);
 		expect(token).toBeDefined();
 
-		expect(() => signer.decryptJWT(token)).rejects.toThrowError(
+		await expect(() => signer.decryptJWT(token)).rejects.toThrowError(
 			`unexpected "iss" claim value`,
 		);
 	});
