@@ -93,7 +93,7 @@ export class TokenSigner {
 		const { id, key } = await this._encryptKeys.getActiveKey();
 
 		const data = await new jose.EncryptJWT(payload)
-			.setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256", kid: id, exp: exp })
+			.setProtectedHeader({ alg: "dir", enc: "A256GCM", kid: id, exp: exp })
 			.setIssuedAt()
 			.setIssuer(this.config.issuer)
 			.setAudience(this.config.audience)
