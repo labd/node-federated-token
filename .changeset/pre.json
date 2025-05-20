@@ -1,13 +1,13 @@
 {
-  "mode": "pre",
-  "tag": "beta",
-  "initialVersions": {
-    "@labdigital/federated-token-apollo": "1.7.0",
-    "@labdigital/federated-token": "1.7.0",
-    "@labdigital/federated-token-express-adapter": "1.7.0",
-    "@labdigital/federated-token-fastify-adapter": "1.7.0",
-    "@labdigital/federated-token-react": "1.7.1",
-    "@labdigital/federated-token-yoga": "1.7.0"
-  },
-  "changesets": []
+	"mode": "pre",
+	"tag": "beta",
+	"initialVersions": {
+		"@labdigital/federated-token-apollo": "1.7.0",
+		"@labdigital/federated-token": "1.7.0",
+		"@labdigital/federated-token-express-adapter": "1.7.0",
+		"@labdigital/federated-token-fastify-adapter": "1.7.0",
+		"@labdigital/federated-token-react": "1.7.1",
+		"@labdigital/federated-token-yoga": "1.7.0"
+	},
+	"changesets": []
 }
