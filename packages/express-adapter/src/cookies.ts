@@ -45,7 +45,7 @@ class ExpressCookieAdapter implements CookieAdapter<Request, Response> {
 	}
 }
 
-export class ExpressCookieTokenSource extends BaseCookieTokenSource<
+export class CookieTokenSource extends BaseCookieTokenSource<
 	Request,
 	Response
 > {
@@ -56,5 +56,3 @@ export class ExpressCookieTokenSource extends BaseCookieTokenSource<
 		this.adapter = new ExpressCookieAdapter(options);
 	}
 }
-
-export const CookieTokenSource = ExpressCookieTokenSource;

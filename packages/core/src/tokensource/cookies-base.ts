@@ -55,11 +55,23 @@ export const DEFAULT_COOKIE_NAMES: CookieNames = {
 	guestRefreshTokenExists: "guestRefreshTokenExists",
 };
 
+
+type CookieSettings = {
+	/**
+	 * `expiresIn` is the number of seconds the cookie expires in, or 'session' when
+	 * the cookie should expire when the browser is closed.
+	 */
+	expiresIn: number | "session";
+}
+
 export type BaseCookieSourceOptions = {
 	secure: boolean;
 	sameSite: "strict" | "lax" | "none" | boolean;
 	refreshTokenPath: string;
 	cookieNames?: Partial<CookieNames>;
+	guestToken?: CookieSettings;
+	userToken?: CookieSettings;
+	refreshToken?: CookieSettings;
 };
 
 export abstract class BaseCookieTokenSource<TRequest, TResponse>
@@ -154,11 +166,16 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		token: string,
 		isAuthenticated = false,
 	) {
-		const cookieOptions = {
+		const opts = (isAuthenticated ? this.options.userToken : this.options.guestToken) ?? {
+			expiresIn: "session",
+		}
+
+		const cookieOptions: CookieOptions = {
 			httpOnly: false,
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.adapter.getPublicDomain(request),
+			expires: opts.expiresIn === "session" ? undefined : new Date(Date.now() + (opts.expiresIn * 1000)),
 			path: "/",
 		};
 
@@ -208,11 +225,16 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		token: string,
 		isAuthenticated = false,
 	) {
-		const cookieOptions = {
+		const opts = (isAuthenticated ? this.options.userToken : this.options.guestToken) ?? {
+			expiresIn: "session",
+		}
+
+		const cookieOptions: CookieOptions = {
 			httpOnly: true,
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
 			domain: this.adapter.getPublicDomain(request),
+			expires: opts.expiresIn === "session" ? undefined : new Date(Date.now() + (opts.expiresIn * 1000)),
 			path: "/",
 		};
 

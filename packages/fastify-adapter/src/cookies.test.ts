@@ -125,7 +125,34 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
+			expires: undefined,
 			path: "/",
+		});
+	});
+
+	it("should set the access token for authenticated users with custom expire", () => {
+		const request = createMockRequest();
+		const response = createMockResponse();
+
+		const cookieTokenSource = new CookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+			userToken: {
+				expiresIn: 30,
+			},
+		});
+
+		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);
+
+		expect(response._cookies["userToken"].value).toBe("FOOBAR");
+		expect(response._cookies["userToken"].options).toStrictEqual({
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+			domain: undefined,
+			path: "/",
+			expires: expect.any(Date),
 		});
 	});
 
@@ -148,6 +175,7 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
+			expires: undefined,
 			path: "/",
 		});
 	});

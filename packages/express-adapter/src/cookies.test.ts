@@ -1,7 +1,7 @@
 import type { CookieSerializeOptions } from "cookie";
 import httpMocks from "node-mocks-http";
 import { describe, expect, it } from "vitest";
-import { CookieTokenSource } from "./token-source";
+import { CookieTokenSource } from "./cookies";
 
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
@@ -113,11 +113,11 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
+			expires: undefined,
 			path: "/",
 		});
 	});
 
-		// Test for setting the access token for authenticated users
 	it("should set the access token for authenticated users with custom expire", () => {
 		const request = httpMocks.createRequest();
 		const response = createMockResponse();
@@ -126,6 +126,9 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			refreshTokenPath: "/refresh",
+			userToken: {
+				expiresIn: 30,
+			}
 		});
 
 		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);
@@ -137,6 +140,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "strict",
 			domain: undefined,
 			path: "/",
+			expires: expect.any(Date),
 		});
 	});
 
@@ -158,6 +162,7 @@ describe("CookieTokenSource", () => {
 			httpOnly: true,
 			secure: true,
 			sameSite: "strict",
+			expires: undefined,
 			domain: undefined,
 			path: "/",
 		});
