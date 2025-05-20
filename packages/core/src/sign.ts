@@ -120,7 +120,7 @@ export class TokenSigner {
 
 type Key = {
 	id: string;
-	key: jose.CryptoKey | Uint8Array;
+	key: jose.KeyObject | Uint8Array;
 };
 
 export interface KeyManagerInterface {
@@ -128,7 +128,7 @@ export interface KeyManagerInterface {
 	getKeyFunction(
 		header: jose.JWTHeaderParameters | jose.CompactJWEHeaderParameters,
 		input: jose.FlattenedJWSInput | jose.FlattenedJWE,
-	): Uint8Array | jose.CryptoKey | Promise<Uint8Array | jose.CryptoKey>;
+	): Uint8Array | jose.KeyObject | Promise<Uint8Array | jose.KeyObject>;
 }
 
 export class KeyManager implements KeyManagerInterface {
@@ -151,7 +151,7 @@ export class KeyManager implements KeyManagerInterface {
 	getKeyFunction(
 		header: jose.JWTHeaderParameters | jose.CompactJWEHeaderParameters,
 		input: jose.FlattenedJWSInput | jose.FlattenedJWE,
-	): Uint8Array | jose.CryptoKey | Promise<Uint8Array | jose.CryptoKey> {
+	): Uint8Array | jose.KeyObject | Promise<Uint8Array | jose.KeyObject> {
 		const kid = header?.kid;
 		if (!kid) {
 			throw new ConfigurationError("Missing kid");
@@ -164,8 +164,8 @@ export class KeyManager implements KeyManagerInterface {
 	}
 
 	convertKey(
-		key: KeyObject | jose.CryptoKey | Uint8Array,
-	): Uint8Array | jose.CryptoKey {
+		key: KeyObject | jose.KeyObject | Uint8Array,
+	): Uint8Array | jose.KeyObject {
 		if (key instanceof KeyObject) {
 			return new Uint8Array(key.export());
 		}
