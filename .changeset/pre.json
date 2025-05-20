@@ -9,5 +9,12 @@
 		"@labdigital/federated-token-react": "1.7.1",
 		"@labdigital/federated-token-yoga": "1.7.0"
 	},
-	"changesets": ["eleven-items-bake", "silent-flies-enjoy", "two-badgers-live"]
+	"changesets": [
+		"eleven-items-bake",
+		"famous-lemons-listen",
+		"modern-hairs-decide",
+		"silent-flies-enjoy",
+		"tricky-starfishes-call",
+		"two-badgers-live"
+	]
 }
