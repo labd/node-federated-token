@@ -27,7 +27,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		response: Response,
 		name: string,
 		value: string,
-		options: CookieSerializeOptions
+		options: CookieSerializeOptions,
 	): void {
 		const cookieStr = serialize(name, value, options);
 		response.headers.append("Set-Cookie", cookieStr);
@@ -37,7 +37,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		request: Request,
 		response: Response,
 		name: string,
-		options?: CookieSerializeOptions
+		options?: CookieSerializeOptions,
 	): void {
 		const cookieStr = serialize(name, "", options);
 		response.headers.append("Set-Cookie", cookieStr);
@@ -312,7 +312,7 @@ describe("CookieTokenSource", () => {
 	it("should delete refresh token by name", () => {
 		const request: Request = new Request("http://localhost", {
 			headers: {
-				cookie: "REFRESH_TOKEN=1"
+				cookie: "REFRESH_TOKEN=1",
 			},
 		});
 		const response: Response = new Response();
@@ -326,8 +326,6 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteRefreshToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toStrictEqual([
-			{ refreshToken: "", Path: "/refresh" },
-		]);
+		expect(cookies).toStrictEqual([{ refreshToken: "", Path: "/refresh" }]);
 	});
 });

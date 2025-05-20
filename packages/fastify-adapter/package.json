@@ -1,26 +1,18 @@
 {
 	"name": "@labdigital/federated-token-fastify-adapter",
 	"version": "1.7.0",
+	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Fastify Adapter for @labdigital/federated-token",
-	"module": "./dist/index.js",
+	"keywords": ["authentication", "fastify", "graphql"],
+	"license": "MIT",
+	"type": "module",
 	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.ts",
-	"type": "module",
 	"exports": {
 		".": {
 			"import": "./dist/index.js",
 			"require": "./dist/index.cjs"
 		}
-	},
-	"keywords": ["graphql", "authentication", "fastify"],
-	"author": "Lab Digital <opensource@labdigital.nl>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"scripts": {
 		"build": "tsup",
@@ -28,16 +20,21 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
 		"@fastify/cookie": "11.0.2",
-		"fastify": "5.2.1",
 		"@vitest/coverage-v8": "1.6.0",
+		"fastify": "5.2.1",
 		"tsup": "^8.3.0",
 		"typescript": "^5.8.2",
 		"vitest": "1.6.0"
-	}
+	},
+	"files": ["dist", "src"],
+	"module": "./dist/index.js",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": "labd/node-federated-token"
 }

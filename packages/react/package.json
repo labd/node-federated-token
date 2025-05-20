@@ -1,27 +1,19 @@
 {
 	"name": "@labdigital/federated-token-react",
 	"version": "1.7.1",
+	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federate JWT tokens for React clients",
-	"module": "./dist/index.js",
+	"keywords": ["authentication", "graphql", "react"],
+	"license": "MIT",
+	"type": "module",
 	"main": "./dist/index.cjs",
 	"types": "./dist/index.d.ts",
-	"type": "module",
 	"exports": {
 		".": {
+			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js",
-			"require": "./dist/index.cjs",
-			"types": "./dist/index.d.ts"
+			"require": "./dist/index.cjs"
 		}
-	},
-	"keywords": ["graphql", "authentication", "react"],
-	"author": "Lab Digital <opensource@labdigital.nl>",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"scripts": {
 		"build": "tsup",
@@ -29,7 +21,6 @@
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
-	"files": ["dist", "src"],
 	"dependencies": {
 		"jose": "5.4.0",
 		"js-cookie": "3.0.5"
@@ -44,8 +35,14 @@
 		"typescript": "^5.8.2",
 		"vitest": "1.6.0"
 	},
+	"files": ["dist", "src"],
+	"module": "./dist/index.js",
 	"peerDependencies": {
 		"graphql": ">= 16.6.0",
 		"react": ">= 18.0.0"
-	}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": "labd/node-federated-token"
 }
