@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-react",
-	"version": "1.7.1",
+	"version": "2.0.0-beta.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federate JWT tokens for React clients",
 	"keywords": ["authentication", "graphql", "react"],
