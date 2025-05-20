@@ -31,8 +31,8 @@ importers:
   packages/apollo:
     dependencies:
       '@labdigital/federated-token':
-        specifier: 1.7.0
-        version: 1.7.0(graphql@16.9.0)
+        specifier: workspace:*
+        version: link:../core
       graphql:
         specifier: '>= 16.6.0'
         version: 16.9.0
@@ -105,8 +105,8 @@ importers:
   packages/express-adapter:
     dependencies:
       '@labdigital/federated-token':
-        specifier: 1.7.0
-        version: 1.7.0(graphql@16.9.0)
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@types/cookie':
         specifier: ^0.6.0
@@ -133,8 +133,8 @@ importers:
   packages/fastify-adapter:
     dependencies:
       '@labdigital/federated-token':
-        specifier: 1.7.0
-        version: 1.7.0(graphql@16.9.0)
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@fastify/cookie':
         specifier: 11.0.2
@@ -198,8 +198,8 @@ importers:
   packages/yoga:
     dependencies:
       '@labdigital/federated-token':
-        specifier: 1.7.0
-        version: 1.7.0(graphql@16.9.0)
+        specifier: workspace:*
+        version: link:../core
       graphql:
         specifier: '>= 16.6.0'
         version: 16.9.0
@@ -917,11 +917,6 @@ packages:
 
   '@kamilkisiela/fast-url-parser@1.1.4':
     resolution: {integrity: sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==}
-
-  '@labdigital/federated-token@1.7.0':
-    resolution: {integrity: sha512-jIZhVpOGivI+4LfHfO4Ox6NOeSHD4gJ+wf8ImSp9kYsrz3DPdZ2rQG3HUIzrkuXQvkMt0JDPk34M2snKRVi7gQ==}
-    peerDependencies:
-      graphql: '>= 16.6.0'
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -4137,11 +4132,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@kamilkisiela/fast-url-parser@1.1.4': {}
-
-  '@labdigital/federated-token@1.7.0(graphql@16.9.0)':
-    dependencies:
-      graphql: 16.9.0
-      jose: 5.4.0
 
   '@manypkg/find-root@1.1.0':
     dependencies:
