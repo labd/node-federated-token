@@ -2,7 +2,8 @@ import * as crypto from "node:crypto";
 import { ApolloServer, HeaderMap } from "@apollo/server";
 import { PublicFederatedToken } from "@labdigital/federated-token";
 import { KeyManager, TokenSigner } from "@labdigital/federated-token";
-import { HeaderTokenSource } from "@labdigital/federated-token";
+import { HeaderTokenSource } from "@labdigital/federated-token-express-adapter";
+import type { Request, Response } from "express";
 import httpMocks from "node-mocks-http";
 import { assert, describe, expect, it } from "vitest";
 import type { PublicFederatedTokenContext } from "./context";
@@ -48,7 +49,7 @@ describe("GatewayAuthPlugin", async () => {
 			testToken: (
 				_: unknown,
 				{ create, value }: { create: boolean; value: string },
-				context: PublicFederatedTokenContext,
+				context: PublicFederatedTokenContext<Request, Response>,
 			) => {
 				if (!context.federatedToken) {
 					throw new Error("No federated token");
@@ -71,11 +72,11 @@ describe("GatewayAuthPlugin", async () => {
 			hello: (
 				_: unknown,
 				{ name }: { name: string },
-				context: PublicFederatedTokenContext,
+				context: PublicFederatedTokenContext<Request, Response>,
 			) => {
 				return `Hello ${name}`;
 			},
-			refreshToken: (_: unknown, context: PublicFederatedTokenContext) => {
+			refreshToken: (_: unknown, context: PublicFederatedTokenContext<Request, Response>) => {
 				context.federatedToken?.setAccessToken("foo", {
 					token: "bar",
 					exp: Math.floor(Date.now() / 1000 - 1000),
@@ -92,7 +93,7 @@ describe("GatewayAuthPlugin", async () => {
 					value,
 					expired,
 				}: { create: boolean; value: string; expired: boolean },
-				context: PublicFederatedTokenContext,
+				context: PublicFederatedTokenContext<Request, Response>,
 			) => {
 				if (!context.federatedToken) {
 					throw new Error("No federated token");
@@ -124,7 +125,7 @@ describe("GatewayAuthPlugin", async () => {
 	});
 
 	it("should return the plugin instance", async () => {
-		const context = {
+		const context: PublicFederatedTokenContext<Request, Response> = {
 			federatedToken: new PublicFederatedToken(),
 			res: httpMocks.createResponse(),
 			req: httpMocks.createRequest(),
