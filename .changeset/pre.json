@@ -1,5 +1,5 @@
 {
-	"mode": "pre",
+	"mode": "exit",
 	"tag": "beta",
 	"initialVersions": {
 		"@labdigital/federated-token-apollo": "1.7.0",
