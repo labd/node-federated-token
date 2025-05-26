@@ -22,7 +22,7 @@
 	},
 	"devDependencies": {
 		"@fastify/cookie": "11.0.2",
-		"@vitest/coverage-v8": "1.6.0",
+		"@vitest/coverage-v8": "3.1.4",
 		"fastify": "5.3.3",
 		"tsup": "^8.3.0",
 		"typescript": "^5.8.2",
