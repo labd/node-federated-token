@@ -333,7 +333,7 @@ export function AuthProvider({
 		if (data.errors && data.errors.length > 0) {
 			throw new Error("Failed to refresh token");
 		}
-		return true;
+		return data;
 	};
 
 	const clearTokens = async () => {
