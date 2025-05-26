@@ -2,14 +2,18 @@
 
 [![npm](https://img.shields.io/npm/v/@labdigital/federated-token.svg)](https://www.npmjs.com/package/@labdigital/federated-token)
 
-This package provides support for using JWT tokens for clients and passing
-that information to all federated services (upstream and downstream).
+This repository contains multiple packages using JWT tokens for clients and
+passing that information to all federated services (upstream and downstream).
 
 ## Packages
  - `@labdigital/federated-token` - The core package that provides the token
 	 handling and token sources.
  - `@labdigital/federated-token-apollo` - A plugin for Apollo Server (and gateway).
  - `@labdigital/federated-token-envelop` - An Envelop plugin for e.g. Yoga.
+ - `@labdigital/federated-token-express-adapter` - An Express adapter for the
+	 `CookieTokenSource` and `HeaderTokenSource` to be used in an Express application.
+ - `@labdigital/federated-token-fastify-adapter` - A Fastify adapter for the
+   `CookieTokenSource` and `HeaderTokenSource` to be used in a Fastify application.
  - `@labdigital/federated-token-react` - A React context provider for managing the
 	 token state in a React application.
 
