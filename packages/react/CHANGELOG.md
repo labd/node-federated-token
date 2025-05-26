@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 2.0.0
+
+### Major Changes
+
+- abf409b: Switch to ESM only builds
+
 ## 2.0.0-beta.0
 
 ### Major Changes

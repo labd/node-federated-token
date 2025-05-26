@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-apollo",
-	"version": "2.0.0-beta.2",
+	"version": "2.0.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federate JWT tokens between Apollo servers",
 	"keywords": ["apollo", "authentication", "graphql"],

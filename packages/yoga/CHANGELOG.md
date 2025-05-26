@@ -1,5 +1,21 @@
 # @labdigital/federated-token-yoga
 
+## 2.0.0
+
+### Major Changes
+
+- abf409b: Switch to ESM only builds
+
+### Patch Changes
+
+- Updated dependencies [fdde268]
+- Updated dependencies [d134a6b]
+- Updated dependencies [de5c70a]
+- Updated dependencies [3d5baf8]
+- Updated dependencies [87334e6]
+- Updated dependencies [abf409b]
+  - @labdigital/federated-token@2.0.0
+
 ## 2.0.0-beta.0
 
 ### Major Changes
