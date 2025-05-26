@@ -1,5 +1,26 @@
 # @labdigital/federated-token-apollo
 
+## 2.0.0
+
+### Major Changes
+
+- abf409b: Switch to ESM only builds
+
+### Minor Changes
+
+- 9c25b37: Allow passing a logger instance to GatewayAuthPlugin
+
+### Patch Changes
+
+- ad2c4ec: Improve masking of tokens when logging errors
+- Updated dependencies [fdde268]
+- Updated dependencies [d134a6b]
+- Updated dependencies [de5c70a]
+- Updated dependencies [3d5baf8]
+- Updated dependencies [87334e6]
+- Updated dependencies [abf409b]
+  - @labdigital/federated-token@2.0.0
+
 ## 2.0.0-beta.2
 
 ### Patch Changes

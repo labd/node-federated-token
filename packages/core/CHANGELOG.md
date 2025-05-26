@@ -1,5 +1,34 @@
 # @labdigital/federated-token
 
+## 2.0.0
+
+### Major Changes
+
+- fdde268: Remove the deprecated `CookieTokenSource` from `@labdigital/federated-token`, this is available from `@labdigital/federated-token-express-adapter`
+- d134a6b: Remove `HeaderTokenSource` (moved to `@labdigital/federated-token-express-adapter`)
+- 87334e6: Move JWE encryption from `A128CBC-HS256` to `A256GCM`
+- abf409b: Switch to ESM only builds
+
+### Minor Changes
+
+- de5c70a: Set the expire time on the protected header of the JWT token, in order to read
+  it without decryption.
+- 3d5baf8: Add ability to set custom expires time for the various cookies. For example:
+
+  ```ts
+  const cookieTokenSource = new CookieTokenSource({
+    secure: true,
+    sameSite: "strict",
+    refreshTokenPath: "/refresh",
+    userToken: {
+      expiresIn: 30 * 24 * 60 * 60, // 30 days
+    },
+  });
+  ```
+
+  This will set the user token cookie to expire in 30 days. The default value is when
+  the browser is closed.
+
 ## 2.0.0-beta.0
 
 ### Major Changes
