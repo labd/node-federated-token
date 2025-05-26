@@ -18,7 +18,7 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"jose": "5.4.0",
+		"jose": "6.0.11",
 		"js-cookie": "3.0.5"
 	},
 	"devDependencies": {
