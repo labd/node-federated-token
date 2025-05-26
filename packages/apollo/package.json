@@ -21,16 +21,16 @@
 		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
-		"@apollo/gateway": "^2.9.3",
-		"@apollo/server": "^4.11.0",
+		"@apollo/gateway": "^2.10.2",
+		"@apollo/server": "^4.12.1",
 		"@apollo/server-gateway-interface": "1.1.1",
 		"@apollo/utils.logger": "^3.0.0",
 		"@labdigital/federated-token-express-adapter": "workspace:*",
 		"@types/express": "5.0.2",
 		"@vitest/coverage-v8": "1.6.0",
-		"node-mocks-http": "^1.16.1",
-		"tsup": "^8.3.0",
-		"typescript": "^5.8.2",
+		"node-mocks-http": "^1.17.2",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3",
 		"vitest": "1.6.0"
 	},
 	"engines": {
