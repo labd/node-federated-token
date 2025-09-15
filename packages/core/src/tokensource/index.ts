@@ -1,13 +1,13 @@
 export type { TokenSource } from "./base";
 export { CompositeTokenSource } from "./composite";
 export {
+	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
 	type CookieAdapter,
-	type BaseCookieSourceOptions,
 	type CookieOptions,
 } from "./cookies-base";
 export {
-	type HeaderAdapter,
-	BaseHeaderTokenSource,
 	type BaseHeaderSourceOptions,
+	BaseHeaderTokenSource,
+	type HeaderAdapter,
 } from "./headers-base";

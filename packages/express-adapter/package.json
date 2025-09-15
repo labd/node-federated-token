@@ -3,7 +3,11 @@
 	"version": "2.0.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Express Adapter for @labdigital/federated-token",
-	"keywords": ["authentication", "fastify", "graphql"],
+	"keywords": [
+		"authentication",
+		"fastify",
+		"graphql"
+	],
 	"license": "MIT",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -18,21 +22,24 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@labdigital/federated-token": "workspace:*"
+		"@labdigital/federated-token": "workspace:*",
+		"cookie": "1.0.2"
 	},
 	"devDependencies": {
-		"@types/cookie": "^0.6.0",
-		"@types/express": "^4.17.21",
-		"@vitest/coverage-v8": "1.6.0",
-		"node-mocks-http": "^1.16.1",
-		"tsup": "^8.3.0",
-		"typescript": "^5.8.2",
-		"vitest": "1.6.0"
+		"@types/express": "5.0.3",
+		"@vitest/coverage-v8": "3.2.4",
+		"node-mocks-http": "1.17.2",
+		"tsup": "8.5.0",
+		"typescript": "5.9.2",
+		"vitest": "3.2.4"
 	},
 	"engines": {
 		"node": ">=20.0.0"
 	},
-	"files": ["dist", "src"],
+	"files": [
+		"dist",
+		"src"
+	],
 	"module": "./dist/index.js",
 	"publishConfig": {
 		"access": "public"

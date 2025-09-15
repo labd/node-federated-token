@@ -1,5 +1,7 @@
+export { TokenExpiredError, TokenInvalidError } from "./errors";
 export { PublicFederatedToken } from "./jwt";
-export { KeyManager, TokenSigner, type KeyManagerInterface } from "./sign";
+export { KeyManager, type KeyManagerInterface, TokenSigner } from "./sign";
+export type { FederatedTokenContext } from "./token";
 export { FederatedToken } from "./token";
 export {
 	type BaseCookieSourceOptions,
@@ -7,5 +9,3 @@ export {
 	CompositeTokenSource,
 	type TokenSource,
 } from "./tokensource/index";
-export { TokenExpiredError, TokenInvalidError } from "./errors";
-export type { FederatedTokenContext } from "./token";

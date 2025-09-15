@@ -8,7 +8,10 @@ const mockAccessToken = "mockAccessToken";
 
 describe("CompositeTokenSource", () => {
 	// Helper function to create a mock TokenSource with empty implementations
-	const createMockTokenSource = (): TokenSource => ({
+	const createMockTokenSource = (): TokenSource<
+		httpMocks.RequestType,
+		httpMocks.ResponseType
+	> => ({
 		getAccessToken: vi.fn().mockReturnValue(""),
 		getRefreshToken: vi.fn().mockReturnValue(""),
 		getDataToken: vi.fn().mockReturnValue(""),
