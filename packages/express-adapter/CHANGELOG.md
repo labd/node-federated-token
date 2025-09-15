@@ -1,5 +1,16 @@
 # @labdigital/federated-token-express-adapter
 
+## 2.1.0
+
+### Minor Changes
+
+- 8f0d3ee: Update dependencies
+
+### Patch Changes
+
+- Updated dependencies [8f0d3ee]
+  - @labdigital/federated-token@2.1.0
+
 ## 2.0.0
 
 ### Major Changes
