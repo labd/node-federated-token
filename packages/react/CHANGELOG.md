@@ -1,5 +1,12 @@
 # @labdigital/federated-token-react
 
+## 2.1.0
+
+### Minor Changes
+
+- a13a7fd: Allow passing a signal to the `refreshToken` call to for example set timeout using an AbortController
+- 8f0d3ee: Update dependencies
+
 ## 2.0.0
 
 ### Major Changes

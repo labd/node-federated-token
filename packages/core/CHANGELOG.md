@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 2.1.0
+
+### Minor Changes
+
+- 8f0d3ee: Update dependencies
+
 ## 2.0.0
 
 ### Major Changes
