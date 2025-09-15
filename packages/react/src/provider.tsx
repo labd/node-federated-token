@@ -51,7 +51,7 @@ type AuthContextType = {
 	logout: () => Promise<void>;
 	validateLocalToken: () => void;
 	checkToken: () => Promise<void>;
-	refreshToken: () => Promise<boolean>;
+	refreshToken: (signal?: AbortSignal) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -59,7 +59,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export type AuthProviderProps = {
 	cookieNames?: CookieNames;
 	logoutHandler?: () => void;
-	refreshHandler?: () => Promise<boolean>;
+	refreshHandler?: (signal?: AbortSignal) => Promise<boolean>;
+	refreshTimeoutMs?: number;
 
 	// Deprecated
 	refreshTokenEndpoint?: string;
@@ -300,46 +301,60 @@ export function AuthProvider({
 		return undefined;
 	};
 
-	const refreshAccessToken = async (): Promise<boolean> => {
-		if (options.refreshHandler) {
-			return await options.refreshHandler();
+	const refreshAccessToken = async (signal?: AbortSignal): Promise<boolean> => {
+		// If no signal is provided, create one with default timeout using AbortSignal.timeout
+		if (!signal) {
+			const timeout = options.refreshTimeoutMs ?? 10000; // Default 10 seconds
+			signal = AbortSignal.timeout(timeout);
 		}
 
-		if (!options.refreshTokenEndpoint || !options.refreshTokenMutation) {
-			throw new Error("No refresh token endpoint or mutation provided");
-		}
+		try {
+			if (options.refreshHandler) {
+				return await options.refreshHandler(signal);
+			}
 
-		// Since we are storing the refresh token in a cookie this will be sent
-		// automatically by the browser.
-		const response = await fetch(options.refreshTokenEndpoint, {
-			method: "POST",
-			body: options.refreshTokenMutation,
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-		});
+			if (!options.refreshTokenEndpoint || !options.refreshTokenMutation) {
+				throw new Error("No refresh token endpoint or mutation provided");
+			}
 
-		if (!response.ok) {
-			throw new Error("Failed to refresh token");
-		}
+			// Since we are storing the refresh token in a cookie this will be sent
+			// automatically by the browser.
+			const response = await fetch(options.refreshTokenEndpoint, {
+				method: "POST",
+				body: options.refreshTokenMutation,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				signal: signal,
+			});
 
-		const data = await response.json();
-		if (!data) {
-			throw new Error("Failed to refresh token");
-		}
+			if (!response.ok) {
+				throw new Error("Failed to refresh token");
+			}
 
-		// Check if there is a GraphQL error
-		if (data.errors && data.errors.length > 0) {
-			throw new Error("Failed to refresh token");
+			const data = await response.json();
+			if (!data) {
+				throw new Error("Failed to refresh token");
+			}
+
+			// Check if there is a GraphQL error
+			if (data.errors && data.errors.length > 0) {
+				throw new Error("Failed to refresh token");
+			}
+			return data;
+		} catch (error) {
+			if (error instanceof Error && error.name === "AbortError") {
+				const timeout = options.refreshTimeoutMs ?? 10000;
+				throw new Error(`Token refresh timed out after ${timeout}ms`);
+			}
+			throw error;
 		}
-		return data;
 	};
 
 	const clearTokens = async () => {
 		if (options.logoutHandler) {
-			await options.logoutHandler();
-			return;
+			return options.logoutHandler();
 		}
 
 		if (!options.logoutEndpoint || !options.logoutMutation) {
