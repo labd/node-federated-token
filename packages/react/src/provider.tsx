@@ -135,107 +135,19 @@ export function AuthProvider({
 	}, []);
 
 	/**
-	 * All this does is validate the local token in the cookie, it will not do any
-	 * request to the server.  This is best used right after a request so that we
-	 * can check if the token is still valid afterwards.
-	 *
-	 * @remarks Valid use case is that the API does not accept the given cookie
-	 * and empties it as a response
-	 */
-	const validateLocalToken = useCallback(() => {
-		const token = checkLocalToken();
-		updateAuthState(token);
-	}, [updateAuthState]);
-
-	/**
-	 * Load initial token when mounting the application. Doesn't do any checks
-	 * because we don't want to hammer the server when the user first loads the
-	 * application
-	 *
-	 * It will get checked when the user makes a request.
-	 */
-	const loadToken = useCallback(() => {
-		const token = getJWT();
-		updateAuthState(token);
-	}, [updateAuthState]);
-
-	/**
-	 * Checks the token status with the server.
-	 *
-	 * - If the access token is expired or invalid, the server attempts to use the refresh token to obtain a new access token.
-	 * - If successful, a new access token is returned and the auth state is updated.
-	 * - If unsuccessful, the auth state is updated to unauthenticated.
-	 */
-	// biome-ignore lint/correctness/useExhaustiveDependencies: fixme
-	const checkToken = useCallback(async () => {
-		const token = await getAccessToken();
-		updateAuthState(token);
-	}, [options.refreshTokenEndpoint, updateAuthState]);
-
-	// Load initial auth state when mounting the application
-	useEffect(() => {
-		loadToken();
-	}, [loadToken]);
-
-	/**
-	 * Log out the user
-	 *
-	 * @throws {Error} If the COOKIE_DOMAIN environment variable is not set. Catch
-	 * this function and handle it in the UI.
-	 */
-	const logout = async () => {
-		setAuthState({
-			isAuthenticated: false,
-			hasToken: false,
-			values: null,
-			loading: false,
-		});
-
-		await clearTokens();
-
-		validateLocalToken();
-	};
-
-	/**
-	 * Checks the local JWT token stored in cookies.
-	 *
-	 * This function retrieves the JWT token using the getJWT function and validates its expiration.
-	 * It ensures that the token is still valid for at least 5 more minutes.
-	 *
-	 * @returns {Token | undefined} The decoded token if it's valid, or undefined if the token is expired or doesn't exist.
-	 *
-	 * @example
-	 * const token = checkLocalToken();
-	 * if (token) {
-	 *   console.log('User is authenticated:', token.authenticated);
-	 * } else {
-	 *   console.log('Token is expired or not present');
-	 * }
-	 */
-	const checkLocalToken = (): TokenData | undefined => {
-		const token = getJWT();
-
-		if (!token) {
-			return undefined;
-		}
-
-		return checkTokenValidity(token) ? token : undefined;
-	};
-
-	/**
 	 * Checks if the token is still valid for at least 5 more minutes.
 	 *
 	 * @param token The JWT token to check.
 	 * @returns {boolean} True if the token is still valid, false otherwise.
 	 */
-	const checkTokenValidity = (token: TokenData): boolean => {
+	const checkTokenValidity = useCallback((token: TokenData): boolean => {
 		// Get the current time in seconds
 		const timeSec = Math.floor(Date.now() / 1000);
 
 		return Boolean(token?.exp && token.exp - TOKEN_VALID_BUFFER > timeSec);
-	};
+	}, []);
 
-	const getJWT = (): TokenData | undefined => {
+	const getJWT = useCallback((): TokenData | undefined => {
 		const userToken = Cookie.get(cookieNames.userData);
 
 		const extractValues = (tokenPayload: TokenPayload) => {
@@ -272,6 +184,94 @@ export function AuthProvider({
 				};
 			}
 		}
+	}, [cookieNames.userData, cookieNames.guestData]);
+
+	/**
+	 * Checks the local JWT token stored in cookies.
+	 *
+	 * This function retrieves the JWT token using the getJWT function and validates its expiration.
+	 * It ensures that the token is still valid for at least 5 more minutes.
+	 *
+	 * @returns {Token | undefined} The decoded token if it's valid, or undefined if the token is expired or doesn't exist.
+	 *
+	 * @example
+	 * const token = checkLocalToken();
+	 * if (token) {
+	 *   console.log('User is authenticated:', token.authenticated);
+	 * } else {
+	 *   console.log('Token is expired or not present');
+	 * }
+	 */
+	const checkLocalToken = useCallback((): TokenData | undefined => {
+		const token = getJWT();
+
+		if (!token) {
+			return undefined;
+		}
+
+		return checkTokenValidity(token) ? token : undefined;
+	}, [getJWT, checkTokenValidity]);
+
+	/**
+	 * All this does is validate the local token in the cookie, it will not do any
+	 * request to the server.  This is best used right after a request so that we
+	 * can check if the token is still valid afterwards.
+	 *
+	 * @remarks Valid use case is that the API does not accept the given cookie
+	 * and empties it as a response
+	 */
+	const validateLocalToken = useCallback(() => {
+		const token = checkLocalToken();
+		updateAuthState(token);
+	}, [updateAuthState, checkLocalToken]);
+
+	/**
+	 * Load initial token when mounting the application. Doesn't do any checks
+	 * because we don't want to hammer the server when the user first loads the
+	 * application
+	 *
+	 * It will get checked when the user makes a request.
+	 */
+	const loadToken = useCallback(() => {
+		const token = getJWT();
+		updateAuthState(token);
+	}, [updateAuthState, getJWT]);
+
+	/**
+	 * Checks the token status with the server.
+	 *
+	 * - If the access token is expired or invalid, the server attempts to use the refresh token to obtain a new access token.
+	 * - If successful, a new access token is returned and the auth state is updated.
+	 * - If unsuccessful, the auth state is updated to unauthenticated.
+	 */
+	// biome-ignore lint/correctness/useExhaustiveDependencies: fixme
+	const checkToken = useCallback(async () => {
+		const token = await getAccessToken();
+		updateAuthState(token);
+	}, [options.refreshTokenEndpoint, updateAuthState]);
+
+	// Load initial auth state when mounting the application
+	useEffect(() => {
+		loadToken();
+	}, [loadToken]);
+
+	/**
+	 * Log out the user
+	 *
+	 * @throws {Error} If the COOKIE_DOMAIN environment variable is not set. Catch
+	 * this function and handle it in the UI.
+	 */
+	const logout = async () => {
+		setAuthState({
+			isAuthenticated: false,
+			hasToken: false,
+			values: null,
+			loading: false,
+		});
+
+		await clearTokens();
+
+		validateLocalToken();
 	};
 
 	const getAccessToken = async (): Promise<TokenData | undefined> => {

@@ -5,10 +5,11 @@ import type {
 	GraphQLRequestListener,
 } from "@apollo/server";
 import type { Logger } from "@apollo/utils.logger";
-import { PublicFederatedToken } from "@labdigital/federated-token";
-import type { TokenSigner } from "@labdigital/federated-token";
-import type { TokenSource } from "@labdigital/federated-token";
-import { TokenExpiredError } from "@labdigital/federated-token";
+import type { TokenSigner, TokenSource } from "@labdigital/federated-token";
+import {
+	PublicFederatedToken,
+	TokenExpiredError,
+} from "@labdigital/federated-token";
 import { GraphQLError } from "graphql";
 import type { PublicFederatedTokenContext } from "./context";
 import { maskToken } from "./utils";

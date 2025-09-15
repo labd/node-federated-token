@@ -1,7 +1,10 @@
 import * as crypto from "node:crypto";
 import { ApolloServer, HeaderMap } from "@apollo/server";
-import { PublicFederatedToken } from "@labdigital/federated-token";
-import { KeyManager, TokenSigner } from "@labdigital/federated-token";
+import {
+	KeyManager,
+	PublicFederatedToken,
+	TokenSigner,
+} from "@labdigital/federated-token";
 import { HeaderTokenSource } from "@labdigital/federated-token-express-adapter";
 import type { Request, Response } from "express";
 import httpMocks from "node-mocks-http";

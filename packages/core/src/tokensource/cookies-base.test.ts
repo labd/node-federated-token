@@ -1,4 +1,4 @@
-import { type SerializeOptions, parse, serialize } from "cookie";
+import { parse, type SerializeOptions, serialize } from "cookie";
 import { describe, expect, it } from "vitest";
 import {
 	type BaseCookieSourceOptions,

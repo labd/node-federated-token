@@ -1,4 +1,4 @@
-import type { CookieSerializeOptions } from "cookie";
+import type { SerializeOptions as CookieSerializeOptions } from "cookie";
 import httpMocks from "node-mocks-http";
 import { describe, expect, it } from "vitest";
 import { CookieTokenSource } from "./cookies";

@@ -3,7 +3,10 @@
 	"version": "0.0.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federate JWT tokens between Apollo servers",
-	"keywords": ["authentication", "graphql"],
+	"keywords": [
+		"authentication",
+		"graphql"
+	],
 	"private": "true",
 	"license": "MIT",
 	"type": "module",
@@ -18,15 +21,16 @@
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"publish:version": "pnpm changeset version && pnpm format",
 		"test": "vitest run",
-		"test:ci": "vitest run --coverage"
+		"test:ci": "vitest run --coverage",
+		"tsc": "turbo tsc"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@changesets/cli": "^2.27.9",
-		"@vitest/coverage-v8": "3.1.4",
+		"@biomejs/biome": "^2.0.6",
+		"@changesets/cli": "2.29.7",
+		"@vitest/coverage-v8": "3.2.4",
 		"syncpack": "13.0.4",
-		"turbo": "^2.2.3",
-		"vitest": "3.1.4"
+		"turbo": "2.5.6",
+		"vitest": "3.2.4"
 	},
 	"engines": {
 		"node": ">=20.0.0"
@@ -35,7 +39,11 @@
 	"packageManager": "pnpm@9.2.0",
 	"repository": "labd/node-federated-token",
 	"syncpack": {
-		"dependencyTypes": ["dev", "prod", "pnpmOverrides"],
+		"dependencyTypes": [
+			"dev",
+			"prod",
+			"pnpmOverrides"
+		],
 		"indent": "\t",
 		"sortFirst": [
 			"name",
@@ -54,5 +62,7 @@
 			"scripts"
 		]
 	},
-	"workspaces": ["packages/*"]
+	"workspaces": [
+		"packages/*"
+	]
 }
