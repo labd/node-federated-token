@@ -1,5 +1,5 @@
 import { parse, type SerializeOptions, serialize } from "cookie";
-import { describe, expect, it, } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
 	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
@@ -282,7 +282,10 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteAccessToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toEqual([{ userToken: "", Path: "/" }, { guestToken: "", Path: "/" }]);
+		expect(cookies).toEqual([
+			{ userToken: "", Path: "/" },
+			{ guestToken: "", Path: "/" },
+		]);
 	});
 
 	// Test for deleting refresh tokens
@@ -305,8 +308,8 @@ describe("CookieTokenSource", () => {
 		const cookies = getCookies(response);
 		expect(cookies).toEqual([
 			{ refreshToken: "", Path: "/refresh" },
-			{ guestRefreshTokenExists: "" , Path: "/"},
-			{ userRefreshTokenExists: "" , Path: "/"},
+			{ guestRefreshTokenExists: "", Path: "/" },
+			{ userRefreshTokenExists: "", Path: "/" },
 		]);
 	});
 
