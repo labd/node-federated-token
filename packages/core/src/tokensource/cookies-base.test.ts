@@ -1,5 +1,5 @@
 import { parse, type SerializeOptions, serialize } from "cookie";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, } from "vitest";
 import {
 	type BaseCookieSourceOptions,
 	BaseCookieTokenSource,
@@ -13,7 +13,7 @@ import {
  * support multiple Set-Cookie headers, so we just 'join' them with a comma.
  */
 class TestAdapter implements CookieAdapter<Request, Response> {
-	constructor(private options: BaseCookieSourceOptions) {}
+	constructor(private options: BaseCookieSourceOptions<Request>) {}
 
 	getCookie(request: Request, name: string): string | undefined {
 		const header = request.headers.get("cookie");
@@ -55,7 +55,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 class TestCookieTokenSource extends BaseCookieTokenSource<Request, Response> {
 	protected adapter: CookieAdapter<Request, Response>;
 
-	constructor(options: BaseCookieSourceOptions) {
+	constructor(options: BaseCookieSourceOptions<Request>) {
 		super(options);
 		this.adapter = new TestAdapter(options);
 	}
@@ -282,7 +282,7 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteAccessToken(request, response);
 
 		const cookies = getCookies(response);
-		expect(cookies).toEqual([{ userToken: "" }, { guestToken: "" }]);
+		expect(cookies).toEqual([{ userToken: "", Path: "/" }, { guestToken: "", Path: "/" }]);
 	});
 
 	// Test for deleting refresh tokens
@@ -305,8 +305,8 @@ describe("CookieTokenSource", () => {
 		const cookies = getCookies(response);
 		expect(cookies).toEqual([
 			{ refreshToken: "", Path: "/refresh" },
-			{ guestRefreshTokenExists: "" },
-			{ userRefreshTokenExists: "" },
+			{ guestRefreshTokenExists: "" , Path: "/"},
+			{ userRefreshTokenExists: "" , Path: "/"},
 		]);
 	});
 
@@ -329,5 +329,32 @@ describe("CookieTokenSource", () => {
 
 		const cookies = getCookies(response);
 		expect(cookies).toEqual([{ refreshToken: "", Path: "/refresh" }]);
+	});
+
+	it("should get the refresh path from the refresh path function", () => {
+		const request: Request = new Request("http://localhost");
+
+		const cookieTokenSource = new TestCookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: () => "/refresh",
+		});
+
+		const result = cookieTokenSource["_getRefreshTokenPath"](request);
+		expect(result).toBe("/refresh");
+	});
+
+	it("should get the cookiePath from the cookiePath function", () => {
+		const request: Request = new Request("http://localhost");
+
+		const cookieTokenSource = new TestCookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+			cookiePathFn: () => "/cookie",
+		});
+
+		const result = cookieTokenSource["options"].cookiePathFn?.(request);
+		expect(result).toBe("/cookie");
 	});
 });

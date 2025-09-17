@@ -63,14 +63,15 @@ type CookieSettings = {
 	expiresIn: number | "session";
 };
 
-export type BaseCookieSourceOptions = {
+export type BaseCookieSourceOptions<TRequest> = {
 	secure: boolean;
 	sameSite: "strict" | "lax" | "none" | boolean;
-	refreshTokenPath: string;
+	refreshTokenPath: string | ((request: TRequest) => string | undefined);
 	cookieNames?: Partial<CookieNames>;
 	guestToken?: CookieSettings;
 	userToken?: CookieSettings;
 	refreshToken?: CookieSettings;
+	cookiePathFn?: (request: TRequest) => string | undefined;
 };
 
 export abstract class BaseCookieTokenSource<TRequest, TResponse>
@@ -79,7 +80,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	protected cookieNames: CookieNames;
 	protected abstract adapter: CookieAdapter<TRequest, TResponse>;
 
-	constructor(protected options: BaseCookieSourceOptions) {
+	constructor(protected options: BaseCookieSourceOptions<TRequest>) {
 		this.cookieNames = {
 			...DEFAULT_COOKIE_NAMES,
 			...(options.cookieNames ?? {}),
@@ -96,7 +97,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 
 	deleteRefreshToken(request: TRequest, response: TResponse): void {
 		this.adapter.clearCookie(request, response, this.cookieNames.refreshToken, {
-			path: this.options.refreshTokenPath,
+			path: this._getRefreshTokenPath(request),
 			domain: this.adapter.getPrivateDomain(request),
 		});
 
@@ -128,6 +129,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		if (this.adapter.getCookie(request, name)) {
 			this.adapter.clearCookie(request, response, name, {
 				domain: this.adapter.getPublicDomain(request),
+				path: this.options.cookiePathFn?.(request) ?? "/",
 			});
 		}
 	}
@@ -140,6 +142,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		if (this.adapter.getCookie(request, name)) {
 			this.adapter.clearCookie(request, response, name, {
 				domain: this.adapter.getPublicDomain(request),
+				path: this.options.cookiePathFn?.(request) ?? "/",
 			});
 		}
 	}
@@ -180,7 +183,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				opts.expiresIn === "session"
 					? undefined
 					: new Date(Date.now() + opts.expiresIn * 1000),
-			path: "/",
+			path: this.options.cookiePathFn?.(request) ?? "/",
 		};
 
 		if (isAuthenticated) {
@@ -189,7 +192,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.userData,
 				token,
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteAccessTokenByName(
 				request,
@@ -244,7 +247,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				opts.expiresIn === "session"
 					? undefined
 					: new Date(Date.now() + opts.expiresIn * 1000),
-			path: "/",
+			path: this.options.cookiePathFn?.(request) ?? "/",
 		};
 
 		if (isAuthenticated) {
@@ -299,7 +302,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 			{
 				...cookieOptions,
 				httpOnly: true,
-				path: this.options.refreshTokenPath,
+				path: this._getRefreshTokenPath(request),
 			},
 		);
 
@@ -330,5 +333,10 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				this.cookieNames.userRefreshTokenExists,
 			);
 		}
+	}
+
+	private _getRefreshTokenPath(req: TRequest): string | undefined {
+		const path = this.options.refreshTokenPath;
+		return typeof path === "function" ? path(req) : path;
 	}
 }

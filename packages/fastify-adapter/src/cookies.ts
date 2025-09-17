@@ -6,9 +6,11 @@ import {
 } from "@labdigital/federated-token/tokensource";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-type FastifyCookieSourceOptions = BaseCookieSourceOptions & {
+type FastifyCookieSourceOptions = BaseCookieSourceOptions<FastifyRequest> & {
+	refreshTokenPath: string | ((request: Request) => string | undefined);
 	publicDomainFn?: (request: FastifyRequest) => string | undefined;
 	privateDomainFn?: (request: FastifyRequest) => string | undefined;
+	cookiePathFn?: (request: Request) => string | undefined;
 };
 
 class FastifyCookieAdapter
