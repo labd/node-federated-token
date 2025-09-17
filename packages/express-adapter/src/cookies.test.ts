@@ -114,7 +114,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "strict",
 			domain: undefined,
 			expires: undefined,
-			path: "/",
+			path: undefined,
 		});
 	});
 
@@ -139,7 +139,7 @@ describe("CookieTokenSource", () => {
 			secure: true,
 			sameSite: "strict",
 			domain: undefined,
-			path: "/",
+			path: undefined,
 			expires: expect.any(Date),
 		});
 	});
@@ -164,7 +164,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "strict",
 			expires: undefined,
 			domain: undefined,
-			path: "/",
+			path: undefined,
 		});
 	});
 
