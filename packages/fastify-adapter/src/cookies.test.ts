@@ -1,6 +1,6 @@
 import type { CookieSerializeOptions } from "@fastify/cookie";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, } from "vitest";
 import { CookieTokenSource } from "./cookies";
 
 type CookieValue = {

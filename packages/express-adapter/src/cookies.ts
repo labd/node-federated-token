@@ -5,9 +5,11 @@ import {
 } from "@labdigital/federated-token/tokensource";
 import type { CookieOptions, Request, Response } from "express";
 
-type ExpressCookieSourceOptions = BaseCookieSourceOptions & {
+type ExpressCookieSourceOptions = BaseCookieSourceOptions<Request> & {
+	refreshTokenPath: string | ((request: Request) => string | undefined);
 	publicDomainFn?: (request: Request) => string | undefined;
 	privateDomainFn?: (request: Request) => string | undefined;
+	cookiePathFn?: (request: Request) => string | undefined;
 };
 
 class ExpressCookieAdapter implements CookieAdapter<Request, Response> {
