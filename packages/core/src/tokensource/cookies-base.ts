@@ -192,7 +192,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.userData,
 				token,
-				cookieOptions
+				cookieOptions,
 			);
 			this.deleteAccessTokenByName(
 				request,
