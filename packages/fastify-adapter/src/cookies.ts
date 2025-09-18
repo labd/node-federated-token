@@ -7,10 +7,10 @@ import {
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 type FastifyCookieSourceOptions = BaseCookieSourceOptions<FastifyRequest> & {
-	refreshTokenPath: string | ((request: Request) => string | undefined);
+	refreshTokenPath: string | ((request: FastifyRequest) => string | undefined);
 	publicDomainFn?: (request: FastifyRequest) => string | undefined;
 	privateDomainFn?: (request: FastifyRequest) => string | undefined;
-	cookiePathFn?: (request: Request) => string | undefined;
+	cookiePathFn?: (request: FastifyRequest) => string | undefined;
 };
 
 class FastifyCookieAdapter
