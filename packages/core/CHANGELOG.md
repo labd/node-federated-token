@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 2.2.0-beta.0
+
+### Minor Changes
+
+- 3ec97c6: Add support for cookie path and refresh token path function
+
 ## 2.1.0
 
 ### Minor Changes
