@@ -4,4 +4,4 @@
 "@labdigital/federated-token": minor
 ---
 
-Add support for setting the cookie path on both auth and refresh tokens
+Add support for cookie path and refresh token path function
