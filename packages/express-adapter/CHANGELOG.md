@@ -1,5 +1,16 @@
 # @labdigital/federated-token-express-adapter
 
+## 2.2.0-beta.0
+
+### Minor Changes
+
+- 3ec97c6: Add support for cookie path and refresh token path function
+
+### Patch Changes
+
+- Updated dependencies [3ec97c6]
+  - @labdigital/federated-token@2.2.0-beta.0
+
 ## 2.1.0
 
 ### Minor Changes

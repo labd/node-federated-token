@@ -9,5 +9,5 @@
 		"@labdigital/federated-token-react": "2.1.0",
 		"@labdigital/federated-token-yoga": "2.1.0"
 	},
-	"changesets": []
+	"changesets": ["slick-rabbits-count"]
 }
