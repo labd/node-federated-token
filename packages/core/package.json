@@ -29,7 +29,7 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@types/node": "^24.4.0",
+		"@types/node": "^24.5.2",
 		"jose": "6.1.0",
 		"node-mock-http": "1.0.3"
 	},
