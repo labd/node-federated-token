@@ -29,7 +29,7 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@types/node": "^24.4.0",
+		"@types/node": "^24.7.0",
 		"jose": "6.1.0",
 		"node-mock-http": "1.0.3"
 	},
@@ -40,7 +40,7 @@
 		"cookie": "1.0.2",
 		"node-mocks-http": "1.17.2",
 		"tsup": "8.5.0",
-		"typescript": "5.9.2",
+		"typescript": "5.9.3",
 		"vitest": "3.2.4"
 	},
 	"engines": {
