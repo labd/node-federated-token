@@ -1,5 +1,13 @@
 # @labdigital/federated-token-apollo
 
+## 2.2.0-beta.1
+
+### Patch Changes
+
+- 05c0a85: Updated vitest and vitest/coverage-v8 versions
+- Updated dependencies [05c0a85]
+  - @labdigital/federated-token@2.2.0-beta.1
+
 ## 2.2.0-beta.0
 
 ### Patch Changes
