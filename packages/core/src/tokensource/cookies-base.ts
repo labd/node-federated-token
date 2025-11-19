@@ -285,12 +285,18 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		token: string,
 		isAuthenticated = false,
 	) {
-		const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
-		const cookieOptions = {
+		const opts = this.options.refreshToken ?? {
+			expiresIn: 60 * 60 * 24 * 365, // Default expiration is one year
+		};
+
+		const cookieOptions: CookieOptions = {
 			httpOnly: false,
 			secure: this.options.secure,
 			sameSite: this.options.sameSite,
-			expires: expiresAt,
+			expires:
+				opts.expiresIn === "session"
+					? undefined
+					: new Date(Date.now() + opts.expiresIn * 1000),
 			domain: this.adapter.getPublicDomain(request),
 		};
 

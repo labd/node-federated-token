@@ -235,8 +235,7 @@ describe("CookieTokenSource", () => {
 		]);
 	});
 
-	// Test for setting the refresh token for authenticated users
-	it("should set the refresh token for authenticated users", () => {
+	it("should set the refresh token with default Expires for authenticated users", () => {
 		const request: Request = new Request("http://localhost");
 		const response: Response = new Response();
 
@@ -248,18 +247,82 @@ describe("CookieTokenSource", () => {
 
 		cookieTokenSource.setRefreshToken(request, response, "FOOBAR", true);
 
+		const expectedExpires = new Date(Date.now() + 60 * 60 * 24 * 365 * 1000);
+
 		const cookies = getCookies(response);
 		expect(cookies).toEqual([
 			{
 				refreshToken: "FOOBAR",
 				Path: "/refresh",
 				SameSite: "None",
-				Expires: expect.any(String),
+				Expires: expectedExpires.toUTCString(),
 			},
 			{
 				userRefreshTokenExists: "1",
 				SameSite: "None",
-				Expires: expect.any(String),
+				Expires: expectedExpires.toUTCString(),
+			},
+		]);
+	});
+
+	it("should set the refresh token with custom Expires for authenticated users", () => {
+		const request: Request = new Request("http://localhost");
+		const response: Response = new Response();
+
+		const cookieTokenSource = new TestCookieTokenSource({
+			secure: true,
+			sameSite: "none",
+			refreshTokenPath: "/refresh",
+			refreshToken: {
+				expiresIn: 60,
+			},
+		});
+
+		const expectedExpires = new Date(Date.now() + 60 * 1000);
+
+		cookieTokenSource.setRefreshToken(request, response, "FOOBAR", true);
+
+		const cookies = getCookies(response);
+		expect(cookies).toEqual([
+			{
+				refreshToken: "FOOBAR",
+				Path: "/refresh",
+				SameSite: "None",
+				Expires: expectedExpires.toUTCString(),
+			},
+			{
+				userRefreshTokenExists: "1",
+				SameSite: "None",
+				Expires: expectedExpires.toUTCString(),
+			},
+		]);
+	});
+
+	it("should set the refresh token with session Expires for authenticated users", () => {
+		const request: Request = new Request("http://localhost");
+		const response: Response = new Response();
+
+		const cookieTokenSource = new TestCookieTokenSource({
+			secure: true,
+			sameSite: "none",
+			refreshTokenPath: "/refresh",
+			refreshToken: {
+				expiresIn: "session",
+			},
+		});
+
+		cookieTokenSource.setRefreshToken(request, response, "FOOBAR", true);
+
+		const cookies = getCookies(response);
+		expect(cookies).toEqual([
+			{
+				refreshToken: "FOOBAR",
+				Path: "/refresh",
+				SameSite: "None",
+			},
+			{
+				userRefreshTokenExists: "1",
+				SameSite: "None",
 			},
 		]);
 	});
