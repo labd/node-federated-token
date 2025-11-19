@@ -25,17 +25,17 @@
 		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
-		"@apollo/gateway": "2.11.2",
-		"@apollo/server": "5.0.0",
+		"@apollo/gateway": "2.12.1",
+		"@apollo/server": "5.1.0",
 		"@apollo/server-gateway-interface": "2.0.0",
 		"@apollo/utils.logger": "3.0.0",
 		"@labdigital/federated-token-express-adapter": "workspace:*",
-		"@types/express": "5.0.3",
-		"@vitest/coverage-v8": "4.0.4",
+		"@types/express": "5.0.5",
+		"@vitest/coverage-v8": "4.0.10",
 		"node-mocks-http": "1.17.2",
-		"tsup": "8.5.0",
-		"typescript": "5.9.2",
-		"vitest": "4.0.4"
+		"tsup": "8.5.1",
+		"typescript": "5.9.3",
+		"vitest": "4.0.10"
 	},
 	"engines": {
 		"node": ">=20.0.0"
