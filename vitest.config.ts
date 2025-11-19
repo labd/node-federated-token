@@ -11,7 +11,6 @@ export default defineConfig({
 				["json", { file: "coverage.json" }],
 			],
 			reportsDirectory: "./coverage",
-			all: true,
 			include: ["packages/**/src/**/*.ts"],
 
 			// Ignore a number of type-only files. These files are included due to the
