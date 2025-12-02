@@ -23,16 +23,16 @@
 	},
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*",
-		"graphql-yoga": "5.16.2"
+		"graphql-yoga": "5.17.1"
 	},
 	"devDependencies": {
-		"@types/express": "5.0.5",
-		"@typescript-eslint/eslint-plugin": "8.47.0",
-		"@vitest/coverage-v8": "4.0.10",
+		"@types/express": "5.0.6",
+		"@typescript-eslint/eslint-plugin": "8.48.0",
+		"@vitest/coverage-v8": "4.0.14",
 		"node-mocks-http": "1.17.2",
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"vitest": "4.0.14"
 	},
 	"engines": {
 		"node": ">=20.0.0"

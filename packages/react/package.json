@@ -26,14 +26,14 @@
 		"js-cookie": "3.0.5"
 	},
 	"devDependencies": {
-		"@types/express": "5.0.5",
+		"@types/express": "5.0.6",
 		"@types/js-cookie": "3.0.6",
-		"@types/react": "19.2.6",
-		"@vitest/coverage-v8": "4.0.10",
+		"@types/react": "19.2.7",
+		"@vitest/coverage-v8": "4.0.14",
 		"node-mocks-http": "1.17.2",
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"vitest": "4.0.14"
 	},
 	"engines": {
 		"node": ">=20.0.0"
