@@ -25,12 +25,12 @@
 		"tsc": "turbo tsc"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.6",
-		"@changesets/cli": "2.29.7",
-		"@vitest/coverage-v8": "4.0.10",
+		"@biomejs/biome": "^2.3.8",
+		"@changesets/cli": "2.29.8",
+		"@vitest/coverage-v8": "4.0.15",
 		"syncpack": "13.0.4",
-		"turbo": "2.6.1",
-		"vitest": "4.0.10"
+		"turbo": "2.6.3",
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=20.0.0"
