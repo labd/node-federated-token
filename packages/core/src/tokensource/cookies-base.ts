@@ -32,13 +32,13 @@ export interface CookieAdapter<TRequest, TResponse> {
 		response: TResponse,
 		name: string,
 		value: string,
-		options: CookieOptions,
+		options: CookieOptions
 	): void;
 	clearCookie(
 		request: TRequest,
 		response: TResponse,
 		name: string,
-		options?: CookieOptions,
+		options?: CookieOptions
 	): void;
 	getPublicDomain(request: TRequest): string | undefined;
 	getPrivateDomain(request: TRequest): string | undefined;
@@ -104,12 +104,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		this.deleteRefreshTokenExistsByName(
 			request,
 			response,
-			this.cookieNames.guestRefreshTokenExists,
+			this.cookieNames.guestRefreshTokenExists
 		);
 		this.deleteRefreshTokenExistsByName(
 			request,
 			response,
-			this.cookieNames.userRefreshTokenExists,
+			this.cookieNames.userRefreshTokenExists
 		);
 	}
 
@@ -124,7 +124,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	deleteAccessTokenByName(
 		request: TRequest,
 		response: TResponse,
-		name: string,
+		name: string
 	): void {
 		if (this.adapter.getCookie(request, name)) {
 			this.adapter.clearCookie(request, response, name, {
@@ -137,7 +137,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	deleteRefreshTokenExistsByName(
 		request: TRequest,
 		response: TResponse,
-		name: string,
+		name: string
 	): void {
 		if (this.adapter.getCookie(request, name)) {
 			this.adapter.clearCookie(request, response, name, {
@@ -166,7 +166,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		request: TRequest,
 		response: TResponse,
 		token: string,
-		isAuthenticated = false,
+		isAuthenticated = false
 	) {
 		const opts = (isAuthenticated
 			? this.options.userToken
@@ -192,12 +192,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.userData,
 				token,
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteAccessTokenByName(
 				request,
 				response,
-				this.cookieNames.guestData,
+				this.cookieNames.guestData
 			);
 		} else {
 			this.adapter.setCookie(
@@ -205,12 +205,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.guestData,
 				token,
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteAccessTokenByName(
 				request,
 				response,
-				this.cookieNames.userData,
+				this.cookieNames.userData
 			);
 		}
 	}
@@ -230,7 +230,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		request: TRequest,
 		response: TResponse,
 		token: string,
-		isAuthenticated = false,
+		isAuthenticated = false
 	) {
 		const opts = (isAuthenticated
 			? this.options.userToken
@@ -256,12 +256,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.userToken,
 				token,
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteAccessTokenByName(
 				request,
 				response,
-				this.cookieNames.guestToken,
+				this.cookieNames.guestToken
 			);
 		} else {
 			this.adapter.setCookie(
@@ -269,12 +269,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.guestToken,
 				token,
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteAccessTokenByName(
 				request,
 				response,
-				this.cookieNames.userToken,
+				this.cookieNames.userToken
 			);
 		}
 	}
@@ -283,9 +283,19 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		request: TRequest,
 		response: TResponse,
 		token: string,
-		isAuthenticated = false,
+		isAuthenticated = false
 	) {
-		const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
+		const expiresIn = this.options.refreshToken?.expiresIn;
+		let expiresAt: Date | undefined = new Date(
+			Date.now() + 1000 * 60 * 60 * 24 * 365
+		);
+
+		if (expiresIn) {
+			expiresAt =
+				expiresIn === "session"
+					? undefined
+					: new Date(Date.now() + expiresIn * 1000);
+		}
 		const cookieOptions = {
 			httpOnly: false,
 			secure: this.options.secure,
@@ -303,7 +313,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				...cookieOptions,
 				httpOnly: true,
 				path: this._getRefreshTokenPath(request),
-			},
+			}
 		);
 
 		if (isAuthenticated) {
@@ -312,12 +322,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.userRefreshTokenExists,
 				"1",
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteRefreshTokenExistsByName(
 				request,
 				response,
-				this.cookieNames.guestRefreshTokenExists,
+				this.cookieNames.guestRefreshTokenExists
 			);
 		} else {
 			this.adapter.setCookie(
@@ -325,12 +335,12 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.guestRefreshTokenExists,
 				"1",
-				cookieOptions,
+				cookieOptions
 			);
 			this.deleteRefreshTokenExistsByName(
 				request,
 				response,
-				this.cookieNames.userRefreshTokenExists,
+				this.cookieNames.userRefreshTokenExists
 			);
 		}
 	}
