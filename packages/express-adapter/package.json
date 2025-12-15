@@ -23,15 +23,15 @@
 	},
 	"dependencies": {
 		"@labdigital/federated-token": "workspace:*",
-		"cookie": "1.0.2"
+		"cookie": "1.1.1"
 	},
 	"devDependencies": {
-		"@types/express": "5.0.5",
-		"@vitest/coverage-v8": "4.0.10",
+		"@types/express": "5.0.6",
+		"@vitest/coverage-v8": "4.0.15",
 		"node-mocks-http": "1.17.2",
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"vitest": "4.0.15"
 	},
 	"engines": {
 		"node": ">=20.0.0"
