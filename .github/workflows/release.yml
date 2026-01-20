@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         node: ["20.x", "22.x", "24.x"]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
       - name: Checkout repo
@@ -36,18 +36,22 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Test
+        run: pnpm run test:ci
+
       - name: Build
         run: pnpm build
-
-      - name: Test
-        run: pnpm test:ci
-
 
   release:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    environment: release
     needs: build
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -56,6 +60,12 @@ jobs:
 
       - name: Set up Node.js
         uses: labd/gh-actions-typescript/pnpm-install@main
+
+      - name: Run build
+        run: pnpm build
+
+      - name: Upgrade npm for trusted publishing
+        run: npm i -g npm@^11.6.4
 
       - name: Create and publish versions
         uses: changesets/action@v1
@@ -66,5 +76,4 @@ jobs:
           version: pnpm publish:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

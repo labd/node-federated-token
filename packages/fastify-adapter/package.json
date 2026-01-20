@@ -41,7 +41,11 @@
 	],
 	"module": "./dist/index.js",
 	"publishConfig": {
-		"access": "public"
+		"access": "public",
+		"provenance": true
 	},
-	"repository": "labd/node-federated-token"
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/labd/node-federated-token"
+	}
 }
