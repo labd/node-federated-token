@@ -1,5 +1,16 @@
 # @labdigital/federated-token-yoga
 
+## 2.2.0
+
+### Patch Changes
+
+- 05c0a85: Updated vitest and vitest/coverage-v8 versions
+- Updated dependencies [4a10d60]
+- Updated dependencies [05c0a85]
+- Updated dependencies [9d37b46]
+- Updated dependencies [3ec97c6]
+  - @labdigital/federated-token@2.2.0
+
 ## 2.2.0-beta.0
 
 ### Patch Changes

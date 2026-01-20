@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-yoga",
-	"version": "2.2.0-beta.0",
+	"version": "2.2.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Federated token plugin for GraphQL Yoga",
 	"keywords": [

@@ -1,5 +1,11 @@
 # @labdigital/federated-token-react
 
+## 2.2.0
+
+### Patch Changes
+
+- 05c0a85: Updated vitest and vitest/coverage-v8 versions
+
 ## 2.1.0
 
 ### Minor Changes
