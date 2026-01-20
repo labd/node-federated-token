@@ -1,5 +1,17 @@
 # @labdigital/federated-token
 
+## 2.2.0
+
+### Minor Changes
+
+- 9d37b46: Pass refreshToken.expiresIn option to setRefreshToken
+- 3ec97c6: Add support for cookie path and refresh token path function
+
+### Patch Changes
+
+- 4a10d60: Resolved encoding issue for token data with special encoded characters
+- 05c0a85: Updated vitest and vitest/coverage-v8 versions
+
 ## 2.2.0-beta.0
 
 ### Minor Changes

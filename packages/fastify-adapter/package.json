@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-fastify-adapter",
-	"version": "2.2.0-beta.0",
+	"version": "2.2.0",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Fastify Adapter for @labdigital/federated-token",
 	"keywords": [
