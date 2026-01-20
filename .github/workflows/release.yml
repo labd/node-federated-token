@@ -36,11 +36,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Test
-        run: pnpm run test:ci
-
       - name: Build
         run: pnpm build
+
+      - name: Test
+        run: pnpm run test:ci
 
   release:
     timeout-minutes: 15
