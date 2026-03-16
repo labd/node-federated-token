@@ -1,11 +1,15 @@
 import * as crypto from "node:crypto";
 import { ApolloServer, HeaderMap } from "@apollo/server";
 import {
+	CompositeTokenSource,
 	KeyManager,
 	PublicFederatedToken,
 	TokenSigner,
 } from "@labdigital/federated-token";
-import { HeaderTokenSource } from "@labdigital/federated-token-express-adapter";
+import {
+	CookieTokenSource,
+	HeaderTokenSource,
+} from "@labdigital/federated-token-express-adapter";
 import type { Request, Response } from "express";
 import httpMocks from "node-mocks-http";
 import { assert, describe, expect, it } from "vitest";
@@ -270,6 +274,69 @@ describe("GatewayAuthPlugin", async () => {
 
 		assert.isNotEmpty(newAccessToken);
 		assert.notEqual(newAccessToken, accessToken);
+	});
+
+	it("should clear invalid refresh token and let request reach resolver", async () => {
+		const wrongAudienceSigner = new TokenSigner({
+			...signOptions,
+			audience: "wrongAudience",
+		});
+
+		const token = new PublicFederatedToken();
+		token.setRefreshToken("commercetools", "stale-refresh-value");
+		const staleRefreshToken = await token.createRefreshJWT(wrongAudienceSigner);
+
+		const cookieSource = new CookieTokenSource({
+			refreshTokenPath: "/auth/graphql",
+			secure: false,
+			sameSite: "lax",
+		});
+
+		const cookiePlugin = new GatewayAuthPlugin({
+			signer: signer,
+			source: new CompositeTokenSource([cookieSource]),
+		});
+
+		const cookieServer = new ApolloServer({
+			typeDefs,
+			resolvers,
+			plugins: [cookiePlugin],
+		});
+
+		const context = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest({
+				cookies: {
+					refreshToken: staleRefreshToken,
+				},
+			}),
+		};
+
+		const response = await cookieServer.executeOperation(
+			{
+				query: 'query hello { hello(name: "world") }',
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: context,
+			},
+		);
+
+		// The request should reach the resolver instead of being blocked with a 401
+		assert(response.body.kind === "single");
+		expect(response.body.singleResult.data?.hello).toBe("Hello world");
+		expect(response.body.singleResult.errors).toBeUndefined();
+
+		// The refresh token cookie should be cleared
+		expect(context.res.cookies.refreshToken).toBeDefined();
+		expect(context.res.cookies.refreshToken.value).toBe("");
+		expect(context.res.cookies.refreshToken.options.expires).toBeDefined();
 	});
 
 	it("should return GraphQLError when token expired", async () => {
