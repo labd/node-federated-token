@@ -114,28 +114,23 @@ export class GatewayAuthPlugin<
 			try {
 				await token.loadRefreshJWT(this.signer, refreshToken);
 			} catch (e: unknown) {
-				this.logger?.error({
-					msg: "Error during loading of the refresh token",
+				this.logger?.warn({
+					msg: "Error during loading of the refresh token, clearing token",
 					refreshToken: maskToken(refreshToken),
 					err: e,
 				});
 
+				// Clear the invalid refresh token but don't return a 401.
+				// Returning a 401 here blocks the entire request before it
+				// reaches any resolver. This prevents operations like
+				// CustomerLogout from completing, which in turn prevents
+				// willSendResponse from properly clearing all related
+				// cookies (including the non-httpOnly userRefreshTokenExists
+				// flag cookie). The result is that the client keeps
+				// retrying refresh with the same stale cookie on every
+				// subsequent request, permanently blocking flows like
+				// password reset.
 				this.tokenSource.deleteRefreshToken(contextValue.req, contextValue.res);
-				return {
-					didResolveOperation: async (
-						requestContext: GraphQLRequestContextDidResolveSource<TContext>,
-					) => {
-						requestContext.response.http.status = 401;
-						throw new GraphQLError("Your refresh token is invalid.", {
-							extensions: {
-								code: "INVALID_TOKEN",
-								http: {
-									statusCode: 400,
-								},
-							},
-						});
-					},
-				};
 			}
 		}
 
