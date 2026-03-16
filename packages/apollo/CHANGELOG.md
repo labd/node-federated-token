@@ -1,5 +1,12 @@
 # @labdigital/federated-token-apollo
 
+## 2.2.1
+
+### Patch Changes
+
+- fc8dc53: Do not return a 401 on bad aud, only clear the refresh token.
+- c8ebdf5: update @apollo/gateway to 2.12.3 due to CVE CVE-2026-32621
+
 ## 2.2.0
 
 ### Patch Changes
