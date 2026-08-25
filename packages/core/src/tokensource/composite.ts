@@ -1,7 +1,6 @@
-import type { Request, Response } from "express";
 import type { TokenSource } from "./base";
 
-export class CompositeTokenSource<TRequest = Request, TResponse = Response>
+export class CompositeTokenSource<TRequest, TResponse>
 	implements TokenSource<TRequest, TResponse>
 {
 	private sources: TokenSource<TRequest, TResponse>[];

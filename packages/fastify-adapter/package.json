@@ -15,8 +15,9 @@
 	"exports": {
 		".": "./dist/index.js"
 	},
+	"sideEffects": false,
 	"scripts": {
-		"build": "tsup",
+		"build": "tsdown",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
@@ -25,12 +26,13 @@
 		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
-		"@fastify/cookie": "11.0.2",
-		"@vitest/coverage-v8": "4.0.10",
-		"fastify": "5.6.2",
-		"tsup": "8.5.1",
-		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"@fastify/cookie": "11.1.2",
+		"@vitest/coverage-v8": "4.1.11",
+		"fastify": "5.12.1",
+		"publint": "^0.3.24",
+		"tsdown": "^0.22.14",
+		"typescript": "7.0.2",
+		"vitest": "4.1.11"
 	},
 	"engines": {
 		"node": ">=20.0.0"
@@ -40,12 +42,16 @@
 		"src"
 	],
 	"module": "./dist/index.js",
+	"peerDependencies": {
+		"@fastify/cookie": ">= 11",
+		"fastify": ">= 5"
+	},
 	"publishConfig": {
 		"access": "public",
 		"provenance": true
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
+		"url": "git+https://github.com/labd/node-federated-token.git"
 	}
 }

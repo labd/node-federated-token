@@ -22,26 +22,27 @@
 			"import": "./dist/tokensource/index.js"
 		}
 	},
+	"sideEffects": false,
 	"scripts": {
-		"build": "tsup",
+		"build": "tsdown",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@types/node": "^24.4.0",
-		"jose": "6.1.2",
-		"node-mock-http": "1.0.3"
+		"@types/node": "^26.2.0",
+		"jose": "6.2.10",
+		"node-mock-http": "1.0.5"
 	},
 	"devDependencies": {
 		"@types/cookie": "1.0.0",
-		"@types/express": "5.0.5",
-		"@vitest/coverage-v8": "4.0.10",
-		"cookie": "1.0.2",
-		"node-mocks-http": "1.17.2",
-		"tsup": "8.5.1",
-		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"@vitest/coverage-v8": "4.1.11",
+		"cookie": "2.0.1",
+		"node-mocks-http": "1.18.1",
+		"publint": "^0.3.24",
+		"tsdown": "^0.22.14",
+		"typescript": "7.0.2",
+		"vitest": "4.1.11"
 	},
 	"engines": {
 		"node": ">=20.0.0"
@@ -60,6 +61,6 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
+		"url": "git+https://github.com/labd/node-federated-token.git"
 	}
 }
