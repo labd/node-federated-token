@@ -1,5 +1,25 @@
 # @labdigital/federated-token
 
+## 3.0.0
+
+### Major Changes
+
+- 416b300: Require Node 22 or newer. Node 20 is no longer supported or tested.
+
+### Minor Changes
+
+- 9d255a9: Remove the `express` type dependency from the core package. `CompositeTokenSource` no longer defaults its `TRequest`/`TResponse` type parameters to the express `Request`/`Response` types, so the framework-agnostic core no longer leaks express types into its published type definitions.
+  
+  Constructor calls such as `new CompositeTokenSource([cookieSource])` still infer both type parameters and need no change. Only code that referenced the bare type without arguments (for example `let source: CompositeTokenSource`) has to pass them explicitly now.
+
+### Patch Changes
+
+- 43419ba: Replace the remaining `any` types in the JWT payload and `TokenSigner.encryptObject` with `unknown`. Callers passing an object are unaffected.
+- 9d255a9: Build the packages with `tsdown` instead of `tsup`, and validate the published output with `publint` on every build.
+  
+  The documented entry points are unchanged, but `dist/` now contains additional shared chunks next to them. Deep imports into `dist/` were never supported and may break.
+- 9d255a9: Declare `"sideEffects": false` so bundlers can tree-shake unused exports, and use the full git URL form for `repository.url`.
+
 ## 2.2.0
 
 ### Minor Changes
