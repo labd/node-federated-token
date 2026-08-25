@@ -118,9 +118,6 @@ importers:
       '@labdigital/federated-token':
         specifier: workspace:*
         version: link:../core
-      cookie:
-        specifier: 2.0.1
-        version: 2.0.1
       express:
         specifier: '>= 4'
         version: 5.2.1
@@ -131,6 +128,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
+      cookie:
+        specifier: 2.0.1
+        version: 2.0.1
       node-mocks-http:
         specifier: 1.18.1
         version: 1.18.1(@types/express@5.0.6)(@types/node@26.2.0)

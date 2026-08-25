@@ -23,12 +23,12 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@labdigital/federated-token": "workspace:*",
-		"cookie": "2.0.1"
+		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/express": "5.0.6",
 		"@vitest/coverage-v8": "4.1.11",
+		"cookie": "2.0.1",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.24",
 		"tsdown": "^0.22.14",
@@ -36,7 +36,7 @@
 		"vitest": "4.1.11"
 	},
 	"engines": {
-		"node": ">=20.0.0"
+		"node": ">=22.0.0"
 	},
 	"files": [
 		"dist",
