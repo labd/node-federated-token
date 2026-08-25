@@ -1,4 +1,4 @@
-import { parse, type SerializeOptions, serialize } from "cookie";
+import { parseCookie, type SerializeOptions, stringifySetCookie } from "cookie";
 import { describe, expect, it } from "vitest";
 import {
 	type BaseCookieSourceOptions,
@@ -18,7 +18,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 	getCookie(request: Request, name: string): string | undefined {
 		const header = request.headers.get("cookie");
 		if (!header) return undefined;
-		const cookies = parse(header);
+		const cookies = parseCookie(header);
 		return cookies[name];
 	}
 
@@ -29,7 +29,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		value: string,
 		options: SerializeOptions,
 	): void {
-		const cookieStr = serialize(name, value, options);
+		const cookieStr = stringifySetCookie({ name, value, ...options });
 		response.headers.append("Set-Cookie", cookieStr);
 	}
 
@@ -39,7 +39,7 @@ class TestAdapter implements CookieAdapter<Request, Response> {
 		name: string,
 		options?: SerializeOptions,
 	): void {
-		const cookieStr = serialize(name, "", options);
+		const cookieStr = stringifySetCookie({ name, value: "", ...options });
 		response.headers.append("Set-Cookie", cookieStr);
 	}
 
@@ -70,7 +70,7 @@ const getCookies = (
 	// split on commas before a new “key=”
 	const parts = raw.split(/,\s*(?=[^;]+=)/);
 
-	return parts.map((str) => parse(str));
+	return parts.map((str) => parseCookie(str));
 };
 
 describe("CookieTokenSource", () => {
