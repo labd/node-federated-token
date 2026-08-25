@@ -15,8 +15,9 @@
 	"exports": {
 		".": "./dist/index.js"
 	},
+	"sideEffects": false,
 	"scripts": {
-		"build": "tsup",
+		"build": "tsdown",
 		"test": "vitest run",
 		"test:ci": "vitest run --coverage",
 		"tsc": "tsc --noEmit"
@@ -25,14 +26,15 @@
 		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
-		"@types/express": "5.0.5",
-		"@typescript-eslint/eslint-plugin": "8.47.0",
-		"@vitest/coverage-v8": "4.0.10",
-		"graphql-yoga": "5.16.2",
-		"node-mocks-http": "1.17.2",
-		"tsup": "8.5.1",
-		"typescript": "5.9.3",
-		"vitest": "4.0.10"
+		"@types/express": "5.0.6",
+		"@typescript-eslint/eslint-plugin": "8.67.0",
+		"@vitest/coverage-v8": "4.1.11",
+		"graphql-yoga": "5.22.0",
+		"node-mocks-http": "1.18.1",
+		"publint": "^0.3.24",
+		"tsdown": "^0.22.14",
+		"typescript": "7.0.2",
+		"vitest": "4.1.11"
 	},
 	"engines": {
 		"node": ">=20.0.0"
@@ -52,6 +54,6 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/labd/node-federated-token"
+		"url": "git+https://github.com/labd/node-federated-token.git"
 	}
 }
