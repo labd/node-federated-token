@@ -17,25 +17,34 @@ const createMockRequest = (options: Record<string, unknown> = {}) => {
 
 type FastifyMockResponse = {
 	_cookies: Record<string, CookieValue>;
+	setCookie(
+		name: string,
+		value: string,
+		options: CookieSerializeOptions,
+	): FastifyMockResponse;
+	clearCookie(
+		name: string,
+		options?: CookieSerializeOptions,
+	): FastifyMockResponse;
 };
 
 // Mock a Fastify reply object
 const createMockResponse = () => {
-	const res: any = {
-		_cookies: {} as Record<string, CookieValue>,
-		setCookie(name: string, value: string, options: CookieSerializeOptions) {
+	const res: FastifyMockResponse = {
+		_cookies: {},
+		setCookie(name, value, options) {
 			this._cookies[name] = {
 				value,
 				options: { ...options, secure: options.secure || false },
 			};
 			return this;
 		},
-		clearCookie(name: string, options?: CookieSerializeOptions) {
+		clearCookie(name) {
 			delete this._cookies[name];
 			return this;
 		},
 	};
-	return res as FastifyReply & FastifyMockResponse;
+	return res as unknown as FastifyReply & FastifyMockResponse;
 };
 
 describe("CookieTokenSource", () => {

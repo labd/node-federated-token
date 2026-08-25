@@ -1,12 +1,14 @@
 import { TokenExpiredError, TokenInvalidError } from "./errors";
 import type { TokenSigner } from "./sign";
-import { FederatedToken } from "./token";
+import { type AccessToken, FederatedToken } from "./token";
 
 type JWTPayload = {
 	exp: number;
 	jwe: string;
 	_fingerprint: string;
-	[key: string]: any;
+	tokens: Record<string, AccessToken>;
+	isAuthenticated?: boolean;
+	[key: string]: unknown;
 };
 
 export class PublicFederatedToken extends FederatedToken {
@@ -49,7 +51,7 @@ export class PublicFederatedToken extends FederatedToken {
 			throw new TokenInvalidError("Invalid JWT");
 		}
 
-		this.values = result.payload.values as Record<string, any>;
+		this.values = result.payload.values as Record<string, unknown>;
 	}
 
 	async loadAccessJWT(signer: TokenSigner, value: string) {

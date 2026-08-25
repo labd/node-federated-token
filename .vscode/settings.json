@@ -1,9 +1,6 @@
 {
 	"editor.codeActionsOnSave": {
-		"quickfix.biome": "explicit",
-		"source.fixAll.eslint": "never",
-		"source.organizeImports": "never",
-		"source.organizeImports.biome": "explicit"
+		"source.fixAll.biome": "explicit"
 	},
 	"[json]": {
 		"editor.defaultFormatter": "biomejs.biome"

@@ -13,20 +13,20 @@
 	"files": {
 		"includes": [
 			"**",
-			"!**/.changes/**",
-			"!**/.pnpm/**",
-			"!**/test-reports/**",
-			"!**/coverage/**",
-			"!**/dist/**",
-			"!**/node_modules/**"
-		],
-		"experimentalScannerIgnores": ["dist"]
+			"!**/.changes/*",
+			"!**/.pnpm/*",
+			"!**/test-reports/*",
+			"!**/coverage/*",
+			"!**/dist/*",
+			"!**/node_modules/*",
+			"!!**/dist"
+		]
 	},
 
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"complexity": {
 				"noUselessTernary": "error",
 				"useDateNow": "error",

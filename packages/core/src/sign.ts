@@ -27,7 +27,7 @@ export class TokenSigner {
 	}
 
 	// Encrypt the embedded token (JWE) in the JWT
-	async encryptObject(value: Record<string, any>): Promise<string> {
+	async encryptObject(value: Record<string, unknown>): Promise<string> {
 		const { id, key } = await this._encryptKeys.getActiveKey();
 		const buf = new TextEncoder().encode(JSON.stringify(value));
 		const data = await new jose.CompactEncrypt(buf)
