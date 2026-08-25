@@ -1,5 +1,18 @@
 # @labdigital/federated-token-react
 
+## 3.0.0
+
+### Major Changes
+
+- 416b300: Require Node 22 or newer. Node 20 is no longer supported or tested.
+
+### Patch Changes
+
+- 9d255a9: Build the packages with `tsdown` instead of `tsup`, and validate the published output with `publint` on every build.
+  
+  The documented entry points are unchanged, but `dist/` now contains additional shared chunks next to them. Deep imports into `dist/` were never supported and may break.
+- 9d255a9: Declare `"sideEffects": false` so bundlers can tree-shake unused exports, and use the full git URL form for `repository.url`.
+
 ## 2.2.0
 
 ### Patch Changes
