@@ -22,13 +22,13 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@labdigital/federated-token": "workspace:*",
-		"graphql-yoga": "5.16.2"
+		"@labdigital/federated-token": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/express": "5.0.5",
 		"@typescript-eslint/eslint-plugin": "8.47.0",
 		"@vitest/coverage-v8": "4.0.10",
+		"graphql-yoga": "5.16.2",
 		"node-mocks-http": "1.17.2",
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
@@ -43,7 +43,8 @@
 	],
 	"module": "./dist/index.js",
 	"peerDependencies": {
-		"graphql": ">= 16.6.0"
+		"graphql": ">= 16.6.0",
+		"graphql-yoga": ">= 5.0.0"
 	},
 	"publishConfig": {
 		"access": "public",
