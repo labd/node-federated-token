@@ -13,8 +13,6 @@ import {
  * support multiple Set-Cookie headers, so we just 'join' them with a comma.
  */
 class TestAdapter implements CookieAdapter<Request, Response> {
-	constructor(private options: BaseCookieSourceOptions<Request>) {}
-
 	getCookie(request: Request, name: string): string | undefined {
 		const header = request.headers.get("cookie");
 		if (!header) return undefined;
@@ -57,7 +55,7 @@ class TestCookieTokenSource extends BaseCookieTokenSource<Request, Response> {
 
 	constructor(options: BaseCookieSourceOptions<Request>) {
 		super(options);
-		this.adapter = new TestAdapter(options);
+		this.adapter = new TestAdapter();
 	}
 }
 
