@@ -2,8 +2,8 @@ import type { TokenSource } from "./base";
 
 export type CookieNames = {
 	// Anonymous cookies
-	guestData: string;
-	guestToken: string; // HTTP ONLY
+	guestData: string | null;
+	guestToken: string | null; // HTTP ONLY
 
 	// Authenticated cookies
 	userData: string;
@@ -11,7 +11,7 @@ export type CookieNames = {
 
 	// Refresh token cookies
 	refreshToken: string; // HTTP_ONLY
-	guestRefreshTokenExists: string;
+	guestRefreshTokenExists: string | null;
 	userRefreshTokenExists: string;
 };
 
@@ -88,24 +88,27 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	}
 
 	deleteAccessToken(request: TRequest, response: TResponse): void {
-		const names = [this.cookieNames.userToken, this.cookieNames.guestToken];
+		const names = [this.cookieNames.userToken, this.cookieNames.guestToken].filter((v) => v !== null);
 
 		for (const name of names) {
 			this.deleteAccessTokenByName(request, response, name);
 		}
 	}
 
+	// Delete both the user and guest refresh token exists cookies
 	deleteRefreshToken(request: TRequest, response: TResponse): void {
 		this.adapter.clearCookie(request, response, this.cookieNames.refreshToken, {
 			path: this._getRefreshTokenPath(request),
 			domain: this.adapter.getPrivateDomain(request),
 		});
 
-		this.deleteRefreshTokenExistsByName(
-			request,
-			response,
-			this.cookieNames.guestRefreshTokenExists,
-		);
+		if (this.cookieNames.guestRefreshTokenExists) {
+			this.deleteRefreshTokenExistsByName(
+				request,
+				response,
+				this.cookieNames.guestRefreshTokenExists,
+			);
+		}
 		this.deleteRefreshTokenExistsByName(
 			request,
 			response,
@@ -114,7 +117,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	}
 
 	deleteDataToken(request: TRequest, response: TResponse): void {
-		const names = [this.cookieNames.userData, this.cookieNames.guestData];
+		const names = [this.cookieNames.userData, this.cookieNames.guestData].filter((v) => v !== null);
 
 		for (const name of names) {
 			this.deleteAccessTokenByName(request, response, name);
@@ -148,7 +151,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	}
 
 	getAccessToken(request: TRequest): string | undefined {
-		const names = [this.cookieNames.userToken, this.cookieNames.guestToken];
+		const names = [this.cookieNames.userToken, this.cookieNames.guestToken].filter((v) => v !== null);
 		for (const name of names) {
 			const value = this.adapter.getCookie(request, name);
 			if (value) {
@@ -194,19 +197,23 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				token,
 				cookieOptions,
 			);
-			this.deleteAccessTokenByName(
-				request,
-				response,
-				this.cookieNames.guestData,
-			);
+			if (this.cookieNames.guestData) {
+				this.deleteAccessTokenByName(
+					request,
+					response,
+					this.cookieNames.guestData,
+				);
+			}
 		} else {
-			this.adapter.setCookie(
-				request,
-				response,
-				this.cookieNames.guestData,
-				token,
-				cookieOptions,
-			);
+			if (this.cookieNames.guestData) {
+				this.adapter.setCookie(
+					request,
+					response,
+					this.cookieNames.guestData,
+					token,
+					cookieOptions,
+				);
+			}
 			this.deleteAccessTokenByName(
 				request,
 				response,
@@ -216,7 +223,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	}
 
 	getDataToken(request: TRequest): string | undefined {
-		const names = [this.cookieNames.userData, this.cookieNames.guestData];
+		const names = [this.cookieNames.userData, this.cookieNames.guestData].filter((v) => v !== null);
 		for (const name of names) {
 			const value = this.adapter.getCookie(request, name);
 			if (value) {
@@ -258,19 +265,23 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				token,
 				cookieOptions,
 			);
-			this.deleteAccessTokenByName(
-				request,
-				response,
-				this.cookieNames.guestToken,
-			);
+			if (this.cookieNames.guestToken) {
+				this.deleteAccessTokenByName(
+					request,
+					response,
+					this.cookieNames.guestToken,
+				);
+			}
 		} else {
-			this.adapter.setCookie(
-				request,
-				response,
-				this.cookieNames.guestToken,
-				token,
-				cookieOptions,
-			);
+			if( this.cookieNames.guestToken) {
+				this.adapter.setCookie(
+					request,
+					response,
+					this.cookieNames.guestToken,
+					token,
+					cookieOptions,
+				);
+			}
 			this.deleteAccessTokenByName(
 				request,
 				response,
@@ -320,19 +331,23 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				"1",
 				cookieOptions,
 			);
-			this.deleteRefreshTokenExistsByName(
-				request,
-				response,
-				this.cookieNames.guestRefreshTokenExists,
-			);
+			if (this.cookieNames.guestRefreshTokenExists) {
+				this.deleteRefreshTokenExistsByName(
+					request,
+					response,
+					this.cookieNames.guestRefreshTokenExists,
+				);
+			}
 		} else {
-			this.adapter.setCookie(
-				request,
-				response,
-				this.cookieNames.guestRefreshTokenExists,
-				"1",
-				cookieOptions,
-			);
+			if (this.cookieNames.guestRefreshTokenExists) {
+				this.adapter.setCookie(
+					request,
+					response,
+					this.cookieNames.guestRefreshTokenExists,
+					"1",
+					cookieOptions,
+				);
+			}
 			this.deleteRefreshTokenExistsByName(
 				request,
 				response,
