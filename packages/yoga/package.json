@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@types/express": "5.0.6",
-		"@typescript-eslint/eslint-plugin": "8.67.0",
+		"@typescript-eslint/eslint-plugin": "8.68.0",
 		"@vitest/coverage-v8": "4.1.11",
 		"graphql-yoga": "5.22.0",
 		"node-mocks-http": "1.18.1",
