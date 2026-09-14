@@ -30,8 +30,8 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@types/node": "^26.2.0",
-		"jose": "6.2.10",
+		"@types/node": "^26.5.1",
+		"jose": "6.2.12",
 		"node-mock-http": "1.0.5"
 	},
 	"devDependencies": {
@@ -40,7 +40,7 @@
 		"cookie": "2.0.1",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.24",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "7.0.2",
 		"vitest": "4.1.11"
 	},

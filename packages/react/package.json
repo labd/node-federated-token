@@ -23,17 +23,17 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"jose": "6.2.10",
+		"jose": "6.2.12",
 		"js-cookie": "3.0.8"
 	},
 	"devDependencies": {
 		"@types/express": "5.0.6",
 		"@types/js-cookie": "3.0.6",
-		"@types/react": "19.2.18",
+		"@types/react": "19.3.0",
 		"@vitest/coverage-v8": "4.1.11",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.24",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "7.0.2",
 		"vitest": "4.1.11"
 	},
