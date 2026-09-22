@@ -6,7 +6,7 @@ import type { PublicFederatedToken } from "./jwt";
 type TokenSignerOptions = {
 	encryptKeys: KeyManagerInterface;
 	signKeys: KeyManagerInterface;
-	audience: string;
+	audience: string | string[];
 	issuer: string;
 	getSubject?: (token: PublicFederatedToken) => string;
 };
@@ -16,7 +16,7 @@ export class TokenSigner {
 	private _signKeys: KeyManagerInterface;
 
 	constructor(private config: TokenSignerOptions) {
-		if (!config.audience) {
+		if (!config.audience?.length) {
 			throw new ConfigurationError("Missing audience");
 		}
 		if (!config.issuer) {

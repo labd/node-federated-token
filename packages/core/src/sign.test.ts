@@ -102,3 +102,83 @@ describe("Strings", async () => {
 		);
 	});
 });
+
+describe("Array audience", async () => {
+	const keys = {
+		encryptKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(Buffer.from("12345678".repeat(4))),
+			},
+		]),
+		signKeys: new KeyManager([
+			{
+				id: "1",
+				key: crypto.createSecretKey(Buffer.from("87654321".repeat(4))),
+			},
+		]),
+	};
+
+	const signer = new TokenSigner({
+		...keys,
+		audience: ["firstAudience", "secondAudience"],
+		issuer: "exampleIssuer",
+	});
+
+	// A consumer configured with only one of the audiences above.
+	const storefrontSigner = new TokenSigner({
+		...keys,
+		audience: "secondAudience",
+		issuer: "exampleIssuer",
+	});
+
+	beforeEach(() => {
+		vi.useFakeTimers();
+		vi.setSystemTime(Date.now());
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
+	test("JWT Sign and verify", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const token = await signer.signJWT({ foo: "bar", exp: exp });
+
+		const result = await signer.verifyJWT(token);
+		expect(result.payload).toStrictEqual({
+			aud: ["firstAudience", "secondAudience"],
+			exp: exp,
+			foo: "bar",
+			iat: Math.floor(Date.now() / 1000),
+			iss: "exampleIssuer",
+		});
+	});
+
+	test("JWT Encrypt and Decrypt", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const token = await signer.encryptJWT({ foo: "bar" }, exp);
+
+		const result = await signer.decryptJWT(token);
+		expect(result.payload).toStrictEqual({
+			aud: ["firstAudience", "secondAudience"],
+			exp: exp,
+			foo: "bar",
+			iat: Math.floor(Date.now() / 1000),
+			iss: "exampleIssuer",
+		});
+	});
+
+	test("JWT Verify by a consumer configured with a single audience", async () => {
+		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
+		const token = await signer.signJWT({ foo: "bar", exp: exp });
+
+		await expect(storefrontSigner.verifyJWT(token)).resolves.toBeDefined();
+	});
+
+	test("Empty audience list", async () => {
+		expect(
+			() => new TokenSigner({ ...keys, audience: [], issuer: "exampleIssuer" }),
+		).toThrowError("Missing audience");
+	});
+});
