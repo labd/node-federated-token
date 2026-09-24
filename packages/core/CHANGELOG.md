@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 3.1.0
+
+### Minor Changes
+
+- 649b7a1: support multiple audiences
+
 ## 3.0.0
 
 ### Major Changes
