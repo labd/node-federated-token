@@ -98,7 +98,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 	deleteRefreshToken(request: TRequest, response: TResponse): void {
 		this.adapter.clearCookie(request, response, this.cookieNames.refreshToken, {
 			path: this._getRefreshTokenPath(request),
-			domain: this.adapter.getPrivateDomain(request),
+			domain: this.adapter.getPublicDomain(request),
 		});
 
 		this.deleteRefreshTokenExistsByName(
@@ -298,6 +298,7 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 					? undefined
 					: new Date(Date.now() + opts.expiresIn * 1000),
 			domain: this.adapter.getPublicDomain(request),
+			path: this.options.cookiePathFn?.(request) ?? "/",
 		};
 
 		this.adapter.setCookie(

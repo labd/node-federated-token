@@ -227,6 +227,7 @@ describe("CookieTokenSource", () => {
 			},
 			{
 				guestRefreshTokenExists: "1",
+				Path: "/",
 				SameSite: "None",
 				Expires: expect.any(String),
 			},
@@ -257,6 +258,7 @@ describe("CookieTokenSource", () => {
 			},
 			{
 				userRefreshTokenExists: "1",
+				Path: "/",
 				SameSite: "None",
 				Expires: expectedExpires.toUTCString(),
 			},
@@ -290,6 +292,7 @@ describe("CookieTokenSource", () => {
 			},
 			{
 				userRefreshTokenExists: "1",
+				Path: "/",
 				SameSite: "None",
 				Expires: expectedExpires.toUTCString(),
 			},
@@ -320,6 +323,7 @@ describe("CookieTokenSource", () => {
 			},
 			{
 				userRefreshTokenExists: "1",
+				Path: "/",
 				SameSite: "None",
 			},
 		]);

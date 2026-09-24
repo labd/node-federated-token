@@ -20,6 +20,44 @@ type GatewayOptions = {
 	logger?: Logger;
 };
 
+/** The session can be renewed. */
+const expiredTokenListener = <
+	TContext extends PublicFederatedTokenContext<unknown, unknown>,
+>(): GraphQLRequestListener<TContext> => ({
+	didResolveOperation: async (
+		requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+	) => {
+		requestContext.response.http.status = 401;
+		throw new GraphQLError("Your token has expired.", {
+			extensions: {
+				code: "UNAUTHENTICATED",
+				http: {
+					statusCode: 401,
+				},
+			},
+		});
+	},
+});
+
+/** The session is over. A refresh cannot repair this one. */
+const invalidTokenListener = <
+	TContext extends PublicFederatedTokenContext<unknown, unknown>,
+>(): GraphQLRequestListener<TContext> => ({
+	didResolveOperation: async (
+		requestContext: GraphQLRequestContextDidResolveSource<TContext>,
+	) => {
+		requestContext.response.http.status = 401;
+		throw new GraphQLError("Your token is invalid.", {
+			extensions: {
+				code: "INVALID_TOKEN",
+				http: {
+					statusCode: 401,
+				},
+			},
+		});
+	},
+});
+
 /**
  * This plugin is used to authenticate requests coming into the gateway. It
  * reads the tokens from the request (using the token source provided),
@@ -66,47 +104,22 @@ export class GatewayAuthPlugin<
 			try {
 				await token.loadAccessJWT(this.signer, accessToken);
 			} catch (e: unknown) {
-				this.tokenSource.deleteAccessToken(contextValue.req, contextValue.res);
-
 				if (e instanceof TokenExpiredError) {
-					return {
-						didResolveOperation: async (
-							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
-						) => {
-							requestContext.response.http.status = 401;
-							throw new GraphQLError("Your token has expired.", {
-								extensions: {
-									code: "UNAUTHENTICATED",
-									http: {
-										statusCode: 401,
-									},
-								},
-							});
-						},
-					};
-				} else {
-					this.logger?.error({
-						msg: "Error during loading of the access token",
-						accessToken: maskToken(accessToken),
-						err: e,
-					});
-
-					return {
-						didResolveOperation: async (
-							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
-						) => {
-							requestContext.response.http.status = 401;
-							throw new GraphQLError("Your token is invalid.", {
-								extensions: {
-									code: "INVALID_TOKEN",
-									http: {
-										statusCode: 400,
-									},
-								},
-							});
-						},
-					};
+					this.tokenSource.deleteAccessToken(
+						contextValue.req,
+						contextValue.res,
+					);
+					return expiredTokenListener<TContext>();
 				}
+
+				this.logger?.error({
+					msg: "Error during loading of the access token",
+					accessToken: maskToken(accessToken),
+					err: e,
+				});
+
+				this.deleteSession(contextValue.req, contextValue.res);
+				return invalidTokenListener<TContext>();
 			}
 		}
 
@@ -138,48 +151,29 @@ export class GatewayAuthPlugin<
 			try {
 				await token.loadDataJWT(this.signer, dataToken);
 			} catch (e: unknown) {
-				this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
 				if (e instanceof TokenExpiredError) {
-					return {
-						didResolveOperation: async (
-							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
-						) => {
-							requestContext.response.http.status = 401;
-							throw new GraphQLError("Your token has expired.", {
-								extensions: {
-									code: "UNAUTHENTICATED",
-									http: {
-										statusCode: 401,
-									},
-								},
-							});
-						},
-					};
-				} else {
-					this.logger?.error({
-						msg: "Error during loading of the data token",
-						dataToken: maskToken(dataToken),
-						err: e,
-					});
-					return {
-						didResolveOperation: async (
-							requestContext: GraphQLRequestContextDidResolveSource<TContext>,
-						) => {
-							requestContext.response.http.status = 401;
-							throw new GraphQLError("Your token is invalid.", {
-								extensions: {
-									code: "INVALID_TOKEN",
-									http: {
-										statusCode: 400,
-									},
-								},
-							});
-						},
-					};
+					this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
+					return expiredTokenListener<TContext>();
 				}
+
+				this.logger?.error({
+					msg: "Error during loading of the data token",
+					dataToken: maskToken(dataToken),
+					err: e,
+				});
+
+				this.deleteSession(contextValue.req, contextValue.res);
+				return invalidTokenListener<TContext>();
 			}
 		}
 		return this;
+	}
+
+	/** The refresh token carries the same claims, so it goes too. */
+	private deleteSession(request: unknown, response: unknown): void {
+		this.tokenSource.deleteAccessToken(request, response);
+		this.tokenSource.deleteRefreshToken(request, response);
+		this.tokenSource.deleteDataToken(request, response);
 	}
 
 	async willSendResponse(
