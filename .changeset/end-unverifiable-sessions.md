@@ -1,6 +1,9 @@
 ---
-"@labdigital/federated-token": minor
-"@labdigital/federated-token-apollo": minor
+"@labdigital/federated-token": patch
+"@labdigital/federated-token-apollo": patch
+"@labdigital/federated-token-express-adapter": patch
+"@labdigital/federated-token-fastify-adapter": patch
+"@labdigital/federated-token-yoga": patch
 ---
 
 Tell an unverifiable token apart from an expired one, and end the session for it.
