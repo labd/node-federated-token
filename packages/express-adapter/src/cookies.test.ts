@@ -1,11 +1,10 @@
 import type { SerializeOptions as CookieSerializeOptions } from "cookie";
 import httpMocks from "node-mocks-http";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { CookieTokenSource } from "./cookies";
 
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
-	const clearedCookies: Record<string, CookieSerializeOptions | undefined> = {};
 
 	// @ts-expect-error cookies is not defined on the response
 	res.cookie = (
@@ -18,14 +17,13 @@ const createMockResponse = () => {
 		return res;
 	};
 
-	res.clearCookie = (name: string, options?: CookieSerializeOptions) => {
+	res.clearCookie = vi.fn((name: string) => {
 		res.cookies = res.cookies || {};
-		clearedCookies[name] = options;
 		delete res.cookies[name];
 		return res;
-	};
+	});
 
-	return Object.assign(res, { clearedCookies });
+	return res;
 };
 
 describe("CookieTokenSource", () => {
@@ -312,14 +310,17 @@ describe("CookieTokenSource", () => {
 
 		cookieTokenSource.deleteRefreshToken(request, response);
 
-		expect(response.clearedCookies["refreshToken"]).toStrictEqual({
+		expect(response.clearCookie).toHaveBeenCalledWith("refreshToken", {
 			domain: ".example.com",
 			path: "/refresh",
 		});
-		expect(response.clearedCookies["guestRefreshTokenExists"]).toStrictEqual({
-			domain: ".example.com",
-			path: "/",
-		});
+		expect(response.clearCookie).toHaveBeenCalledWith(
+			"guestRefreshTokenExists",
+			{
+				domain: ".example.com",
+				path: "/",
+			},
+		);
 	});
 
 	// Test for deleting refresh token by name
