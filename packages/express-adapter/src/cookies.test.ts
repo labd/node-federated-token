@@ -5,6 +5,7 @@ import { CookieTokenSource } from "./cookies";
 
 const createMockResponse = () => {
 	const res = httpMocks.createResponse();
+	const clearedCookies: Record<string, CookieSerializeOptions | undefined> = {};
 
 	// @ts-expect-error cookies is not defined on the response
 	res.cookie = (
@@ -19,11 +20,12 @@ const createMockResponse = () => {
 
 	res.clearCookie = (name: string, options?: CookieSerializeOptions) => {
 		res.cookies = res.cookies || {};
+		clearedCookies[name] = options;
 		delete res.cookies[name];
 		return res;
 	};
 
-	return res;
+	return Object.assign(res, { clearedCookies });
 };
 
 describe("CookieTokenSource", () => {
@@ -199,6 +201,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "none",
 			expires: expect.any(Date),
 			domain: ".example.com",
+			path: "/",
 		});
 	});
 
@@ -233,6 +236,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "none",
 			expires: expect.any(Date),
 			domain: ".example.com",
+			path: "/",
 		});
 	});
 
@@ -286,6 +290,36 @@ describe("CookieTokenSource", () => {
 		expect(response.cookies).not.toHaveProperty("authRefreshToken");
 		expect(response.cookies).not.toHaveProperty("guestRefreshTokenExists");
 		expect(response.cookies).not.toHaveProperty("userRefreshTokenExists");
+	});
+
+	// The delete must use the same domain and path as the set. If not, the
+	// browser keeps the old cookie.
+	it("should delete refresh tokens on the public domain and the set paths", () => {
+		const request = httpMocks.createRequest({
+			cookies: {
+				guestRefreshTokenExists: "1",
+			},
+		});
+		const response = createMockResponse();
+
+		const cookieTokenSource = new CookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+			publicDomainFn: () => ".example.com",
+			privateDomainFn: () => "private.example.com",
+		});
+
+		cookieTokenSource.deleteRefreshToken(request, response);
+
+		expect(response.clearedCookies["refreshToken"]).toStrictEqual({
+			domain: ".example.com",
+			path: "/refresh",
+		});
+		expect(response.clearedCookies["guestRefreshTokenExists"]).toStrictEqual({
+			domain: ".example.com",
+			path: "/",
+		});
 	});
 
 	// Test for deleting refresh token by name

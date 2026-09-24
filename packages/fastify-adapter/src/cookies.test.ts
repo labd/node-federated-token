@@ -220,6 +220,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "none",
 			expires: expect.any(Date),
 			domain: ".example.com",
+			path: "/",
 		});
 	});
 
@@ -254,6 +255,7 @@ describe("CookieTokenSource", () => {
 			sameSite: "none",
 			expires: expect.any(Date),
 			domain: ".example.com",
+			path: "/",
 		});
 	});
 
