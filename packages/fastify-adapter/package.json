@@ -28,9 +28,9 @@
 	"devDependencies": {
 		"@fastify/cookie": "11.1.2",
 		"@vitest/coverage-v8": "4.1.11",
-		"fastify": "5.12.1",
+		"fastify": "5.12.5",
 		"publint": "^0.3.24",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "7.0.2",
 		"vitest": "4.1.11"
 	},

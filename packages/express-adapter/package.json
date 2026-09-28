@@ -31,7 +31,7 @@
 		"cookie": "2.0.1",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.24",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "7.0.2",
 		"vitest": "4.1.11"
 	},
