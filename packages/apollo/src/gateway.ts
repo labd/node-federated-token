@@ -99,6 +99,8 @@ export class GatewayAuthPlugin<
 		}
 
 		const token = contextValue.federatedToken;
+		let tokenExpired = false;
+		let refreshTokenLoaded = false;
 
 		if (accessToken) {
 			try {
@@ -109,23 +111,22 @@ export class GatewayAuthPlugin<
 						contextValue.req,
 						contextValue.res,
 					);
-					return expiredTokenListener<TContext>();
+					tokenExpired = true;
+				} else {
+					return this.rejectInvalidToken(
+						contextValue,
+						"access",
+						accessToken,
+						e,
+					);
 				}
-
-				this.logger?.error({
-					msg: "Error during loading of the access token",
-					accessToken: maskToken(accessToken),
-					err: e,
-				});
-
-				this.deleteSession(contextValue.req, contextValue.res);
-				return invalidTokenListener<TContext>();
 			}
 		}
 
 		if (refreshToken) {
 			try {
 				await token.loadRefreshJWT(this.signer, refreshToken);
+				refreshTokenLoaded = true;
 			} catch (e: unknown) {
 				this.logger?.warn({
 					msg: "Error during loading of the refresh token, clearing token",
@@ -153,20 +154,34 @@ export class GatewayAuthPlugin<
 			} catch (e: unknown) {
 				if (e instanceof TokenExpiredError) {
 					this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
-					return expiredTokenListener<TContext>();
+					tokenExpired = true;
+				} else {
+					return this.rejectInvalidToken(contextValue, "data", dataToken, e);
 				}
-
-				this.logger?.error({
-					msg: "Error during loading of the data token",
-					dataToken: maskToken(dataToken),
-					err: e,
-				});
-
-				this.deleteSession(contextValue.req, contextValue.res);
-				return invalidTokenListener<TContext>();
 			}
 		}
+
+		// Skip the 401 when a refresh token loaded: it would block the refresh
+		// that replaces the expired token.
+		if (tokenExpired && !refreshTokenLoaded) {
+			return expiredTokenListener<TContext>();
+		}
 		return this;
+	}
+
+	private rejectInvalidToken(
+		contextValue: TContext,
+		kind: "access" | "data",
+		value: string,
+		err: unknown,
+	): GraphQLRequestListener<TContext> {
+		this.logger?.error({
+			msg: `Error during loading of the ${kind} token`,
+			[`${kind}Token`]: maskToken(value),
+			err,
+		});
+		this.deleteSession(contextValue.req, contextValue.res);
+		return invalidTokenListener<TContext>();
 	}
 
 	/** The refresh token carries the same claims, so it goes too. */

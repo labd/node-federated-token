@@ -24,3 +24,12 @@ When a federated services creates a new token (when non exist) it can also
 return a refresh token in the `x-refresh-token` header. The gateway will then
 encrypt all refresh tokens and encrypt them before passing them to the client
 as `x-refresh-token` header.
+
+When a request's access or data token has expired but it carries a valid
+refresh token, the gateway clears the expired token and continues without it,
+so a refresh succeeds on its first attempt. Send the refresh token with refresh
+requests only: a cookie scoped to a refresh-only `refreshTokenPath`, or for
+header clients `x-refresh-token` on the refresh mutation alone. Any other
+request carrying it runs without the expired token (anonymously if it was the
+access token) instead of getting a 401, and a resolver minting an anonymous
+session would replace the user's refresh token.

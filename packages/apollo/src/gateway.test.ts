@@ -339,6 +339,129 @@ describe("GatewayAuthPlugin", async () => {
 		expect(context.res.cookies.refreshToken.options.expires).toBeDefined();
 	});
 
+	it.each([
+		{
+			access: "expired",
+			data: "expired",
+			refresh: "valid",
+			outcome: "continues",
+			cleared: ["userToken", "userData"],
+		},
+		{
+			access: "expired",
+			data: "valid",
+			refresh: "invalid",
+			outcome: "UNAUTHENTICATED",
+			cleared: ["userToken", "refreshToken"],
+		},
+		{
+			access: "valid",
+			data: "expired",
+			refresh: "invalid",
+			outcome: "UNAUTHENTICATED",
+			cleared: ["userData", "refreshToken"],
+		},
+		{
+			access: "invalid",
+			data: "valid",
+			refresh: "valid",
+			outcome: "INVALID_TOKEN",
+			cleared: ["userToken", "userData", "refreshToken"],
+		},
+		{
+			access: "valid",
+			data: "invalid",
+			refresh: "valid",
+			outcome: "INVALID_TOKEN",
+			cleared: ["userToken", "userData", "refreshToken"],
+		},
+		{
+			access: "expired",
+			data: "invalid",
+			refresh: "absent",
+			outcome: "INVALID_TOKEN",
+			cleared: ["userToken", "userData", "refreshToken"],
+		},
+	] as const)(
+		"$access access, $data data and $refresh refresh tokens: $outcome",
+		async ({ access, data, refresh, outcome, cleared }) => {
+			const now = Math.floor(Date.now() / 1000);
+			const token = new PublicFederatedToken();
+			token.setAccessToken("foo", {
+				token: "bar",
+				exp: access === "expired" ? now - 1000 : now + 1000,
+				sub: "my-user-id",
+			});
+			token.setRefreshToken("foo", "refresh-value");
+			const cookies = {
+				userToken:
+					access === "invalid"
+						? "invalid"
+						: await token.createAccessJWT(signer),
+				userData:
+					data === "invalid"
+						? "invalid"
+						: await signer.signJWT({
+								values: { value: "foobar" },
+								exp: data === "expired" ? now - 1000 : now + 1000,
+							}),
+				...(refresh !== "absent" && {
+					refreshToken:
+						refresh === "valid"
+							? await token.createRefreshJWT(signer)
+							: "invalid",
+				}),
+			};
+
+			const cookieServer = new ApolloServer({
+				typeDefs,
+				resolvers,
+				plugins: [
+					new GatewayAuthPlugin({
+						signer: signer,
+						source: new CookieTokenSource({
+							refreshTokenPath: "/auth/graphql",
+							secure: false,
+							sameSite: "lax",
+						}),
+					}),
+				],
+			});
+
+			const context = {
+				federatedToken: new PublicFederatedToken(),
+				res: httpMocks.createResponse(),
+				req: httpMocks.createRequest({ cookies }),
+			};
+
+			const response = await cookieServer.executeOperation(
+				{ query: "query testToken { testToken(create: false) }" },
+				{ contextValue: context },
+			);
+
+			assert(response.body.kind === "single");
+			const { data: result, errors } = response.body.singleResult;
+			for (const name of ["userToken", "userData", "refreshToken"] as const) {
+				expect(context.res.cookies[name]?.value).toBe(
+					(cleared as readonly string[]).includes(name) ? "" : undefined,
+				);
+			}
+			if (outcome === "continues") {
+				expect(errors).toBeUndefined();
+				const resolverToken = JSON.parse(
+					result?.testToken as string,
+				) as PublicFederatedToken;
+				expect(resolverToken.tokens).toStrictEqual({});
+				expect(resolverToken.refreshTokens).toStrictEqual({
+					foo: "refresh-value",
+				});
+			} else {
+				expect(response.http.status).toBe(401);
+				expect(errors?.[0]?.extensions?.code).toBe(outcome);
+			}
+		},
+	);
+
 	it("should return GraphQLError when token expired", async () => {
 		const context = {
 			federatedToken: new PublicFederatedToken(),
