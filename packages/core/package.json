@@ -31,7 +31,7 @@
 	},
 	"dependencies": {
 		"@types/node": "^26.2.0",
-		"jose": "6.2.10",
+		"jose": "6.2.12",
 		"node-mock-http": "1.0.5"
 	},
 	"devDependencies": {
@@ -39,8 +39,8 @@
 		"@vitest/coverage-v8": "4.1.11",
 		"cookie": "2.0.1",
 		"node-mocks-http": "1.18.1",
-		"publint": "^0.3.24",
-		"tsdown": "^0.22.14",
+		"publint": "^0.3.25",
+		"tsdown": "^0.23.0",
 		"typescript": "7.0.2",
 		"vitest": "4.1.11"
 	},
