@@ -36,13 +36,7 @@
 		"node": ">=22.0.0"
 	},
 	"module": "./dist/index.mjs",
-	"packageManager": "pnpm@9.2.0",
-	"pnpm": {
-		"overrides": {
-			"proxy-addr": "^2.0.8",
-			"shell-quote": "^1.11.0"
-		}
-	},
+	"packageManager": "pnpm@10.34.6",
 	"repository": "labd/node-federated-token",
 	"syncpack": {
 		"dependencyTypes": [
