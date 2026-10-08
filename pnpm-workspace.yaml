@@ -8,3 +8,8 @@ minimumReleaseAge: 10080
 overrides:
   proxy-addr: ^2.0.8
   shell-quote: ^1.11.0
+
+allowBuilds:
+  "@apollo/protobufjs": true
+  esbuild: true
+  protobufjs: true
