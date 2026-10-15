@@ -144,10 +144,12 @@ export class FederatedToken {
 			Buffer.from(at, "base64").toString(),
 		);
 
+		// Accumulate rather than assign: the gateway merges every subgraph response into the same token,
+		// and a later response that changed nothing must not undo a change made by an earlier one.
 		if (trackModified) {
-			this._valueModified = !isDeepStrictEqual(this.values, token.values);
+			this._valueModified ||= !isDeepStrictEqual(this.values, token.values);
 
-			this._accessTokenModified = Object.keys(token.tokens ?? []).some(
+			this._accessTokenModified ||= Object.keys(token.tokens ?? []).some(
 				(key) => !isDeepStrictEqual(this.tokens[key], token.tokens?.[key]),
 			);
 		}
