@@ -8,6 +8,12 @@
 			"dependsOn": ["^build"],
 			"outputs": ["dist/**", "README.md"]
 		},
+		"test": {
+			"dependsOn": ["^build"]
+		},
+		"test:ci": {
+			"dependsOn": ["^build"]
+		},
 		"tsc": {
 			"dependsOn": ["topo"]
 		},
