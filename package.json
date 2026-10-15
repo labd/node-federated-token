@@ -20,8 +20,8 @@
 		"lint": "biome check",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"publish:version": "pnpm changeset version && pnpm format",
-		"test": "vitest run",
-		"test:ci": "vitest run --coverage",
+		"test": "turbo test",
+		"test:ci": "turbo test:ci",
 		"tsc": "turbo tsc"
 	},
 	"devDependencies": {

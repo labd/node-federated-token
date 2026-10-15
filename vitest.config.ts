@@ -2,6 +2,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 	test: {
+		projects: ["packages/*/vitest.config.ts"],
 		slowTestThreshold: 100,
 		coverage: {
 			provider: "v8",
