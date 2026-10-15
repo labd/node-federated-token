@@ -142,6 +142,57 @@ describe("FederatedToken", () => {
 		);
 	});
 
+	test("deserializeAccessToken keeps an earlier token change when a later response only changes values", () => {
+		const tokens = {
+			exampleName: {
+				token: "newToken",
+				exp: 1234567890,
+				sub: "exampleSubject",
+			},
+		};
+		const federatedToken = new FederatedToken();
+		federatedToken.deserializeAccessToken(
+			Buffer.from(JSON.stringify({ tokens })).toString("base64"),
+			true,
+		);
+		federatedToken.deserializeAccessToken(
+			Buffer.from(
+				JSON.stringify({ tokens, values: { value1: "exampleValue1" } }),
+			).toString("base64"),
+			true,
+		);
+
+		assert.isTrue(federatedToken.isAccessTokenModified());
+		assert.isTrue(federatedToken.isValueModified());
+	});
+
+	test("deserializeAccessToken keeps an earlier value change when a later response only changes tokens", () => {
+		const values = { value1: "exampleValue1" };
+		const federatedToken = new FederatedToken();
+		federatedToken.deserializeAccessToken(
+			Buffer.from(JSON.stringify({ values })).toString("base64"),
+			true,
+		);
+		federatedToken.deserializeAccessToken(
+			Buffer.from(
+				JSON.stringify({
+					tokens: {
+						exampleName: {
+							token: "newToken",
+							exp: 1234567890,
+							sub: "exampleSubject",
+						},
+					},
+					values,
+				}),
+			).toString("base64"),
+			true,
+		);
+
+		assert.isTrue(federatedToken.isValueModified());
+		assert.isTrue(federatedToken.isAccessTokenModified());
+	});
+
 	test("serializeAccessToken empty", () => {
 		const federatedToken = new FederatedToken();
 		federatedToken.setAccessToken("exampleName", {
