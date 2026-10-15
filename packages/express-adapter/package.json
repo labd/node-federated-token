@@ -1,6 +1,6 @@
 {
 	"name": "@labdigital/federated-token-express-adapter",
-	"version": "3.1.1",
+	"version": "4.0.1",
 	"author": "Lab Digital <opensource@labdigital.nl>",
 	"description": "Express Adapter for @labdigital/federated-token",
 	"keywords": [
