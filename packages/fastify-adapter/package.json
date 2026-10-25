@@ -52,6 +52,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/labd/node-federated-token.git"
+		"url": "git+https://github.com/labd/node-federated-token.git",
+		"directory": "packages/fastify-adapter"
 	}
 }

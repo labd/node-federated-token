@@ -74,6 +74,9 @@ jobs:
           commit-message: "update version"
           publish-script: pnpm publish:ci
           version-script: pnpm publish:version
+          # v2 pushes the release commit and tags through the GitHub API; the
+          # git CLI path keeps the previous behaviour.
+          push-with-git-cli: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
