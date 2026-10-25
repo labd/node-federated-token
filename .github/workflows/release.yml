@@ -68,12 +68,12 @@ jobs:
         run: npm i -g npm@^11.6.4
 
       - name: Create and publish versions
-        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          title: "Release new version"
-          commit: "update version"
-          publish: pnpm publish:ci
-          version: pnpm publish:version
+          pr-title: "Release new version"
+          commit-message: "update version"
+          publish-script: pnpm publish:ci
+          version-script: pnpm publish:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
