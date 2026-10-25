@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Set up Node.js
-        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # main
+        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # v1.0.0
 
       - name: Lint
         run: pnpm lint
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Set up Node.js
-        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # main
+        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # v1.0.0
         with:
           node-version: ${{ matrix.node }}
 
@@ -59,7 +59,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # main
+        uses: labd/gh-actions-typescript/pnpm-install@e7a21fb56b52bf2d91616e34f0bc3f4f9a821b62 # v1.0.0
 
       - name: Run build
         run: pnpm build
