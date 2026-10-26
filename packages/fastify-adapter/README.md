@@ -69,7 +69,8 @@ await app.register(fastifyApollo(server), {
 });
 ```
 
-`createTokenSigner()` returns a `TokenSigner`, see the
+`gateway` is your `ApolloGateway` instance and `createTokenSigner()` returns a
+`TokenSigner`, see the
 [core package](../core/README.md). The context must contain `req` and `res`
 so the plugin can read and write the tokens.
 
