@@ -27,16 +27,16 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.15",
 		"@changesets/cli": "3.0.3",
-		"@vitest/coverage-v8": "5.0.3",
+		"@vitest/coverage-v8": "5.0.5",
 		"syncpack": "15.3.3",
-		"turbo": "2.11.7",
-		"vitest": "5.0.3"
+		"turbo": "2.11.9",
+		"vitest": "5.0.5"
 	},
 	"engines": {
 		"node": ">=22.0.0"
 	},
 	"module": "./dist/index.mjs",
-	"packageManager": "pnpm@12.8.2",
+	"packageManager": "pnpm@12.14.0",
 	"repository": "labd/node-federated-token",
 	"syncpack": {
 		"dependencyTypes": [
