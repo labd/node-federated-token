@@ -22,9 +22,11 @@ npm install @labdigital/federated-token-express-adapter express cookie-parser
 
 - Node.js >= 22
 - Peer dependency: `express` >= 4
-- `CookieTokenSource` reads `request.cookies`, so the
-  [`cookie-parser`](https://www.npmjs.com/package/cookie-parser) middleware
-  must be registered.
+- `CookieTokenSource` reads `request.cookies`, which Express does not populate
+  by itself. Register [`cookie-parser`](https://www.npmjs.com/package/cookie-parser)
+  (or another middleware that sets `request.cookies`), otherwise reading the
+  cookies throws. It is not a peer dependency; `HeaderTokenSource` works
+  without it.
 
 ## Usage
 
@@ -70,7 +72,8 @@ app.use(
 );
 ```
 
-`createTokenSigner()` returns a `TokenSigner`, see the
+`gateway` is your `ApolloGateway` instance and `createTokenSigner()` returns a
+`TokenSigner`, see the
 [core package](../core/README.md). The context must contain `req` and `res`
 so the plugin can read and write the tokens.
 

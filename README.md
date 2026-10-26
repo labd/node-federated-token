@@ -46,7 +46,7 @@ const server = new ApolloServer({
 				new CookieTokenSource({
 					refreshTokenPath: "/auth/graphql",
 					secure: true,
-					sameSite: "Lax",
+					sameSite: "lax",
 					publicDomainFn: (request: express.Request) => config.COOKIE_DOMAIN,
 					cookieNames: {
 						refreshToken: "authRefreshToken",
