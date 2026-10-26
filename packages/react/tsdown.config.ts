@@ -11,5 +11,12 @@ export default defineConfig([
 		outDir: "dist",
 		fixedExtension: false,
 		publint: true,
+		failOnWarn: true,
+		// TypeScript 7 is used on purpose; its "experimental API" notice is not actionable
+		// "use client" is kept in the output; rolldown warns about it regardless
+		suppressWarnings: [
+			"TypeScript 7.0 does not yet have a stable API",
+			'module level directive "use client"',
+		],
 	},
 ]);
