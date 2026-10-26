@@ -1,5 +1,12 @@
 # @labdigital/federated-token-react
 
+## 4.0.2
+
+### Patch Changes
+
+- a3c8c98: Declare the `types` condition explicitly in the package `exports` (the packages remain ESM-only).
+- 78502d6: Update jose to 6.2.12.
+
 ## 3.0.0
 
 ### Major Changes

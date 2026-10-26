@@ -1,5 +1,14 @@
 # @labdigital/federated-token-fastify-adapter
 
+## 4.0.2
+
+### Patch Changes
+
+- a8c99a8: Bump fastify dev dependency to 5.12.7 to resolve security advisories (fastify < 5.12.2)
+- a3c8c98: Declare the `types` condition explicitly in the package `exports` (the packages remain ESM-only).
+- Updated dependencies [78502d6]
+  - @labdigital/federated-token@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes
