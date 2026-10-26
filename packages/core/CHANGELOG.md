@@ -1,5 +1,11 @@
 # @labdigital/federated-token
 
+## 4.0.2
+
+### Patch Changes
+
+- 78502d6: Update jose to 6.2.12.
+
 ## 4.0.1
 
 ### Patch Changes
