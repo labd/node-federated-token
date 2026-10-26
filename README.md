@@ -2,12 +2,12 @@
 
 | Package | Version |
 | ------- | ------- |
-| `@labdigital/federated-token` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token)](https://www.npmjs.com/package/@labdigital/federated-token) |
-| `@labdigital/federated-token-apollo` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-apollo)](https://www.npmjs.com/package/@labdigital/federated-token-apollo) |
-| `@labdigital/federated-token-yoga` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-yoga)](https://www.npmjs.com/package/@labdigital/federated-token-yoga) |
-| `@labdigital/federated-token-express-adapter` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-express-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-express-adapter) |
-| `@labdigital/federated-token-fastify-adapter` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-fastify-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-fastify-adapter) |
-| `@labdigital/federated-token-react` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-react)](https://www.npmjs.com/package/@labdigital/federated-token-react) |
+| [`@labdigital/federated-token`](packages/core) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token)](https://www.npmjs.com/package/@labdigital/federated-token) |
+| [`@labdigital/federated-token-apollo`](packages/apollo) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-apollo)](https://www.npmjs.com/package/@labdigital/federated-token-apollo) |
+| [`@labdigital/federated-token-yoga`](packages/yoga) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-yoga)](https://www.npmjs.com/package/@labdigital/federated-token-yoga) |
+| [`@labdigital/federated-token-express-adapter`](packages/express-adapter) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-express-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-express-adapter) |
+| [`@labdigital/federated-token-fastify-adapter`](packages/fastify-adapter) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-fastify-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-fastify-adapter) |
+| [`@labdigital/federated-token-react`](packages/react) | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-react)](https://www.npmjs.com/package/@labdigital/federated-token-react) |
 
 This repository contains multiple packages using JWT tokens for clients and
 passing that information to all federated services (upstream and downstream).
@@ -84,3 +84,23 @@ an existing token.
 
 
 Note that this expects the "cookie-parser" express middleware to be used.
+
+
+# Development
+Requires Node.js >= 22 and pnpm.
+
+```sh
+pnpm install
+pnpm build    # build all packages
+pnpm test     # run the tests
+pnpm lint     # biome check
+pnpm tsc      # type check
+```
+
+# Release
+Releases are managed with [changesets](https://github.com/changesets/changesets).
+Add a changeset with `pnpm changeset` in your pull request. Once merged, CI
+opens a release PR; merging that publishes the packages to npm.
+
+# License
+MIT
