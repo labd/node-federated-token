@@ -15,7 +15,7 @@
 			"dependsOn": ["^build"]
 		},
 		"tsc": {
-			"dependsOn": ["topo"]
+			"dependsOn": ["topo", "^build"]
 		},
 		"lint": {
 			"dependsOn": ["topo"],
