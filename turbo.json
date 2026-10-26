@@ -8,9 +8,6 @@
 			"dependsOn": ["^build"],
 			"outputs": ["dist/**", "README.md"]
 		},
-		"lint:package": {
-			"dependsOn": ["build"]
-		},
 		"test": {
 			"dependsOn": ["^build"]
 		},

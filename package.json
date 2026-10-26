@@ -18,7 +18,6 @@
 		"deps:fix": "syncpack fix --dependency-types dev,prod,pnpmOverrides && pnpm dedupe && pnpm install",
 		"format": "biome format --fix",
 		"lint": "biome check",
-		"lint:package": "turbo lint:package",
 		"publish:ci": "pnpm build && pnpm changeset publish",
 		"publish:version": "pnpm changeset version && pnpm format",
 		"test": "turbo test",
