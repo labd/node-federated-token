@@ -1,6 +1,13 @@
 # Federated Token
 
-[![npm](https://img.shields.io/npm/v/@labdigital/federated-token.svg)](https://www.npmjs.com/package/@labdigital/federated-token)
+| Package | Version |
+| ------- | ------- |
+| `@labdigital/federated-token` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token)](https://www.npmjs.com/package/@labdigital/federated-token) |
+| `@labdigital/federated-token-apollo` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-apollo)](https://www.npmjs.com/package/@labdigital/federated-token-apollo) |
+| `@labdigital/federated-token-yoga` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-yoga)](https://www.npmjs.com/package/@labdigital/federated-token-yoga) |
+| `@labdigital/federated-token-express-adapter` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-express-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-express-adapter) |
+| `@labdigital/federated-token-fastify-adapter` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-fastify-adapter)](https://www.npmjs.com/package/@labdigital/federated-token-fastify-adapter) |
+| `@labdigital/federated-token-react` | [![npm](https://img.shields.io/npm/v/@labdigital/federated-token-react)](https://www.npmjs.com/package/@labdigital/federated-token-react) |
 
 This repository contains multiple packages using JWT tokens for clients and
 passing that information to all federated services (upstream and downstream).
@@ -9,7 +16,7 @@ passing that information to all federated services (upstream and downstream).
  - `@labdigital/federated-token` - The core package that provides the token
 	 handling and token sources.
  - `@labdigital/federated-token-apollo` - A plugin for Apollo Server (and gateway).
- - `@labdigital/federated-token-envelop` - An Envelop plugin for e.g. Yoga.
+ - `@labdigital/federated-token-yoga` - A plugin for GraphQL Yoga.
  - `@labdigital/federated-token-express-adapter` - An Express adapter for the
 	 `CookieTokenSource` and `HeaderTokenSource` to be used in an Express application.
  - `@labdigital/federated-token-fastify-adapter` - A Fastify adapter for the
