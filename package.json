@@ -14,8 +14,8 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "pnpm turbo build",
-		"deps": "syncpack list-mismatches",
-		"deps:fix": "syncpack fix-mismatches && pnpm dedupe && pnpm install",
+		"deps": "syncpack lint --dependency-types dev,prod,pnpmOverrides",
+		"deps:fix": "syncpack fix --dependency-types dev,prod,pnpmOverrides && pnpm dedupe && pnpm install",
 		"format": "biome format --fix",
 		"lint": "biome check",
 		"publish:ci": "pnpm build && pnpm changeset publish",
@@ -39,11 +39,6 @@
 	"packageManager": "pnpm@12.14.0",
 	"repository": "labd/node-federated-token",
 	"syncpack": {
-		"dependencyTypes": [
-			"dev",
-			"prod",
-			"pnpmOverrides"
-		],
 		"indent": "\t",
 		"sortFirst": [
 			"name",
