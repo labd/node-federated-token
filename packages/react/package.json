@@ -26,7 +26,7 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"jose": "6.2.12",
+		"jose": "6.2.13",
 		"js-cookie": "3.0.8"
 	},
 	"devDependencies": {
@@ -36,7 +36,7 @@
 		"@vitest/coverage-v8": "5.0.5",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.25",
-		"tsdown": "^0.23.1",
+		"tsdown": "^0.23.2",
 		"typescript": "7.0.2",
 		"vitest": "5.0.5"
 	},
