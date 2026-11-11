@@ -45,13 +45,32 @@ export class PublicFederatedToken extends FederatedToken {
 		return await signer.encryptJWT(data, exp);
 	}
 
-	async loadDataJWT(signer: TokenSigner, value: string) {
-		const result = await signer.verifyJWT(value);
-		if (!result) {
-			throw new TokenInvalidError("Invalid JWT");
+	/**
+	 * With `allowExpired`, an expired but otherwise valid data token still
+	 * loads its values, marked modified so the gateway re-signs it. jose
+	 * reports expiry only after verifying the signature, issuer and audience.
+	 */
+	async loadDataJWT(
+		signer: TokenSigner,
+		value: string,
+		{ allowExpired = false }: { allowExpired?: boolean } = {},
+	) {
+		let payload: Record<string, unknown>;
+		try {
+			const result = await signer.verifyJWT(value);
+			if (!result) {
+				throw new TokenInvalidError("Invalid JWT");
+			}
+			payload = result.payload;
+		} catch (e: unknown) {
+			if (!(allowExpired && e instanceof TokenExpiredError && e.payload)) {
+				throw e;
+			}
+			payload = e.payload;
+			this._valueModified = true;
 		}
 
-		this.values = result.payload.values as Record<string, unknown>;
+		this.values = (payload.values ?? {}) as Record<string, unknown>;
 	}
 
 	async loadAccessJWT(signer: TokenSigner, value: string) {

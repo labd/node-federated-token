@@ -27,7 +27,7 @@ export class FederatedToken {
 
 	private _accessTokenModified: boolean;
 	private _refreshTokenModified: boolean;
-	private _valueModified: boolean;
+	protected _valueModified: boolean;
 
 	private _isAuthenticated: boolean;
 	private _destroyToken: boolean;

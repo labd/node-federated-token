@@ -26,8 +26,9 @@ encrypt all refresh tokens and encrypt them before passing them to the client
 as `x-refresh-token` header.
 
 When a request's access or data token has expired but it carries a valid
-refresh token, the gateway clears the expired token and continues without it,
-so a refresh succeeds on its first attempt. Send the refresh token with refresh
+refresh token, the gateway clears the expired access token and continues
+without it, so a refresh succeeds on its first attempt. An expired data token
+keeps its values and is re-signed, since the refresh need not restore them. Send the refresh token with refresh
 requests only: a cookie scoped to a refresh-only `refreshTokenPath`, or for
 header clients `x-refresh-token` on the refresh mutation alone. Any other
 request carrying it runs without the expired token (anonymously if it was the
