@@ -1,5 +1,6 @@
 import * as crypto from "node:crypto";
 import { describe, expect, test } from "vitest";
+import { TokenExpiredError, TokenInvalidError } from "./errors";
 import { PublicFederatedToken } from "./jwt";
 import { KeyManager, TokenSigner } from "./sign";
 
@@ -138,5 +139,50 @@ describe("PublicFederatedToken", async () => {
 		await token.loadDataJWT(signer, jwt);
 		expect(token.values).toBeDefined();
 		expect(token.values).toStrictEqual(payload.values);
+	});
+
+	describe("loadDataJWT with an expired token", async () => {
+		const values = { value1: "exampleValue1" };
+		const expired = await signer.signJWT({
+			values,
+			exp: Math.floor(Date.now() / 1000) - 60,
+		});
+
+		test("throws TokenExpiredError by default", async () => {
+			const token = new PublicFederatedToken();
+			await expect(token.loadDataJWT(signer, expired)).rejects.toBeInstanceOf(
+				TokenExpiredError,
+			);
+			expect(token.values).toStrictEqual({});
+		});
+
+		test("loads the values and marks them modified with allowExpired", async () => {
+			const token = new PublicFederatedToken();
+			await token.loadDataJWT(signer, expired, { allowExpired: true });
+			expect(token.values).toStrictEqual(values);
+			expect(token.isValueModified()).toBe(true);
+		});
+
+		test("rejects a forged expired token with allowExpired", async () => {
+			const forger = new TokenSigner({
+				...signOptions,
+				signKeys: new KeyManager([
+					{
+						id: "1",
+						key: crypto.createSecretKey(Buffer.from("forgedky".repeat(4))),
+					},
+				]),
+			});
+			const forged = await forger.signJWT({
+				values,
+				exp: Math.floor(Date.now() / 1000) - 60,
+			});
+
+			const token = new PublicFederatedToken();
+			await expect(
+				token.loadDataJWT(signer, forged, { allowExpired: true }),
+			).rejects.toBeInstanceOf(TokenInvalidError);
+			expect(token.values).toStrictEqual({});
+		});
 	});
 });

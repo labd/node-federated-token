@@ -345,7 +345,16 @@ describe("GatewayAuthPlugin", async () => {
 			data: "expired",
 			refresh: "valid",
 			outcome: "continues",
-			cleared: ["userToken", "userData"],
+			cleared: ["userToken"],
+			resigned: true,
+		},
+		{
+			access: "valid",
+			data: "expired",
+			refresh: "valid",
+			outcome: "continues",
+			cleared: [],
+			resigned: true,
 		},
 		{
 			access: "expired",
@@ -384,7 +393,8 @@ describe("GatewayAuthPlugin", async () => {
 		},
 	] as const)(
 		"$access access, $data data and $refresh refresh tokens: $outcome",
-		async ({ access, data, refresh, outcome, cleared }) => {
+		async ({ access, data, refresh, outcome, cleared, ...rest }) => {
+			const resigned = "resigned" in rest && rest.resigned;
 			const now = Math.floor(Date.now() / 1000);
 			const token = new PublicFederatedToken();
 			token.setAccessToken("foo", {
@@ -442,19 +452,35 @@ describe("GatewayAuthPlugin", async () => {
 			assert(response.body.kind === "single");
 			const { data: result, errors } = response.body.singleResult;
 			for (const name of ["userToken", "userData", "refreshToken"] as const) {
+				if (resigned && name === "userData") {
+					continue;
+				}
 				expect(context.res.cookies[name]?.value).toBe(
 					(cleared as readonly string[]).includes(name) ? "" : undefined,
 				);
+			}
+			if (resigned) {
+				// The session type picks the cookie: userData or guestData.
+				const dataCookie = [
+					context.res.cookies.userData?.value,
+					context.res.cookies.guestData?.value,
+				].find(Boolean);
+				const { payload } = await signer.verifyJWT(dataCookie);
+				expect(payload.values).toStrictEqual({ value: "foobar" });
+				expect(payload.exp).toBeGreaterThan(now);
 			}
 			if (outcome === "continues") {
 				expect(errors).toBeUndefined();
 				const resolverToken = JSON.parse(
 					result?.testToken as string,
 				) as PublicFederatedToken;
-				expect(resolverToken.tokens).toStrictEqual({});
+				expect(resolverToken.tokens).toStrictEqual(
+					access === "expired" ? {} : { foo: expect.anything() },
+				);
 				expect(resolverToken.refreshTokens).toStrictEqual({
 					foo: "refresh-value",
 				});
+				expect(resolverToken.values).toStrictEqual({ value: "foobar" });
 			} else {
 				expect(response.http.status).toBe(401);
 				expect(errors?.[0]?.extensions?.code).toBe(outcome);

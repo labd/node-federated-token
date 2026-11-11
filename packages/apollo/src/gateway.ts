@@ -150,7 +150,12 @@ export class GatewayAuthPlugin<
 
 		if (dataToken) {
 			try {
-				await token.loadDataJWT(this.signer, dataToken);
+				// The refresh replaces the access token but need not restore every
+				// value, so keep those of an expired data token instead of dropping
+				// them.
+				await token.loadDataJWT(this.signer, dataToken, {
+					allowExpired: refreshTokenLoaded,
+				});
 			} catch (e: unknown) {
 				if (e instanceof TokenExpiredError) {
 					this.tokenSource.deleteDataToken(contextValue.req, contextValue.res);
