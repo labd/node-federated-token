@@ -1,5 +1,18 @@
 # @labdigital/federated-token-apollo
 
+## 4.1.0
+
+### Minor Changes
+
+- 88ef61c: `GatewayAuthPlugin` keeps the values of an expired data token on a refresh request (one carrying a valid refresh token) and re-signs it, instead of dropping them. `loadDataJWT` gains an `allowExpired` option for this, and `TokenExpiredError` carries the verified `payload`.
+
+### Patch Changes
+
+- a3c8c98: Declare the `types` condition explicitly in the package `exports` (the packages remain ESM-only).
+- Updated dependencies [88ef61c]
+- Updated dependencies [78502d6]
+  - @labdigital/federated-token@4.1.0
+
 ## 4.0.1
 
 ### Patch Changes

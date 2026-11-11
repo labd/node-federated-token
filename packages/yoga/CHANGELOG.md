@@ -1,5 +1,14 @@
 # @labdigital/federated-token-yoga
 
+## 4.1.0
+
+### Patch Changes
+
+- a3c8c98: Declare the `types` condition explicitly in the package `exports` (the packages remain ESM-only).
+- Updated dependencies [88ef61c]
+- Updated dependencies [78502d6]
+  - @labdigital/federated-token@4.1.0
+
 ## 4.0.1
 
 ### Patch Changes

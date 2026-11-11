@@ -1,5 +1,15 @@
 # @labdigital/federated-token
 
+## 4.1.0
+
+### Minor Changes
+
+- 88ef61c: `GatewayAuthPlugin` keeps the values of an expired data token on a refresh request (one carrying a valid refresh token) and re-signs it, instead of dropping them. `loadDataJWT` gains an `allowExpired` option for this, and `TokenExpiredError` carries the verified `payload`.
+
+### Patch Changes
+
+- 78502d6: Update jose to 6.2.12.
+
 ## 4.0.1
 
 ### Patch Changes
