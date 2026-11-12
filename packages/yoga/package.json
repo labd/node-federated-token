@@ -31,7 +31,7 @@
 	"devDependencies": {
 		"@types/express": "5.0.6",
 		"@vitest/coverage-v8": "5.0.5",
-		"graphql-yoga": "5.24.6",
+		"graphql-yoga": "6.0.1",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.25",
 		"tsdown": "^0.23.1",
