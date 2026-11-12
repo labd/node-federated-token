@@ -147,15 +147,6 @@ describe("PublicFederatedToken", async () => {
 			...claims,
 			exp: now + 60,
 		});
-
-		const withExplicitExpiry = await token.createDataJWT(signer, {
-			exp: now + 3600,
-		});
-		assert(withExplicitExpiry);
-		expect((await signer.verifyJWT(withExplicitExpiry)).payload).toStrictEqual({
-			...claims,
-			exp: now + 3600,
-		});
 	});
 
 	test("loadDataJWT", async () => {

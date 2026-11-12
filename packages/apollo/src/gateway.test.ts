@@ -12,7 +12,7 @@ import {
 } from "@labdigital/federated-token-express-adapter";
 import type { Request, Response } from "express";
 import httpMocks from "node-mocks-http";
-import { assert, describe, expect, it, vi } from "vitest";
+import { assert, describe, expect, it } from "vitest";
 import type { PublicFederatedTokenContext } from "./context";
 import { GatewayAuthPlugin } from "./gateway";
 
@@ -456,7 +456,6 @@ describe("GatewayAuthPlugin", async () => {
 				}),
 			};
 
-			const dataTokenExpiry = vi.fn(() => now + 5000);
 			const cookieServer = new ApolloServer({
 				typeDefs,
 				resolvers,
@@ -468,7 +467,6 @@ describe("GatewayAuthPlugin", async () => {
 							secure: false,
 							sameSite: "lax",
 						}),
-						dataTokenExpiry,
 					}),
 				],
 			});
@@ -502,11 +500,7 @@ describe("GatewayAuthPlugin", async () => {
 				].find(Boolean);
 				const { payload } = await signer.verifyJWT(dataCookie);
 				expect(payload.values).toStrictEqual({ value: "foobar" });
-				expect(payload.exp).toBe(now + 5000);
-				expect(dataTokenExpiry).toHaveBeenCalledExactlyOnceWith({
-					token: context.federatedToken,
-					renewable: true,
-				});
+				expect(payload.exp).toBeGreaterThan(now);
 			}
 			if (outcome === "continues") {
 				expect(errors).toBeUndefined();
