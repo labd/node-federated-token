@@ -41,6 +41,12 @@ export class CompositeTokenSource<TRequest, TResponse>
 		return "";
 	}
 
+	hasRefreshToken(request: TRequest, isAuthenticated = false): boolean {
+		return this.sources.some(
+			(source) => source.hasRefreshToken?.(request, isAuthenticated) ?? false,
+		);
+	}
+
 	getDataToken(request: TRequest): string {
 		for (const source of this.sources) {
 			const token = source.getDataToken(request);
