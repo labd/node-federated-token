@@ -52,7 +52,6 @@ describe("HeaderTokenSource", () => {
 		const result = headerTokenSource.getRefreshToken(request);
 
 		expect(result).toBe(mockRefreshToken);
-		expect(headerTokenSource.hasRefreshToken(request)).toBe(true);
 	});
 
 	it("should return an undefined value if access token is missing from headers", () => {
@@ -60,7 +59,6 @@ describe("HeaderTokenSource", () => {
 		const request = new Request("http://localhost");
 		const result = headerTokenSource.getAccessToken(request);
 		expect(result).toBeUndefined();
-		expect(headerTokenSource.hasRefreshToken(request)).toBe(false);
 	});
 
 	it("should set the access token in the response headers", () => {

@@ -11,10 +11,6 @@ type JWTPayload = {
 	[key: string]: unknown;
 };
 
-type CreateDataJWTOptions = {
-	exp?: number;
-};
-
 type LoadDataJWTOptions = {
 	allowExpired?: boolean;
 };
@@ -27,17 +23,14 @@ export class PublicFederatedToken extends FederatedToken {
 
 	// Create the JWT for the client, this JWT is only signed and used to store
 	// JWT values
-	async createDataJWT(
-		signer: TokenSigner,
-		options: CreateDataJWTOptions = {},
-	): Promise<string | undefined> {
+	async createDataJWT(signer: TokenSigner): Promise<string | undefined> {
 		if (!this.values) {
 			return;
 		}
 
 		const payload = {
 			values: this.values,
-			exp: options.exp ?? this.getDataExpireTime(),
+			exp: this.getDataExpireTime(),
 			sub: signer.getSubject(this),
 		};
 

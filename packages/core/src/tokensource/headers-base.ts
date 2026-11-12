@@ -51,10 +51,6 @@ export abstract class BaseHeaderTokenSource<TRequest, TResponse>
 		return this.adapter.getHeader(request, this.headerNames.refreshToken);
 	}
 
-	hasRefreshToken(request: TRequest): boolean {
-		return Boolean(this.getRefreshToken(request));
-	}
-
 	getDataToken(request: TRequest): string | undefined {
 		return this.adapter.getHeader(request, this.headerNames.dataToken);
 	}

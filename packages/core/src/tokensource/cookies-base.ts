@@ -162,17 +162,6 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 		return this.adapter.getCookie(request, this.cookieNames.refreshToken);
 	}
 
-	// A guest marker can outlive a login that set no refresh token, so only the
-	// marker of the current session type counts.
-	hasRefreshToken(request: TRequest, isAuthenticated = false): boolean {
-		const name = isAuthenticated
-			? this.cookieNames.userRefreshTokenExists
-			: this.cookieNames.guestRefreshTokenExists;
-		return Boolean(
-			this.getRefreshToken(request) || this.adapter.getCookie(request, name),
-		);
-	}
-
 	setDataToken(
 		request: TRequest,
 		response: TResponse,
