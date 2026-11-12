@@ -15,6 +15,10 @@ type CreateDataJWTOptions = {
 	exp?: number;
 };
 
+type LoadDataJWTOptions = {
+	allowExpired?: boolean;
+};
+
 export class PublicFederatedToken extends FederatedToken {
 	// Create the access JWT. This JWT is sent to the client. It is sent as
 	// signed token (not encrypted). The jwe attribute is encrypted, however.
@@ -68,7 +72,7 @@ export class PublicFederatedToken extends FederatedToken {
 	async loadDataJWT(
 		signer: TokenSigner,
 		value: string,
-		{ allowExpired = false }: { allowExpired?: boolean } = {},
+		options: LoadDataJWTOptions = {},
 	) {
 		let payload: Record<string, unknown>;
 		try {
@@ -78,7 +82,9 @@ export class PublicFederatedToken extends FederatedToken {
 			}
 			payload = result.payload;
 		} catch (e: unknown) {
-			if (!(allowExpired && e instanceof TokenExpiredError && e.payload)) {
+			if (
+				!(options.allowExpired && e instanceof TokenExpiredError && e.payload)
+			) {
 				throw e;
 			}
 			payload = e.payload;
