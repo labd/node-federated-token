@@ -26,19 +26,19 @@
 		"tsc": "tsc --noEmit"
 	},
 	"dependencies": {
-		"jose": "6.2.12",
+		"jose": "6.2.15",
 		"js-cookie": "3.0.8"
 	},
 	"devDependencies": {
 		"@types/express": "5.0.6",
 		"@types/js-cookie": "3.0.6",
 		"@types/react": "19.3.0",
-		"@vitest/coverage-v8": "5.0.5",
+		"@vitest/coverage-v8": "5.1.0",
 		"node-mocks-http": "1.18.1",
 		"publint": "^0.3.25",
-		"tsdown": "^0.23.1",
+		"tsdown": "^0.23.5",
 		"typescript": "7.0.2",
-		"vitest": "5.0.5"
+		"vitest": "5.1.0"
 	},
 	"engines": {
 		"node": ">=22.0.0"
