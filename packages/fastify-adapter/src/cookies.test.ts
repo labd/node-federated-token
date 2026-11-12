@@ -1,5 +1,5 @@
-import type { CookieSerializeOptions } from "@fastify/cookie";
-import type { FastifyReply, FastifyRequest } from "fastify";
+import fastifyCookie, { type CookieSerializeOptions } from "@fastify/cookie";
+import Fastify, { type FastifyReply, type FastifyRequest } from "fastify";
 import { describe, expect, it } from "vitest";
 import { CookieTokenSource } from "./cookies";
 
@@ -330,5 +330,38 @@ describe("CookieTokenSource", () => {
 		cookieTokenSource.deleteRefreshToken(request, response);
 
 		expect(response._cookies).not.toHaveProperty("authRefreshToken");
+	});
+});
+
+describe("CookieTokenSource on a Fastify reply", () => {
+	it("keeps the new refresh token when a guest logs in with a refresh token", async () => {
+		const source = new CookieTokenSource({
+			secure: false,
+			sameSite: "lax",
+			refreshTokenPath: "/refresh",
+		});
+		const app = Fastify();
+		await app.register(fastifyCookie);
+		app.get("/login", (request, reply) => {
+			source.setAccessToken(request, reply, "USER_TOKEN", true);
+			source.setRefreshToken(request, reply, "USER_REFRESH_TOKEN", true);
+			reply.send();
+		});
+
+		const response = await app.inject({
+			method: "GET",
+			url: "/login",
+			cookies: { guestRefreshTokenExists: "1" },
+		});
+		await app.close();
+
+		expect(
+			response.cookies.map(({ name, value, path }) => ({ name, value, path })),
+		).toEqual([
+			{ name: "userToken", value: "USER_TOKEN", path: "/" },
+			{ name: "refreshToken", value: "USER_REFRESH_TOKEN", path: "/refresh" },
+			{ name: "guestRefreshTokenExists", value: "", path: "/" },
+			{ name: "userRefreshTokenExists", value: "1", path: "/" },
+		]);
 	});
 });

@@ -155,12 +155,36 @@ describe("CookieTokenSource", () => {
 		const cookies = getCookies(response);
 		expect(cookies).toEqual([
 			{ userToken: "FOOBAR", Path: "/", SameSite: "Strict" },
+			{ refreshToken: "", Path: "/refresh" },
+			{ guestRefreshTokenExists: "", Path: "/" },
+		]);
+	});
+
+	it("should keep the refresh token when it sets the access token for a user with a refresh token", () => {
+		const request: Request = new Request("http://localhost", {
+			headers: { cookie: "userRefreshTokenExists=1" },
+		});
+		const response: Response = new Response();
+
+		const cookieTokenSource = new TestCookieTokenSource({
+			secure: true,
+			sameSite: "strict",
+			refreshTokenPath: "/refresh",
+		});
+
+		cookieTokenSource.setAccessToken(request, response, "FOOBAR", true);
+
+		const cookies = getCookies(response);
+		expect(cookies).toEqual([
+			{ userToken: "FOOBAR", Path: "/", SameSite: "Strict" },
 		]);
 	});
 
 	// Test for setting the access token for authenticated users
 	it("should set the access token for authenticated users with custom expire", () => {
-		const request: Request = new Request("http://localhost");
+		const request: Request = new Request("http://localhost", {
+			headers: { cookie: "userRefreshTokenExists=1" },
+		});
 		const response: Response = new Response();
 
 		const cookieTokenSource = new TestCookieTokenSource({

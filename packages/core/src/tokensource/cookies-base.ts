@@ -263,6 +263,14 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				response,
 				this.cookieNames.guestToken,
 			);
+			if (
+				!this.adapter.getCookie(
+					request,
+					this.cookieNames.userRefreshTokenExists,
+				)
+			) {
+				this.deleteGuestRefreshToken(request, response);
+			}
 		} else {
 			this.adapter.setCookie(
 				request,
@@ -340,6 +348,31 @@ export abstract class BaseCookieTokenSource<TRequest, TResponse>
 				this.cookieNames.userRefreshTokenExists,
 			);
 		}
+	}
+
+	/**
+	 * A user session must never be refreshed with a guest refresh token: the
+	 * refresh would replace the user's access token with an anonymous one. A
+	 * login without a refresh token of its own would otherwise keep the guest's.
+	 * Both are cleared without checking the request, because a caller without
+	 * the browser's cookies (a server-side handoff) cannot see them.
+	 */
+	private deleteGuestRefreshToken(request: TRequest, response: TResponse) {
+		const domain = this.adapter.getPublicDomain(request);
+
+		this.adapter.clearCookie(request, response, this.cookieNames.refreshToken, {
+			path: this._getRefreshTokenPath(request),
+			domain,
+		});
+		this.adapter.clearCookie(
+			request,
+			response,
+			this.cookieNames.guestRefreshTokenExists,
+			{
+				domain,
+				path: this.options.cookiePathFn?.(request) ?? "/",
+			},
+		);
 	}
 
 	private _getRefreshTokenPath(req: TRequest): string | undefined {
