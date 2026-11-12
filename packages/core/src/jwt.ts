@@ -11,6 +11,10 @@ type JWTPayload = {
 	[key: string]: unknown;
 };
 
+type CreateDataJWTOptions = {
+	exp?: number;
+};
+
 export class PublicFederatedToken extends FederatedToken {
 	// Create the access JWT. This JWT is sent to the client. It is sent as
 	// signed token (not encrypted). The jwe attribute is encrypted, however.
@@ -21,7 +25,7 @@ export class PublicFederatedToken extends FederatedToken {
 	// JWT values
 	async createDataJWT(
 		signer: TokenSigner,
-		{ exp }: { exp?: number } = {},
+		options: CreateDataJWTOptions = {},
 	): Promise<string | undefined> {
 		if (!this.values) {
 			return;
@@ -29,7 +33,7 @@ export class PublicFederatedToken extends FederatedToken {
 
 		const payload = {
 			values: this.values,
-			exp: exp ?? this.getDataExpireTime(),
+			exp: options.exp ?? this.getDataExpireTime(),
 			sub: signer.getSubject(this),
 		};
 
