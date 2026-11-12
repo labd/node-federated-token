@@ -12,7 +12,7 @@ import {
 } from "@labdigital/federated-token-express-adapter";
 import type { Request, Response } from "express";
 import httpMocks from "node-mocks-http";
-import { assert, describe, expect, it } from "vitest";
+import { assert, describe, expect, it, vi } from "vitest";
 import type { PublicFederatedTokenContext } from "./context";
 import { GatewayAuthPlugin } from "./gateway";
 
@@ -157,6 +157,7 @@ describe("GatewayAuthPlugin", async () => {
 		expect(context.res.statusCode).toBe(200);
 		expect(context.res.get("x-access-token")).toBeDefined();
 		expect(context.res.get("x-refresh-token")).toBeDefined();
+		expect(context.res.get("x-data-token")).toBeUndefined();
 	});
 
 	it("Use generated token", async () => {
@@ -274,6 +275,38 @@ describe("GatewayAuthPlugin", async () => {
 
 		assert.isNotEmpty(newAccessToken);
 		assert.notEqual(newAccessToken, accessToken);
+
+		const refreshedContext = {
+			federatedToken: new PublicFederatedToken(),
+			res: httpMocks.createResponse(),
+			req: httpMocks.createRequest({
+				headers: {
+					"x-access-token": `Bearer ${accessToken}`,
+					"x-data-token": newAccessToken,
+				},
+			}),
+		};
+
+		await testServer.executeOperation(
+			{
+				query: "query testToken { testToken(create: true) }",
+				http: {
+					headers: new HeaderMap(),
+					method: "POST",
+					search: "",
+					body: "",
+				},
+			},
+			{
+				contextValue: refreshedContext,
+			},
+		);
+		const resignedDataToken = refreshedContext.res.get("x-data-token");
+
+		assert(typeof resignedDataToken === "string");
+		const { payload } = await signer.verifyJWT(resignedDataToken);
+		expect(payload.values).toStrictEqual({ value: "foobar" });
+		expect(payload.exp).toBe(refreshedContext.federatedToken.tokens.foo.exp);
 	});
 
 	it("should clear invalid refresh token and let request reach resolver", async () => {
@@ -423,6 +456,7 @@ describe("GatewayAuthPlugin", async () => {
 				}),
 			};
 
+			const dataTokenExpiry = vi.fn(() => now + 5000);
 			const cookieServer = new ApolloServer({
 				typeDefs,
 				resolvers,
@@ -434,6 +468,7 @@ describe("GatewayAuthPlugin", async () => {
 							secure: false,
 							sameSite: "lax",
 						}),
+						dataTokenExpiry,
 					}),
 				],
 			});
@@ -467,7 +502,11 @@ describe("GatewayAuthPlugin", async () => {
 				].find(Boolean);
 				const { payload } = await signer.verifyJWT(dataCookie);
 				expect(payload.values).toStrictEqual({ value: "foobar" });
-				expect(payload.exp).toBeGreaterThan(now);
+				expect(payload.exp).toBe(now + 5000);
+				expect(dataTokenExpiry).toHaveBeenCalledExactlyOnceWith({
+					token: context.federatedToken,
+					renewable: true,
+				});
 			}
 			if (outcome === "continues") {
 				expect(errors).toBeUndefined();

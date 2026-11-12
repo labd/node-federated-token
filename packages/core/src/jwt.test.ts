@@ -1,5 +1,5 @@
 import * as crypto from "node:crypto";
-import { describe, expect, test } from "vitest";
+import { assert, describe, expect, onTestFinished, test, vi } from "vitest";
 import { TokenExpiredError, TokenInvalidError } from "./errors";
 import { PublicFederatedToken } from "./jwt";
 import { KeyManager, TokenSigner } from "./sign";
@@ -115,15 +115,47 @@ describe("PublicFederatedToken", async () => {
 	});
 
 	test("createDataJWT", async () => {
-		// Write tests for createRefreshJWT if needed
+		vi.useFakeTimers({ toFake: ["Date"] });
+		onTestFinished(() => {
+			vi.useRealTimers();
+		});
+		const now = Math.floor(Date.now() / 1000);
 		const token = new PublicFederatedToken();
 		token.values = {
 			value1: "exampleValue1",
 			value2: "exampleValue2",
 		};
+		const claims = {
+			values: token.values,
+			iat: now,
+			aud: signOptions.audience,
+			iss: signOptions.issuer,
+		};
 
-		const jwt = await token.createDataJWT(signer);
-		expect(jwt).toBeDefined();
+		const withoutAccessToken = await token.createDataJWT(signer);
+		assert(withoutAccessToken);
+		expect((await signer.verifyJWT(withoutAccessToken)).payload).toStrictEqual({
+			...claims,
+			exp: now + 60 * 60 * 24 * 90,
+		});
+
+		token.setAccessToken("late", { token: "a", exp: now + 120, sub: "s" });
+		token.setAccessToken("early", { token: "b", exp: now + 60, sub: "s" });
+		const withAccessTokens = await token.createDataJWT(signer);
+		assert(withAccessTokens);
+		expect((await signer.verifyJWT(withAccessTokens)).payload).toStrictEqual({
+			...claims,
+			exp: now + 60,
+		});
+
+		const withExplicitExpiry = await token.createDataJWT(signer, {
+			exp: now + 3600,
+		});
+		assert(withExplicitExpiry);
+		expect((await signer.verifyJWT(withExplicitExpiry)).payload).toStrictEqual({
+			...claims,
+			exp: now + 3600,
+		});
 	});
 
 	test("loadDataJWT", async () => {

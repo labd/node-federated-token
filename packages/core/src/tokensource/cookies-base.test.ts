@@ -399,6 +399,55 @@ describe("CookieTokenSource", () => {
 		expect(cookies).toEqual([{ refreshToken: "", Path: "/refresh" }]);
 	});
 
+	it.each([
+		{
+			cookie: "userRefreshTokenExists=1",
+			isAuthenticated: true,
+			expected: true,
+		},
+		{
+			cookie: "guestRefreshTokenExists=1",
+			isAuthenticated: false,
+			expected: true,
+		},
+		{
+			cookie: "guestRefreshTokenExists=1",
+			isAuthenticated: true,
+			expected: false,
+		},
+		{
+			cookie: "userRefreshTokenExists=1",
+			isAuthenticated: false,
+			expected: false,
+		},
+		{ cookie: "refreshToken=FOOBAR", isAuthenticated: true, expected: true },
+		{ cookie: "userToken=FOOBAR", isAuthenticated: true, expected: false },
+		{
+			cookie: "authRefreshTokenExists=1",
+			isAuthenticated: true,
+			cookieNames: { userRefreshTokenExists: "authRefreshTokenExists" },
+			expected: true,
+		},
+	])(
+		"hasRefreshToken is $expected for $cookie with isAuthenticated $isAuthenticated",
+		({ cookie, isAuthenticated, expected, cookieNames }) => {
+			const request: Request = new Request("http://localhost", {
+				headers: { cookie },
+			});
+
+			const cookieTokenSource = new TestCookieTokenSource({
+				secure: true,
+				sameSite: "strict",
+				refreshTokenPath: "/refresh",
+				cookieNames,
+			});
+
+			expect(cookieTokenSource.hasRefreshToken(request, isAuthenticated)).toBe(
+				expected,
+			);
+		},
+	);
+
 	it("should get the refresh path from the refresh path function", () => {
 		const request: Request = new Request("http://localhost");
 

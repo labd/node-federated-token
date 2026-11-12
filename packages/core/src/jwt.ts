@@ -19,19 +19,30 @@ export class PublicFederatedToken extends FederatedToken {
 
 	// Create the JWT for the client, this JWT is only signed and used to store
 	// JWT values
-	async createDataJWT(signer: TokenSigner): Promise<string | undefined> {
+	async createDataJWT(
+		signer: TokenSigner,
+		{ exp }: { exp?: number } = {},
+	): Promise<string | undefined> {
 		if (!this.values) {
 			return;
 		}
 
-		const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 		const payload = {
 			values: this.values,
-			exp,
+			exp: exp ?? this.getDataExpireTime(),
 			sub: signer.getSubject(this),
 		};
 
 		return await signer.signJWT(payload);
+	}
+
+	// Clients read the session expiry from the data token, so it ends with the
+	// first access token. Without an access token there is nothing to follow.
+	private getDataExpireTime(): number {
+		if (Object.keys(this.tokens).length > 0) {
+			return this.getExpireTime();
+		}
+		return Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90;
 	}
 
 	// Create the access JWT. This JWT is sent to the client. Is used in the

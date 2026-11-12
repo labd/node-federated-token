@@ -76,7 +76,8 @@ differentiates the tokens using a prefix for user tokens and guest tokens.
 - `userToken` / `guestToken` - The JWT token, HTTP_ONLY
 - `userData` / `guestData` - Value data for keeping state, can be used to for
 	example store some user information so it can be used in a frontend,
-	non-HTTP_ONLY
+	non-HTTP_ONLY. Its `exp` is that of the earliest access token, so a client
+	can read when to refresh
 - `refreshToken` - The refresh token, if any. It is stored as HTTP_ONLY cookie.
 - `userRefreshTokenExists` / `guestRefreshTokenExists` - A boolean value that
 indicates if a refresh token exists. It is used to determine if we can refresh

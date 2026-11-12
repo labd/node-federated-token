@@ -14,6 +14,7 @@ describe("CompositeTokenSource", () => {
 	> => ({
 		getAccessToken: vi.fn().mockReturnValue(""),
 		getRefreshToken: vi.fn().mockReturnValue(""),
+		hasRefreshToken: vi.fn().mockReturnValue(false),
 		getDataToken: vi.fn().mockReturnValue(""),
 		deleteAccessToken: vi.fn(),
 		deleteRefreshToken: vi.fn(),
@@ -38,5 +39,24 @@ describe("CompositeTokenSource", () => {
 		expect(result).toBe(mockAccessToken);
 		expect(mockTokenSource1.getAccessToken).toHaveBeenCalled();
 		expect(mockTokenSource2.getAccessToken).toHaveBeenCalled();
+	});
+
+	it("should report a refresh token when any source has one", () => {
+		const mockTokenSource1 = createMockTokenSource();
+		mockTokenSource1.hasRefreshToken = undefined;
+		const mockTokenSource2 = createMockTokenSource();
+		mockTokenSource2.hasRefreshToken = vi.fn().mockReturnValue(true);
+
+		const request = httpMocks.createRequest();
+		const compositeTokenSource = new CompositeTokenSource([
+			mockTokenSource1,
+			mockTokenSource2,
+		]);
+
+		expect(compositeTokenSource.hasRefreshToken(request, true)).toBe(true);
+		expect(mockTokenSource2.hasRefreshToken).toHaveBeenCalledWith(
+			request,
+			true,
+		);
 	});
 });

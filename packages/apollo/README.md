@@ -34,3 +34,19 @@ header clients `x-refresh-token` on the refresh mutation alone. Any other
 request carrying it runs without the expired token (anonymously if it was the
 access token) instead of getting a 401, and a resolver minting an anonymous
 session would replace the user's refresh token.
+
+The data token expires with the earliest access token, because clients read
+the session expiry from it to know when to refresh. The gateway therefore
+re-signs it when the access token changes. To set another expiry, pass
+`dataTokenExpiry`. It returns a unix time in seconds, or `undefined` for the
+default. `renewable` tells if the client holds a refresh token:
+
+```ts
+new GatewayAuthPlugin({
+	signer,
+	source,
+	// Keep sessions that the client cannot refresh for 90 days.
+	dataTokenExpiry: ({ renewable }) =>
+		renewable ? undefined : Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 90,
+});
+```

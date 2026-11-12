@@ -14,10 +14,17 @@ import { GraphQLError } from "graphql";
 import type { PublicFederatedTokenContext } from "./context";
 import { maskToken } from "./utils";
 
+export type DataTokenSession = {
+	token: PublicFederatedToken;
+	renewable: boolean;
+};
+
 type GatewayOptions = {
 	signer: TokenSigner;
 	source: TokenSource<unknown, unknown>;
 	logger?: Logger;
+	// Unix time in seconds. `undefined` keeps the earliest access token expiry.
+	dataTokenExpiry?: (session: DataTokenSession) => number | undefined;
 };
 
 /** The session can be renewed. */
@@ -73,11 +80,13 @@ export class GatewayAuthPlugin<
 	private tokenSource: TokenSource<unknown, unknown>;
 
 	private logger: Logger | undefined;
+	private dataTokenExpiry: GatewayOptions["dataTokenExpiry"];
 
 	constructor(options: GatewayOptions) {
 		this.signer = options.signer;
 		this.tokenSource = options.source;
 		this.logger = options.logger;
+		this.dataTokenExpiry = options.dataTokenExpiry;
 	}
 
 	public async requestDidStart(
@@ -226,8 +235,22 @@ export class GatewayAuthPlugin<
 			}
 		}
 
-		if (token?.isValueModified()) {
-			const dataToken = await token.createDataJWT(this.signer);
+		// The data token carries the access token's expiry, so a new access token
+		// needs a new data token even when no value changed.
+		const isDataTokenStale =
+			token?.isValueModified() ||
+			(token?.isAccessTokenModified() && Object.keys(token.values).length > 0);
+
+		if (token && isDataTokenStale) {
+			const dataToken = await token.createDataJWT(this.signer, {
+				exp: this.dataTokenExpiry?.({
+					token,
+					renewable:
+						Object.keys(token.refreshTokens).length > 0 ||
+						(this.tokenSource.hasRefreshToken?.(request, isAuthenticated) ??
+							false),
+				}),
+			});
 			if (dataToken) {
 				this.tokenSource.setDataToken(
 					request,
